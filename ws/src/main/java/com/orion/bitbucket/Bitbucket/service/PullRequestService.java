@@ -13,7 +13,13 @@ import com.orion.bitbucket.Bitbucket.model.UserPrDetails;
 
 @Service
 public class PullRequestService {
-   
+   // bu service base servisi (serviceimpl) i extend etsin.
+   // burayla ilgili olabilecek metotlar burada tanımlanson.
+   // mesela:
+   // public ArrayList<PullRequestDO> getMergedPRList() {
+   //		return this.mergedPRList;
+   //	}
+   // base classs da ise yalnızca common şeyler olsun. mesela data çekme şeyleri. getData gibi olanlar.
    @Autowired
    private ServiceImpl service;
 //asd
