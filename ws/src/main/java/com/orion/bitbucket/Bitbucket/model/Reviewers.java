@@ -12,21 +12,11 @@ public class Reviewers {
 		this.unApproved = unApproved;
 	}
 	
-	 private static Reviewers instance = new Reviewers();
-	   public static Reviewers getInstance() {
-		   return instance;
-	   }
-	   
-	public Reviewers() {
-		
-	}
 	
 	public String getDisplayName() {
 		return displayName;
 	}
 	
-	
-
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
