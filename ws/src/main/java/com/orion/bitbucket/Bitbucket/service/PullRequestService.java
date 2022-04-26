@@ -36,6 +36,8 @@ public class PullRequestService {
    public List<PullRequest> reportAll() throws JsonSyntaxException, UnirestException {
       return service.getAll(BitbucketConstants.EndPoints.ALL_PRS, BitbucketConstants.JsonPaths.PR_OWNERS);
    }
+
+
    
    public List<PullRequest> reportAllAuthorTest() throws JsonSyntaxException, UnirestException {
 	      return service.getAllAuthor(BitbucketConstants.EndPoints.ALL_PRS, BitbucketConstants.JsonPaths.PR_OWNERS);
@@ -45,6 +47,8 @@ public class PullRequestService {
 	      return service.getTestPr(name);
 	   }
    
-   
+   public void getData() {
+      service.getData();
+   }
    
 }

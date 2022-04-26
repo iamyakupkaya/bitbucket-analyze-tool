@@ -23,9 +23,10 @@ public class TestWebController {
    
    @RequestMapping(value = "/api/web-controller/test", method = RequestMethod.GET)
    public String edit(Model model) throws JsonSyntaxException, UnirestException {
-      List<PullRequest> pullrequests = service.reportAll();
-      model.addAttribute("pr", new PullRequest());
-      model.addAttribute("pullrequests", pullrequests);
+       service.getData(); // Bu metot uygulamanin baslangicinda cagirilmali ki listeler doldurulsun. Hangi kisim ilk calisacaksa bu orada cagirilmali.
+      //List<PullRequest> pullrequests = service.reportAll();
+      //model.addAttribute("pr", new PullRequest());
+      //model.addAttribute("pullrequests", pullrequests);
       return "index.html";
    }
    

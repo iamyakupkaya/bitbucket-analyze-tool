@@ -76,10 +76,16 @@ public class ServiceImpl implements ServiceIF {
 	ArrayList<PullRequestDO> mergedPRList;
 	ArrayList<PullRequestDO> declinedPRList;
 
-	public ServiceImpl() throws UnirestException {
-		openPRList = getPullRequestData("OPEN");
-		mergedPRList = getPullRequestData("MERGED");
-		declinedPRList = getPullRequestData("DECLINED");
+	// TODO: try-catch kaldirilip performansa bir bakar misin?
+	public void getData() {
+		try {
+			this.openPRList = getPullRequestData("OPEN");
+			this.mergedPRList = getPullRequestData("MERGED");
+			this.declinedPRList = getPullRequestData("DECLINED");
+		}
+		catch (Exception exception) {
+			System.out.println(exception);
+		}
 	}
 	
 	// TODO: will be deleted
