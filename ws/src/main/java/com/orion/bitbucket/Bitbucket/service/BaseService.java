@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 @Service
-public class BaseService {
+public class BaseService implements BaseServiceIF {
 
 	@Autowired
 	private JsonResponse response;
