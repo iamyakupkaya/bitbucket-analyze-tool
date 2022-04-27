@@ -13,6 +13,7 @@ public interface PullRequestServiceIF {
     public ArrayList<PullRequestDO> getMergedPRList();
     public ArrayList<PullRequestDO> getOpenPRList();
     public ArrayList<PullRequestDO> getDeclinedPRList();
+    public ArrayList<PullRequestDO> getAllPRList();
 
     public ArrayList<PullRequestDO> getMergedPRListByUsername(String username);
     public ArrayList<PullRequestDO> getOpenPRListByUsername(String username);
