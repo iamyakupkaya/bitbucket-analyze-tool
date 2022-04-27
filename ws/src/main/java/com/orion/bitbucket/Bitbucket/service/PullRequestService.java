@@ -1,4 +1,5 @@
 package com.orion.bitbucket.Bitbucket.service;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
@@ -29,6 +30,15 @@ public class PullRequestService extends BaseService implements PullRequestServic
 
    public ArrayList<PullRequestDO> getDeclinedPRList() {
       return this.declinedPRList;
+   }
+
+   // Not sure how it works :)))
+   public ArrayList<PullRequestDO> getAllPRList() {
+      this.allPRList = new ArrayList<PullRequestDO>();
+      allPRList.addAll(this.openPRList);
+      allPRList.addAll(this.mergedPRList);
+      allPRList.addAll(this.declinedPRList);
+      return this.allPRList;
    }
 
    public ArrayList<PullRequestDO> getMergedPRListByUsername(String username) {

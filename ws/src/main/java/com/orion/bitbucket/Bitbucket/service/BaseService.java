@@ -18,6 +18,7 @@ public class BaseService {
 	ArrayList<PullRequestDO> openPRList;
 	ArrayList<PullRequestDO> mergedPRList;
 	ArrayList<PullRequestDO> declinedPRList;
+	ArrayList<PullRequestDO> allPRList;
 
 	// TODO: BaseService için de bir interface olsun, yalnızca bu metot olsun.
 	public void getData() {
