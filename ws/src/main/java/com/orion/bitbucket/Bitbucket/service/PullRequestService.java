@@ -33,6 +33,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
    }
 
    // Not sure how it works :)))
+   // TODO: Discussion yapabiliriz bu metodun yaptigi burada mi olmali yoksa getData icerisinde mi yapilmali.
    public ArrayList<PullRequestDO> getAllPRList() {
       this.allPRList = new ArrayList<PullRequestDO>();
       allPRList.addAll(this.openPRList);
