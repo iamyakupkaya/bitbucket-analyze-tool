@@ -22,14 +22,14 @@ public class BaseService implements BaseServiceIF {
 
 	// Call this method while application is running at first time
 	public void getData() {
-			try{
-				this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
-				this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
-				this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
-			}
-			catch(Exception e){
+        try{
+			this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
+			this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
+			this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
+		}
+		catch(Exception e){
 			System.out.println(e);
-			}
+		}
 	}
 
 	public ArrayList<PullRequestDO> getPullRequestData(String url) throws UnirestException {
