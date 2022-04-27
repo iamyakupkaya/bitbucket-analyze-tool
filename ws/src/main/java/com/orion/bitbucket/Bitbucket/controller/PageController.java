@@ -17,7 +17,7 @@ public class PageController {
    
    @RequestMapping(value = "/", method = RequestMethod.GET)
    public String edit(Model model) throws  UnirestException {
-       service.getDataAll(); // Bu metot uygulamanin baslangicinda cagirilmali ki listeler doldurulsun. Hangi kisim ilk calisacaksa bu orada cagirilmali.
+       //service.getDataAll(); // Bu metot uygulamanin baslangicinda cagirilmali ki listeler doldurulsun. Hangi kisim ilk calisacaksa bu orada cagirilmali.
       //List<PullRequest> pullrequests = service.reportAll();
       //model.addAttribute("pr", new PullRequest());
       //model.addAttribute("pullrequests", pullrequests);
@@ -25,7 +25,7 @@ public class PageController {
    }
    
    @RequestMapping(value ="/api/web-controller/test/@username={userName}")
-   public String showAuthorDetails(Model model, @PathVariable(name = "userName", required = false) String userName) throws JsonSyntaxException, UnirestException{
+   public String showAuthorDetails(Model model, @PathVariable(name = "userName", required = false) String userName) throws UnirestException{
 	   // List<UserPrDetails> UserPrDetails = service.filterPRsByName(userName);
 	   // model.addAttribute("prId", new UserPrDetails());
 	   // model.addAttribute("UserPrDetails", UserPrDetails);

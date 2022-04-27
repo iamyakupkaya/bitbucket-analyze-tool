@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-
 @Service
 public class BaseService {
 
@@ -20,6 +19,7 @@ public class BaseService {
 	ArrayList<PullRequestDO> mergedPRList;
 	ArrayList<PullRequestDO> declinedPRList;
 
+	// TODO: BaseService için de bir interface olsun, yalnızca bu metot olsun.
 	public void getData() {
 			try{
 				this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
@@ -30,22 +30,19 @@ public class BaseService {
 			System.out.println(e);
 			}
 	}
-	
-	// takes a state input
-	public ArrayList<PullRequestDO> getPullRequestData(String state) throws UnirestException {
+
+	public ArrayList<PullRequestDO> getPullRequestData(String url) throws UnirestException {
 		ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
 
 		int start = 0;
 		boolean isLastPage = false;
 		while (!isLastPage) {
-			HttpResponse<JsonNode> httpResponse = response.getResponse(state + start, BitbucketConstants.Bearer.TOKEN);
+			HttpResponse<JsonNode> httpResponse = response.getResponse(url + start, BitbucketConstants.Bearer.TOKEN);
 			JSONObject body = httpResponse.getBody().getObject();
 			Object values = body.get("values");
 			JSONArray array = (JSONArray) values;
-			JSONObject object = null;
 			for (int i=0; i< array.length(); i++) {
-				object = array.getJSONObject(i);
-				list.add(commonDataParser(object)); // if you want change object with array.getjsonobject...
+				list.add(commonDataParser(array.getJSONObject(i)));
 			}
 			isLastPage = (boolean) body.get("isLastPage");
 			start += 100;
@@ -73,73 +70,6 @@ public class BaseService {
 		return new PullRequestDO(title, state, closed, updatedDate, createdDate, closedDate, displayName, slug);
 	}
 
-	public int getMergedPRCount() {
-		return this.mergedPRList.size();
-	}
-
-	public int getOpenPRCount() {
-		 return openPRList.size();
-	}
-
-	public int getDeclinedPRCount() {
-		 return declinedPRList.size();
-	}
-
-	public ArrayList<PullRequestDO> getMergedPRList() {
-		return this.mergedPRList;
-	}
-
-	public ArrayList<PullRequestDO> getOpenPRList() {
-		 return this.openPRList;
-	}
-
-	public ArrayList<PullRequestDO>  getDeclinedPRList() {
-		 return this.declinedPRList;
-	}
-
-	public ArrayList<PullRequestDO> getMergedPRListByUsername(String username) {
-		ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-		for (int i=0; i<this.mergedPRList.size(); i++) {
-			if (mergedPRList.get(i).getSlug().equals(username)) {
-				list.add(mergedPRList.get(i));
-			}
-		}
-		return list;
-	}
-
-	public ArrayList<PullRequestDO> getOpenPRListByUsername(String username) {
-		ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-		for (int i=0; i<this.openPRList.size(); i++) {
-			if (openPRList.get(i).getSlug().equals(username)) {
-				list.add(openPRList.get(i));
-			}
-		}
-		return list;
-	}
-
-	public ArrayList<PullRequestDO> getDeclinedPRListByUsername(String username) {
-		ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-		for (int i=0; i<this.declinedPRList.size(); i++) {
-			if (declinedPRList.get(i).getSlug().equals(username)) {
-				list.add(declinedPRList.get(i));
-			}
-		}
-		return list;
-	}
-
-	public int getMergedPRCountByUsername(String username) {
-		return getMergedPRListByUsername(username).size();
-	}
-
-	public int getOpenPRCountByUsername(String username) {
-		 return getOpenPRListByUsername(username).size();
-	}
-
-	public int getDeclinedPRCountByUsername(String username) {
-		return getDeclinedPRListByUsername(username).size();
-	}
-
-
 	private String convertDate(Long date) {
 		String pattern = "dd.MM.yyyy";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -147,7 +77,4 @@ public class BaseService {
 		return newDate;
 		
 	}
-
-	
-	
 }
