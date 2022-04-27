@@ -22,12 +22,24 @@ public class PullRequestService extends BaseService{
    }
 
    public ArrayList<PullRequestDO> mergedPRList(){
-      return this.getMergedPRList();
+      return this.mergedPRList;
     }
 
    public ArrayList<PullRequestDO> openPRList(){
      return this.getOpenPRList();
    }
+
+   public int getMergedPRCount() {
+		return getMergedPRList().size();
+	}
+
+	public int getOpenPRCount() {
+		 return getOpenPRList().size();
+	}
+
+	public int getDeclinedPRCount() {
+		 return getDeclinedPRList().size();
+	}
 
    public void getDataAll() {
       this.getData();

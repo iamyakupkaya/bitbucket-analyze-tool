@@ -41,15 +41,10 @@ public final class BitbucketConstants {
 		public static final String COUNT_OPEN_BY_USERNAME = "$..[?(@.state == 'OPEN')].author.user.displayName";
 		public static final String COUNT_MERGED_BY_USERNAME = "$..[?(@.state == 'MERGED')].author.user.displayName";
 		public static final String COUNT_DECLINED_BY_USERNAME = "$..[?(@.state == 'DECLINED')].author.user.displayName";
-		private static final String name = null;
-		public static final String jsonPathTitle = "$..[?(@.author.user.name =="+"'"+name+"')].title";
-		public static final String jsonPathStatus = "$..[?(@.author.user.name =="+"'"+name+"')].state";
-		public static final String jsonPathPrId = "$..[?(@.author.user.name =="+"'"+name+"')].id";
-		public static final String jsonPathPrDate = "$..[?(@.author.user.name =="+"'"+name+"')].createdDate";
-		
+
 		//public static final String FILTER_AUTHOR_PRS_TITLE = "$..[?(@.author.user.displayName == 'Shih, David')].title";
 		
-		public static final String PR_ID = "$.values.*.title";
+		
 		
 	}
 

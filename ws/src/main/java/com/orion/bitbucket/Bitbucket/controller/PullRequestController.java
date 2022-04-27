@@ -20,6 +20,10 @@ public class PullRequestController {
    // public String getOpenPullRequests() throws JsonSyntaxException, UnirestException {
    //    return pullRequestService.open();
    // }
+
+   public void getDataAll() {
+      pullRequestService.getData();
+   }
  
    
   
