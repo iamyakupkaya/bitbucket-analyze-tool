@@ -54,12 +54,12 @@
 						<th>Declined PRs</th>
 						<th>Open PRs</th>
 					</tr>
-					<tr th:each="pr : ${pullrequests}">
-						<td th:text="${pr.authorName}">Author Name</td>
-						<td th:text="${pr.total}">Pull requests</td>
-						<td th:text="${pr.mergedPRs}">Merged PRs</td>
-						<td th:text="${pr.declinedPRs}">Declined PRs</td>
-						<td th:text="${pr.openPRs}">Open PRs</td>
+					<tr th:each="tst : ${getAllAuthor}">
+						<td th:text="${tst.name}">Author Name</td>
+						<td th:text="${tst.totalPRs}">Pull requests</td>
+						<td th:text="${tst.totalMergedPRs}">Merged PRs</td>
+						<td th:text="${tst.totalOpenPRs}">Declined PRs</td>
+						<td th:text="${tst.totalDeclinedPRs}">Open PRs</td>
 					</tr>
 			</table>
 		</div>
