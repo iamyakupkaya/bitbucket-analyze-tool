@@ -1,7 +1,7 @@
 package com.orion.bitbucket.Bitbucket.service;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
+import java.util.List;
+import com.orion.bitbucket.Bitbucket.model.Authors;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,9 @@ public class PullRequestService extends BaseService implements PullRequestServic
    }
 
    // Not sure how it works :)))
-   // TODO: Discussion yapabiliriz bu metodun yaptigi burada mi olmali yoksa getData icerisinde mi yapilmali.
+   //
+   // TODO: Discussion yapabiliriz bu metodun yaptigi burada mi olmali yoksa
+   // getData icerisinde mi yapilmali.
    public ArrayList<PullRequestDO> getAllPRList() {
       this.allPRList = new ArrayList<PullRequestDO>();
       allPRList.addAll(this.openPRList);
@@ -44,8 +46,8 @@ public class PullRequestService extends BaseService implements PullRequestServic
 
    public ArrayList<PullRequestDO> getMergedPRListByUsername(String username) {
       ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-      for (int i=0; i<this.mergedPRList.size(); i++) {
-         if (mergedPRList.get(i).getSlug().equals(username)) {
+      for (int i = 0; i < this.mergedPRList.size(); i++) {
+         if (mergedPRList.get(i).getDisplayName().equals(username)) {
             list.add(mergedPRList.get(i));
          }
       }
@@ -54,8 +56,8 @@ public class PullRequestService extends BaseService implements PullRequestServic
 
    public ArrayList<PullRequestDO> getOpenPRListByUsername(String username) {
       ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-      for (int i=0; i<this.openPRList.size(); i++) {
-         if (openPRList.get(i).getSlug().equals(username)) {
+      for (int i = 0; i < this.openPRList.size(); i++) {
+         if (openPRList.get(i).getDisplayName().equals(username)) {
             list.add(openPRList.get(i));
          }
       }
@@ -64,8 +66,8 @@ public class PullRequestService extends BaseService implements PullRequestServic
 
    public ArrayList<PullRequestDO> getDeclinedPRListByUsername(String username) {
       ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-      for (int i=0; i<this.declinedPRList.size(); i++) {
-         if (declinedPRList.get(i).getSlug().equals(username)) {
+      for (int i = 0; i < this.declinedPRList.size(); i++) {
+         if (declinedPRList.get(i).getDisplayName().equals(username)) {
             list.add(declinedPRList.get(i));
          }
       }
@@ -84,17 +86,21 @@ public class PullRequestService extends BaseService implements PullRequestServic
       return getDeclinedPRListByUsername(username).size();
    }
 
-   /*
-   public void author() {
+   public List<Authors> getCountOfPrStatesOfAllAuthor() {
+      List<Authors> array = new ArrayList<Authors>();
       ArrayList<String> authorList = new ArrayList<String>();
-
-      yeni liste = mergedPRList+openPRList+declinedPRList
-      for (int i=0; i<yeniliste.size() i++) {
-         if (!authorlist.contains( yeni liste[i].displayName)) {
-            authorliste.add(yeniliste[i])
+      ArrayList<PullRequestDO> allPRs = getAllPRList();
+      for (int i = 0; i < allPRs.size(); i++) {
+         if (!authorList.contains(allPRs.get(i).getDisplayName())) {
+            authorList.add(allPRs.get(i).getDisplayName());
          }
       }
+      int total;
+      for (int i = 0; i < authorList.size(); i++) {
+         total = getMergedPRCountByUsername(authorList.get(i)) + getOpenPRCountByUsername(authorList.get(i)) + getDeclinedPRCountByUsername(authorList.get(i));
+         array.add(new Authors(authorList.get(i), total, getMergedPRCountByUsername(authorList.get(i)), getOpenPRCountByUsername(authorList.get(i)), getDeclinedPRCountByUsername(authorList.get(i))));
+      }
+      return array;
    }
-   */
-
+   
 }
