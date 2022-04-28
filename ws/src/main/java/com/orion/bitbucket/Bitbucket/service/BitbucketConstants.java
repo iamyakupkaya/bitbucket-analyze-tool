@@ -29,25 +29,6 @@ public final class BitbucketConstants {
 
 	}
 
-	public static final class JsonPaths {
-		private JsonPaths() {
-		}
-
-		public static final String PR_OWNERS = "$.values.*.author.user.displayName";
-		public static final String ALL_REVIEWERS = "$.values.*.reviewers.*.user.displayName";
-		public static final String PR_REVIEWERS = "$.reviewers.*.user.displayName";
-		public static final String PR_APPROVAL = "$.values.*.reviewers.*.approved";
-		public static final String IS_LAST_PAGE = "$.isLastPage";
-		public static final String COUNT_OPEN_BY_USERNAME = "$..[?(@.state == 'OPEN')].author.user.displayName";
-		public static final String COUNT_MERGED_BY_USERNAME = "$..[?(@.state == 'MERGED')].author.user.displayName";
-		public static final String COUNT_DECLINED_BY_USERNAME = "$..[?(@.state == 'DECLINED')].author.user.displayName";
-
-		//public static final String FILTER_AUTHOR_PRS_TITLE = "$..[?(@.author.user.displayName == 'Shih, David')].title";
-		
-		
-		
-	}
-
 	public static final class Bearer {
 		private Bearer() {
 		}
