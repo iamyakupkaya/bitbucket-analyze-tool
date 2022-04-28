@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.orion.bitbucket.Bitbucket.model.AuthorTotalPRs;
 import com.orion.bitbucket.Bitbucket.service.PullRequestService;
 
 @Controller
@@ -17,10 +18,18 @@ public class PageController {
    
    @RequestMapping(value = "/", method = RequestMethod.GET)
    public String edit(Model model) throws  UnirestException {
-       //service.getDataAll(); // Bu metot uygulamanin baslangicinda cagirilmali ki listeler doldurulsun. Hangi kisim ilk calisacaksa bu orada cagirilmali.
+       service.getData(); // Bu metot uygulamanin baslangicinda cagirilmali ki listeler doldurulsun. Hangi kisim ilk calisacaksa bu orada cagirilmali.
       //List<PullRequest> pullrequests = service.reportAll();
       //model.addAttribute("pr", new PullRequest());
       //model.addAttribute("pullrequests", pullrequests);
+      return "index.html";
+   }
+
+   @RequestMapping(value = "/test", method = RequestMethod.GET)
+   public String test(Model model) throws  UnirestException {
+      List<AuthorTotalPRs> getAllAuthor = service.getCountOfPrStatesOfAllAuthor();
+      model.addAttribute("tst", new AuthorTotalPRs());
+      model.addAttribute("getAllAuthor", getAllAuthor);
       return "index.html";
    }
    
