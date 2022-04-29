@@ -4,6 +4,8 @@ import java.util.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
+import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,14 +63,36 @@ public class BaseService implements BaseServiceIF {
 		long updatedDate = (long) object.get("updatedDate");
 		long createdDate = (long) object.get("createdDate");
 		long closedDate = (long) object.optLong("closedDate");
+		// author
 		JSONObject author = object.getJSONObject("author");
 		JSONObject user = author.getJSONObject("user");
 		String emailAddress = (String) user.optString("emailAddress");;
 		String displayName = (String) user.get("displayName");
 		String slug = (String) user.get("slug");
 		// Add to somewhere. Get just important data from object.
-		return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate,  emailAddress, displayName, slug);
+		// reviewers
+		ArrayList<ReviewerDO> reviewerList = new ArrayList<ReviewerDO>();
+		
+		JSONArray reviewer = object.getJSONArray("reviewers");
+		for(int i = 0 ; i <reviewer.length();i++){
+
+		JSONObject index = reviewer.getJSONObject(i);
+		JSONObject userReviwers = index.getJSONObject("user");	
+		
+		String reviewerDisplayName = (String) userReviwers.get("displayName");
+		String reviewerEmailAddress =  userReviwers.optString("emailAddress");
+		String reviewerLastReviewedCommit = object.optString("lastReviewedCommit");
+		boolean reviewerApproved= (boolean) object.optBoolean("approved");
+		String reviewerStatus= (String) object.optString("status");
+		reviewerList.add(new ReviewerDO(reviewerDisplayName, reviewerEmailAddress, reviewerLastReviewedCommit, reviewerApproved, reviewerStatus));
+
+		}
+		
+		System.out.println(reviewerList);
+		return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate,  emailAddress, displayName, slug, reviewerList);
 	}
+
+
 
 	private String convertDate(Long date) {
 		String pattern = "dd.MM.yyyy";
