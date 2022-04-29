@@ -12,7 +12,6 @@ public class PullRequestDO {
     private String emailAddress;
     private String displayName;
     private String slug;
-
     
     public PullRequestDO(String title, String state, boolean closed, String description, long updatedDate, long createdDate, long closedDate, String emailAddress, String displayName, String slug) {
         this.title = title;

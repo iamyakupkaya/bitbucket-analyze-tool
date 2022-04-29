@@ -22,13 +22,13 @@ public class BaseService implements BaseServiceIF {
 
 	// Call this method while application is running at first time
 	public void getData() {
-        try{
+        try {
 			this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
 			this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
 			this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
 			System.out.println("Bütün data yüklendi.");
 		}
-		catch(Exception e){
+		catch(Exception e) {
 			System.out.println(e);
 		}
 	}
@@ -74,6 +74,6 @@ public class BaseService implements BaseServiceIF {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String newDate = simpleDateFormat.format(date);
 		return newDate;
-		
 	}
+
 }
