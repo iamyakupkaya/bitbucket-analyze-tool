@@ -26,6 +26,7 @@ public class BaseService implements BaseServiceIF {
 			this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
 			this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
 			this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
+			System.out.println("Bütün data yüklendi.");
 		}
 		catch(Exception e){
 			System.out.println(e);
@@ -55,20 +56,17 @@ public class BaseService implements BaseServiceIF {
 		String title = (String) object.get("title");
 		String state = (String) object.get("state");
 		boolean closed = (boolean) object.get("closed");
-		// String description = (String) object.get("description");
+		String description = (String) object.optString("description");
 		long updatedDate = (long) object.get("updatedDate");
 		long createdDate = (long) object.get("createdDate");
-		long closedDate = 0;
-		if (closed) {
-			closedDate = (long) object.get("closedDate");
-		}
+		long closedDate = (long) object.optLong("closedDate");
 		JSONObject author = object.getJSONObject("author");
 		JSONObject user = author.getJSONObject("user");
-		// String emailAddress = (String) user.get("emailAddress");
+		String emailAddress = (String) user.optString("emailAddress");;
 		String displayName = (String) user.get("displayName");
 		String slug = (String) user.get("slug");
 		// Add to somewhere. Get just important data from object.
-		return new PullRequestDO(title, state, closed, updatedDate, createdDate, closedDate, displayName, slug);
+		return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate,  emailAddress, displayName, slug);
 	}
 
 	private String convertDate(Long date) {
