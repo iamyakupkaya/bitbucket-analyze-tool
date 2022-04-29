@@ -2,32 +2,49 @@ package com.orion.bitbucket.Bitbucket.model;
 
 public class ReviewerDO {
 	private String displayName;
-	private int approved;
-	private int unApproved;
-	
-	public ReviewerDO(String displayName, int approved, int unApproved) {
-		this.displayName = displayName;
-		this.approved = approved;
-		this.unApproved = unApproved;
-	}
-	
-	
-	public String getDisplayName() {
-		return displayName;
-	}
-	
+	private String emailAddress;
+	private String lastReviewedCommit;
+	private boolean approved;
+	private String status;
 
-	public int getApproved() {
+	public ReviewerDO(String displayName, String emailAddress, String lastReviewedCommit, boolean approved, String status){
+		this.displayName=displayName;
+		this.emailAddress=emailAddress;
+		this.lastReviewedCommit=lastReviewedCommit;
+		this.approved=approved;
+		this.status=status;
+	}
+
+
+	public String getDisplayName() {
+        return displayName;
+    }
+
+	public String getEmailAddress() {
+        return displayName;
+    }
+
+	public String getLastReviewedCommit(){
+		return lastReviewedCommit;
+	}
+
+	public boolean getApproved(){
 		return approved;
 	}
-	
-	public int getUnApproved() {
-		return unApproved;
-	}
-	public void setUnApproved(int unApproved) {
-		this.unApproved = unApproved;
-	}
-	
-	
 
+	public String getStatus(){
+		return status;
+	}
+
+
+	@Override
+    public String toString() {
+        return "ReviewerDO{" +
+                "displayName='" + displayName + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", lastReviewedCommit='" + lastReviewedCommit + '\'' +
+				", approved='" + approved + '\'' +
+				", status='" + status + '\'' +
+                '}';
+    }
 }
