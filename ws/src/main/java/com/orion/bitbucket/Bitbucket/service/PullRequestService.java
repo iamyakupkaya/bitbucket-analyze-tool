@@ -80,18 +80,4 @@ public class PullRequestService extends BaseService implements PullRequestServic
       return getDeclinedPRListByUsername(username).size();
    }
 
-   public ArrayList<String> getAllAuthor(){
-         ArrayList<String> authorList = new ArrayList<String>();
-         ArrayList<PullRequestDO> allPRs = getAllPRList();
-         for (int i = 0; i < allPRs.size(); i++) {
-            if (!authorList.contains(allPRs.get(i).getDisplayName())) {
-               authorList.add(allPRs.get(i).getDisplayName());
-            }
-         
-   }
-   return authorList;
-}
-
-   
-   
 }
