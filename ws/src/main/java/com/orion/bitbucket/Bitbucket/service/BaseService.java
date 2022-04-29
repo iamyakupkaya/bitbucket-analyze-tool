@@ -21,6 +21,7 @@ public class BaseService implements BaseServiceIF {
 	ArrayList<PullRequestDO> allPRList;
 
 	// Call this method while application is running at first time
+    // TODO At future, we have to apply multithreading in below
 	public void getData() {
         try {
 			this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
