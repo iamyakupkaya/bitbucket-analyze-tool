@@ -10,13 +10,13 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 @Service
 public class JsonResponse {
 
-   public HttpResponse<JsonNode> getResponse(String url, String token) throws UnirestException {
-      HttpResponse<JsonNode> response = Unirest.get(url)
-                                               .header("Accept", "application/json")
-                                               .header("Authorization", "Bearer " + token + "")
-                                               .asJson();
-      
-      return response;
-   }
+    public HttpResponse<JsonNode> getResponse(String url, String token) throws UnirestException {
+        HttpResponse<JsonNode> response = Unirest.get(url)
+                .header("Accept", "application/json")
+                .header("Authorization", "Bearer " + token + "")
+                .asJson();
+
+        return response;
+    }
 }
 

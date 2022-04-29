@@ -11,12 +11,12 @@ public class AuthorDO {
     public AuthorDO(String name, int totalPRs, int totalMergedPRs, int totalOpenPRs, int totalDeclinedPRs) {
         this.name = name;
         this.totalPRs = totalPRs;
-        this.totalMergedPRs=totalMergedPRs;
+        this.totalMergedPRs = totalMergedPRs;
         this.totalOpenPRs = totalOpenPRs;
         this.totalDeclinedPRs = totalDeclinedPRs;
     }
 
-    public AuthorDO(){
+    public AuthorDO() {
 
     }
 
@@ -25,22 +25,21 @@ public class AuthorDO {
         return name;
     }
 
-    public int getTotalPRs(){
+    public int getTotalPRs() {
         return totalPRs;
     }
 
-    public int getTotalMergedPRs(){
+    public int getTotalMergedPRs() {
         return totalMergedPRs;
     }
 
-    public int getTotalOpenPRs(){
+    public int getTotalOpenPRs() {
         return totalOpenPRs;
     }
 
-    public int getTotalDeclinedPRs(){
+    public int getTotalDeclinedPRs() {
         return totalDeclinedPRs;
     }
-
 
 
     @Override

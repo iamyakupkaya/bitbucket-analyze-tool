@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BitbucketApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BitbucketApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BitbucketApplication.class, args);
+    }
 }

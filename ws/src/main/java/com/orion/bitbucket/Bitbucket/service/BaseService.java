@@ -19,50 +19,49 @@ import java.util.ArrayList;
 @Service
 public class BaseService implements BaseServiceIF {
 
-	@Autowired
-	private JsonResponse response;
-	ArrayList<PullRequestDO> openPRList;
-	ArrayList<PullRequestDO> mergedPRList;
-	ArrayList<PullRequestDO> declinedPRList;
-	ArrayList<PullRequestDO> allPRList;
+    @Autowired
+    private JsonResponse response;
+    ArrayList<PullRequestDO> openPRList;
+    ArrayList<PullRequestDO> mergedPRList;
+    ArrayList<PullRequestDO> declinedPRList;
+    ArrayList<PullRequestDO> allPRList;
     ArrayList<BranchDO> branchList;
 
-	// Call this method while application is running at first time
+    // Call this method while application is running at first time
     // TODO At future, we have to apply multithreading in below
-	public void getData() {
+    public void getData() {
         try {
             Instant start = Instant.now();
-			this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
-			this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
-			this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
+            this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
+            this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
+            this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
             // this.branchList = getBranchData();
             Instant finish = Instant.now();
             Duration timeElapsed = Duration.between(start, finish);
             System.out.println("Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds() + " seconds.");
-		}
-		catch(Exception e) {
-			System.out.println(e);
-		}
-	}
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
-	public ArrayList<PullRequestDO> getPullRequestData(String url) throws UnirestException {
-		ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
+    public ArrayList<PullRequestDO> getPullRequestData(String url) throws UnirestException {
+        ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
 
-		int start = 0;
-		boolean isLastPage = false;
-		while (!isLastPage) {
-			HttpResponse<JsonNode> httpResponse = response.getResponse(url + start, BitbucketConstants.Bearer.TOKEN);
-			JSONObject body = httpResponse.getBody().getObject();
-			Object values = body.get("values");
-			JSONArray array = (JSONArray) values;
-			for (int i=0; i< array.length(); i++) {
-				list.add(commonPullRequestDataParser(array.getJSONObject(i)));
-			}
-			isLastPage = (boolean) body.get("isLastPage");
-			start += 100;
-		}
-		return list;
-	}
+        int start = 0;
+        boolean isLastPage = false;
+        while (!isLastPage) {
+            HttpResponse<JsonNode> httpResponse = response.getResponse(url + start, BitbucketConstants.Bearer.TOKEN);
+            JSONObject body = httpResponse.getBody().getObject();
+            Object values = body.get("values");
+            JSONArray array = (JSONArray) values;
+            for (int i = 0; i < array.length(); i++) {
+                list.add(commonPullRequestDataParser(array.getJSONObject(i)));
+            }
+            isLastPage = (boolean) body.get("isLastPage");
+            start += 100;
+        }
+        return list;
+    }
 
     public PullRequestDO commonPullRequestDataParser(JSONObject object) {
         String title = (String) object.get("title");
@@ -76,14 +75,15 @@ public class BaseService implements BaseServiceIF {
         // Author Information
         JSONObject author = object.getJSONObject("author");
         JSONObject user = author.getJSONObject("user");
-        String emailAddress = user.optString("emailAddress");;
+        String emailAddress = user.optString("emailAddress");
+        ;
         String displayName = (String) user.get("displayName");
         String slug = (String) user.get("slug");
 
         // Reviewer Information
         ArrayList<ReviewerDO> reviewerList = new ArrayList<ReviewerDO>();
         JSONArray reviewers = object.getJSONArray("reviewers");
-        for(int i = 0 ; i <reviewers.length(); i++) {
+        for (int i = 0; i < reviewers.length(); i++) {
             JSONObject reviewer = reviewers.getJSONObject(i);
             user = reviewer.getJSONObject("user");
             String reviewerDisplayName = (String) user.get("displayName");
@@ -92,7 +92,7 @@ public class BaseService implements BaseServiceIF {
             boolean reviewerApproved = reviewer.optBoolean("approved");
             reviewerList.add(new ReviewerDO(reviewerDisplayName, reviewerEmailAddress, status, reviewerApproved));
         }
-        return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate,  emailAddress, displayName, slug, reviewerList);
+        return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, reviewerList);
     }
 
     // TODO Branch url will be added onto constants, then we can call it while getting data
@@ -106,7 +106,7 @@ public class BaseService implements BaseServiceIF {
             JSONObject body = httpResponse.getBody().getObject();
             Object values = body.get("values");
             JSONArray array = (JSONArray) values;
-            for (int i=0; i< array.length(); i++) {
+            for (int i = 0; i < array.length(); i++) {
                 //list.add(commonBranchDataParser(array.getJSONObject(i)));
             }
             isLastPage = (boolean) body.get("isLastPage");
@@ -119,11 +119,11 @@ public class BaseService implements BaseServiceIF {
     public void commonBranchDataParser(JSONObject object) {
     }
 
-	private String convertDate(Long date) {
-		String pattern = "dd.MM.yyyy";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		String newDate = simpleDateFormat.format(date);
-		return newDate;
-	}
+    private String convertDate(Long date) {
+        String pattern = "dd.MM.yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String newDate = simpleDateFormat.format(date);
+        return newDate;
+    }
 
 }

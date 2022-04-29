@@ -1,9 +1,11 @@
 package com.orion.bitbucket.Bitbucket.service;
+
 import java.util.ArrayList;
+
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 
-public class AuthorService extends BaseService implements AuthorServiceIF{
+public class AuthorService extends BaseService implements AuthorServiceIF {
 
     private PullRequestService pullRequestService;
 
@@ -33,9 +35,9 @@ public class AuthorService extends BaseService implements AuthorServiceIF{
             merge = pullRequestService.getMergedPRCountByUsername(authorList.get(i));
             declined = pullRequestService.getDeclinedPRCountByUsername(authorList.get(i));
             open = pullRequestService.getOpenPRCountByUsername(authorList.get(i));
-            total =  merge + open + declined;
+            total = merge + open + declined;
             authorDOList.add(new AuthorDO(authorList.get(i), total, merge, open, declined));
         }
         return authorDOList;
-     }
+    }
 }

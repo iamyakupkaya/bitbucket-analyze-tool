@@ -17,8 +17,8 @@ public class PullRequestDO {
     private ArrayList<ReviewerDO> reviewerList;
 
     public PullRequestDO(String title, String state, boolean closed, String description, long updatedDate,
-            long createdDate, long closedDate, String emailAddress, String displayName, String slug,
-            ArrayList<ReviewerDO> reviewerList) {
+                         long createdDate, long closedDate, String emailAddress, String displayName, String slug,
+                         ArrayList<ReviewerDO> reviewerList) {
         this.title = title;
         this.state = state;
         this.closed = closed;
@@ -89,7 +89,7 @@ public class PullRequestDO {
                 ", emailAddress='" + emailAddress + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", slug='" + slug + '\'' +
-                ", Reviewers = {'" + reviewerList + "}"+'\'' +
+                ", Reviewers = {'" + reviewerList + "}" + '\'' +
                 '}';
     }
 }

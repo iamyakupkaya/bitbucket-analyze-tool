@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 
-public class ReviewerService extends BaseService implements ReviewerServiceIF{
+public class ReviewerService extends BaseService implements ReviewerServiceIF {
 
 
     public ArrayList<ReviewerDO> getMergedPRReviewList() {
@@ -24,7 +24,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF{
         // TODO Auto-generated method stub
         return null;
     }
-    
+
     // En fazla review yapan kisi
     // En fazla review edilen pull request
     // En fazla review edilen 5 pull request (gereksiz olabilir bu)
@@ -34,9 +34,9 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF{
     public ArrayList<PullRequestDO> getMergedPRListReviewedByUsername(String username) {
         ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
         ArrayList<PullRequestDO> mergedPRList = this.mergedPRList;
-        for (int i=0; i<mergedPRList.size(); i++) {
+        for (int i = 0; i < mergedPRList.size(); i++) {
             ArrayList<ReviewerDO> reviewers = mergedPRList.get(i).getReviewerList();
-            for (int j=0; j<reviewers.size(); j++) {
+            for (int j = 0; j < reviewers.size(); j++) {
                 if (reviewers.get(j).getDisplayName().equals(username)) {
                     list.add(mergedPRList.get(i));
                 }
@@ -81,6 +81,6 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF{
         // TODO Auto-generated method stub
         return null;
     }
-    
-    
+
+
 }
