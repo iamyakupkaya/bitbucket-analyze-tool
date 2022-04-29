@@ -14,13 +14,15 @@ public class PullRequestDO {
     private String slug;
 
     // description ve emailAddress eklenecek
-    public PullRequestDO(String title, String state, boolean closed, long updatedDate, long createdDate, long closedDate, String displayName, String slug) {
+    public PullRequestDO(String title, String state, boolean closed, String description, long updatedDate, long createdDate, long closedDate, String emailAddress, String displayName, String slug) {
         this.title = title;
         this.state = state;
         this.closed = closed;
+        this.description=description;
         this.updatedDate = updatedDate;
         this.createdDate = createdDate;
         this.closedDate = closedDate;
+        this.emailAddress=emailAddress;
         this.displayName = displayName;
         this.slug = slug;
     }
