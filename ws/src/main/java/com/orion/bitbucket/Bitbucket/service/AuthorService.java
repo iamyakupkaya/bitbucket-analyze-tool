@@ -10,6 +10,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF{
     public int getAuthorCount() {
         return getAllAuthor().size();
     }
+    
     public ArrayList<String> getAllAuthor() {
         ArrayList<String> authorList = new ArrayList<String>();
         ArrayList<PullRequestDO> allPRs = pullRequestService.getAllPRList();
