@@ -53,7 +53,7 @@ public class BaseService implements BaseServiceIF {
 			Object values = body.get("values");
 			JSONArray array = (JSONArray) values;
 			for (int i=0; i< array.length(); i++) {
-				list.add(commonDataParser(array.getJSONObject(i)));
+				list.add(commonPullRequestDataParser(array.getJSONObject(i)));
 			}
 			isLastPage = (boolean) body.get("isLastPage");
 			start += 100;
@@ -61,7 +61,7 @@ public class BaseService implements BaseServiceIF {
 		return list;
 	}
 
-	public PullRequestDO commonDataParser(JSONObject object) {
+	public PullRequestDO commonPullRequestDataParser(JSONObject object) {
 		String title = (String) object.get("title");
 		String state = (String) object.get("state");
 		boolean closed = (boolean) object.get("closed");
