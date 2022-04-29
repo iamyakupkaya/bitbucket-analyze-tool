@@ -72,6 +72,10 @@ public class PullRequestDO {
         return slug;
     }
 
+    public ArrayList<ReviewerDO> getReviewerList() {
+        return reviewerList;
+    }
+
     @Override
     public String toString() {
         return "PullRequestDO{" +

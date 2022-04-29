@@ -30,6 +30,7 @@ public class BaseService implements BaseServiceIF {
 			this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
 			this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
 			System.out.println("Bütün data yüklendi.");
+            // System.out.println(this.mergedPRList.get(10).toString());
 		}
 		catch(Exception e) {
 			System.out.println(e);
@@ -59,36 +60,29 @@ public class BaseService implements BaseServiceIF {
 		String title = (String) object.get("title");
 		String state = (String) object.get("state");
 		boolean closed = (boolean) object.get("closed");
-		String description = (String) object.optString("description");
+		String description = object.optString("description");
 		long updatedDate = (long) object.get("updatedDate");
 		long createdDate = (long) object.get("createdDate");
-		long closedDate = (long) object.optLong("closedDate");
-		// author
+		long closedDate = object.optLong("closedDate");
+
+        // author
 		JSONObject author = object.getJSONObject("author");
 		JSONObject user = author.getJSONObject("user");
-		String emailAddress = (String) user.optString("emailAddress");;
+		String emailAddress = user.optString("emailAddress");;
 		String displayName = (String) user.get("displayName");
 		String slug = (String) user.get("slug");
-		// Add to somewhere. Get just important data from object.
-		// reviewers
+
+        // reviewer
 		ArrayList<ReviewerDO> reviewerList = new ArrayList<ReviewerDO>();
-		
-		JSONArray reviewer = object.getJSONArray("reviewers");
-		for(int i = 0 ; i <reviewer.length();i++){
-
-		JSONObject index = reviewer.getJSONObject(i);
-		JSONObject userReviwers = index.getJSONObject("user");	
-		
-		String reviewerDisplayName = (String) userReviwers.get("displayName");
-		String reviewerEmailAddress =  userReviwers.optString("emailAddress");
-		String reviewerLastReviewedCommit = object.optString("lastReviewedCommit");
-		boolean reviewerApproved= (boolean) object.optBoolean("approved");
-		String reviewerStatus= (String) object.optString("status");
-		reviewerList.add(new ReviewerDO(reviewerDisplayName, reviewerEmailAddress, reviewerLastReviewedCommit, reviewerApproved, reviewerStatus));
-
+		JSONArray reviewers = object.getJSONArray("reviewers");
+		for(int i = 0 ; i <reviewers.length(); i++) {
+            JSONObject reviewer = reviewers.getJSONObject(i).getJSONObject("user");
+            String reviewerDisplayName = (String) reviewer.get("displayName");
+            String reviewerEmailAddress =  reviewer.optString("emailAddress");
+            String status =  reviewer.optString("status");
+            boolean reviewerApproved = object.optBoolean("approved");
+            reviewerList.add(new ReviewerDO(reviewerDisplayName, reviewerEmailAddress, status, reviewerApproved));
 		}
-		
-		System.out.println(reviewerList);
 		return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate,  emailAddress, displayName, slug, reviewerList);
 	}
 
