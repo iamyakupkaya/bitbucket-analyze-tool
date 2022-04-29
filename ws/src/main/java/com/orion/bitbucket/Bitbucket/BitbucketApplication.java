@@ -9,5 +9,4 @@ public class BitbucketApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BitbucketApplication.class, args);
 	}
-
 }
