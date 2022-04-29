@@ -30,7 +30,6 @@ public class BaseService implements BaseServiceIF {
 			this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
 			this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
 			System.out.println("Bütün data yüklendi.");
-            // System.out.println(this.mergedPRList.get(10).toString());
 		}
 		catch(Exception e) {
 			System.out.println(e);
@@ -65,22 +64,24 @@ public class BaseService implements BaseServiceIF {
 		long createdDate = (long) object.get("createdDate");
 		long closedDate = object.optLong("closedDate");
 
-        // author
+        // Author Information
 		JSONObject author = object.getJSONObject("author");
 		JSONObject user = author.getJSONObject("user");
 		String emailAddress = user.optString("emailAddress");;
 		String displayName = (String) user.get("displayName");
 		String slug = (String) user.get("slug");
 
-        // reviewer
+        // Reviewer Information
 		ArrayList<ReviewerDO> reviewerList = new ArrayList<ReviewerDO>();
 		JSONArray reviewers = object.getJSONArray("reviewers");
 		for(int i = 0 ; i <reviewers.length(); i++) {
-            JSONObject reviewer = reviewers.getJSONObject(i).getJSONObject("user");
-            String reviewerDisplayName = (String) reviewer.get("displayName");
-            String reviewerEmailAddress =  reviewer.optString("emailAddress");
+			
+            JSONObject reviewer = reviewers.getJSONObject(i);
+			JSONObject usertest = reviewer.getJSONObject("user");
+            String reviewerDisplayName = (String) usertest.get("displayName");
+            String reviewerEmailAddress =  usertest.optString("emailAddress");
             String status =  reviewer.optString("status");
-            boolean reviewerApproved = object.optBoolean("approved");
+            boolean reviewerApproved = reviewer.optBoolean("approved");
             reviewerList.add(new ReviewerDO(reviewerDisplayName, reviewerEmailAddress, status, reviewerApproved));
 		}
 		return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate,  emailAddress, displayName, slug, reviewerList);
