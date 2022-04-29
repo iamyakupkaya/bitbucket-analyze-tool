@@ -1,7 +1,5 @@
 package com.orion.bitbucket.Bitbucket.service;
 import java.util.ArrayList;
-import java.util.List;
-import com.orion.bitbucket.Bitbucket.model.Authors;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +30,6 @@ public class PullRequestService extends BaseService implements PullRequestServic
       return this.declinedPRList;
    }
 
-   // Not sure how it works :)))
-   //
-   // TODO: Discussion yapabiliriz bu metodun yaptigi burada mi olmali yoksa
-   // getData icerisinde mi yapilmali.
    public ArrayList<PullRequestDO> getAllPRList() {
       this.allPRList = new ArrayList<PullRequestDO>();
       allPRList.addAll(this.openPRList);
@@ -86,21 +80,18 @@ public class PullRequestService extends BaseService implements PullRequestServic
       return getDeclinedPRListByUsername(username).size();
    }
 
-   public List<Authors> getCountOfPrStatesOfAllAuthor() {
-      List<Authors> array = new ArrayList<Authors>();
-      ArrayList<String> authorList = new ArrayList<String>();
-      ArrayList<PullRequestDO> allPRs = getAllPRList();
-      for (int i = 0; i < allPRs.size(); i++) {
-         if (!authorList.contains(allPRs.get(i).getDisplayName())) {
-            authorList.add(allPRs.get(i).getDisplayName());
-         }
-      }
-      int total;
-      for (int i = 0; i < authorList.size(); i++) {
-         total = getMergedPRCountByUsername(authorList.get(i)) + getOpenPRCountByUsername(authorList.get(i)) + getDeclinedPRCountByUsername(authorList.get(i));
-         array.add(new Authors(authorList.get(i), total, getMergedPRCountByUsername(authorList.get(i)), getOpenPRCountByUsername(authorList.get(i)), getDeclinedPRCountByUsername(authorList.get(i))));
-      }
-      return array;
+   public ArrayList<String> getAllAuthor(){
+         ArrayList<String> authorList = new ArrayList<String>();
+         ArrayList<PullRequestDO> allPRs = getAllPRList();
+         for (int i = 0; i < allPRs.size(); i++) {
+            if (!authorList.contains(allPRs.get(i).getDisplayName())) {
+               authorList.add(allPRs.get(i).getDisplayName());
+            }
+         
    }
+   return authorList;
+}
+
+   
    
 }
