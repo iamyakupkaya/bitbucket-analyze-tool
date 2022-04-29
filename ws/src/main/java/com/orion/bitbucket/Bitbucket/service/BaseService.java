@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
+import com.orion.bitbucket.Bitbucket.model.BranchDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 
@@ -90,6 +91,25 @@ public class BaseService implements BaseServiceIF {
 		}
 		return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate,  emailAddress, displayName, slug, reviewerList);
 	}
+
+    public ArrayList<BranchDO> getBranchData(String url) throws UnirestException {
+        ArrayList<BranchDO> list = new ArrayList<BranchDO>();
+
+        int start = 0;
+        boolean isLastPage = false;
+        while (!isLastPage) {
+            HttpResponse<JsonNode> httpResponse = response.getResponse(url + start, BitbucketConstants.Bearer.TOKEN);
+            JSONObject body = httpResponse.getBody().getObject();
+            Object values = body.get("values");
+            JSONArray array = (JSONArray) values;
+            for (int i=0; i< array.length(); i++) {
+                //list.add(commonDataParser(array.getJSONObject(i)));
+            }
+            isLastPage = (boolean) body.get("isLastPage");
+            start += 100;
+        }
+        return list;
+    }
 
 	private String convertDate(Long date) {
 		String pattern = "dd.MM.yyyy";
