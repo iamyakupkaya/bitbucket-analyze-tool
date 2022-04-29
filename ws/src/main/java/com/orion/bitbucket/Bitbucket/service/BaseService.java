@@ -1,5 +1,7 @@
 package com.orion.bitbucket.Bitbucket.service;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -26,10 +28,13 @@ public class BaseService implements BaseServiceIF {
     // TODO At future, we have to apply multithreading in below
 	public void getData() {
         try {
+            Instant start = Instant.now();
 			this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
 			this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
 			this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
-			System.out.println("Bütün data yüklendi.");
+            Instant finish = Instant.now();
+            Duration timeElapsed = Duration.between(start, finish);
+            System.out.println("Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds() + " seconds.");
 		}
 		catch(Exception e) {
 			System.out.println(e);
@@ -75,19 +80,16 @@ public class BaseService implements BaseServiceIF {
 		ArrayList<ReviewerDO> reviewerList = new ArrayList<ReviewerDO>();
 		JSONArray reviewers = object.getJSONArray("reviewers");
 		for(int i = 0 ; i <reviewers.length(); i++) {
-			
             JSONObject reviewer = reviewers.getJSONObject(i);
-			JSONObject usertest = reviewer.getJSONObject("user");
-            String reviewerDisplayName = (String) usertest.get("displayName");
-            String reviewerEmailAddress =  usertest.optString("emailAddress");
-            String status =  reviewer.optString("status");
+			user = reviewer.getJSONObject("user");
+            String reviewerDisplayName = (String) user.get("displayName");
+            String reviewerEmailAddress = user.optString("emailAddress");
+            String status = reviewer.optString("status");
             boolean reviewerApproved = reviewer.optBoolean("approved");
             reviewerList.add(new ReviewerDO(reviewerDisplayName, reviewerEmailAddress, status, reviewerApproved));
 		}
 		return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate,  emailAddress, displayName, slug, reviewerList);
 	}
-
-
 
 	private String convertDate(Long date) {
 		String pattern = "dd.MM.yyyy";
