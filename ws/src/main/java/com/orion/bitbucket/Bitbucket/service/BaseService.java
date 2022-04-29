@@ -24,6 +24,7 @@ public class BaseService implements BaseServiceIF {
 	ArrayList<PullRequestDO> mergedPRList;
 	ArrayList<PullRequestDO> declinedPRList;
 	ArrayList<PullRequestDO> allPRList;
+    ArrayList<BranchDO> branchList;
 
 	// Call this method while application is running at first time
     // TODO At future, we have to apply multithreading in below
@@ -33,6 +34,7 @@ public class BaseService implements BaseServiceIF {
 			this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
 			this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
 			this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
+            // this.branchList = getBranchData();
             Instant finish = Instant.now();
             Duration timeElapsed = Duration.between(start, finish);
             System.out.println("Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds() + " seconds.");
@@ -92,6 +94,7 @@ public class BaseService implements BaseServiceIF {
 		return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate,  emailAddress, displayName, slug, reviewerList);
 	}
 
+    // TODO Branch url will be added onto constants, then we can call it while getting data
     public ArrayList<BranchDO> getBranchData(String url) throws UnirestException {
         ArrayList<BranchDO> list = new ArrayList<BranchDO>();
 
@@ -103,12 +106,16 @@ public class BaseService implements BaseServiceIF {
             Object values = body.get("values");
             JSONArray array = (JSONArray) values;
             for (int i=0; i< array.length(); i++) {
-                //list.add(commonDataParser(array.getJSONObject(i)));
+                //list.add(commonBranchDataParser(array.getJSONObject(i)));
             }
             isLastPage = (boolean) body.get("isLastPage");
             start += 100;
         }
         return list;
+    }
+
+    // TODO Below method will be modified for branch data
+    public void commonBranchDataParser(JSONObject object) {
     }
 
 	private String convertDate(Long date) {
