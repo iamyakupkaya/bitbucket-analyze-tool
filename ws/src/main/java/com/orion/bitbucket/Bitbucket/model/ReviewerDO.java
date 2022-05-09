@@ -18,7 +18,11 @@ public class ReviewerDO {
     }
 
     public String getEmailAddress() {
-        return displayName;
+        return emailAddress;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public boolean getApproved() {
