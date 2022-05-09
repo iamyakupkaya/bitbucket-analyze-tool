@@ -73,6 +73,7 @@ public class BaseService implements BaseServiceIF {
     }
 
     public PullRequestDO commonPullRequestDataParser(JSONObject object) {
+        int prId = (int) object.get("id");
         String title = (String) object.get("title");
         String state = (String) object.get("state");
         boolean closed = (boolean) object.get("closed");
@@ -101,7 +102,7 @@ public class BaseService implements BaseServiceIF {
             boolean reviewerApproved = reviewer.optBoolean("approved");
             reviewerList.add(new ReviewerDO(reviewerDisplayName, reviewerEmailAddress, status, reviewerApproved));
         }
-        return new PullRequestDO(title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, reviewerList);
+        return new PullRequestDO(prId, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, reviewerList);
     }
 
     // TODO Branch url will be added onto constants, then we can call it while getting data

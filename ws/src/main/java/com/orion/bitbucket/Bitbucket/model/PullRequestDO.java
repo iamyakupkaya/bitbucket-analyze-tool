@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class PullRequestDO {
 
+    private int prId;
     private String title;
     private String state;
     private boolean closed;
@@ -16,9 +17,10 @@ public class PullRequestDO {
     private String slug;
     private ArrayList<ReviewerDO> reviewerList;
 
-    public PullRequestDO(String title, String state, boolean closed, String description, long updatedDate,
+    public PullRequestDO(int prId, String title, String state, boolean closed, String description, long updatedDate,
                          long createdDate, long closedDate, String emailAddress, String displayName, String slug,
                          ArrayList<ReviewerDO> reviewerList) {
+        this.prId= prId;
         this.title = title;
         this.state = state;
         this.closed = closed;
@@ -30,6 +32,10 @@ public class PullRequestDO {
         this.displayName = displayName;
         this.slug = slug;
         this.reviewerList = reviewerList;
+    }
+
+    public int getPrId() {
+        return prId;
     }
 
     public String getTitle() {
@@ -79,7 +85,8 @@ public class PullRequestDO {
     @Override
     public String toString() {
         return "PullRequestDO{" +
-                "title='" + title + '\'' +
+                "id='" + prId + '\'' +
+                ", title='" + title + '\'' +
                 ", state='" + state + '\'' +
                 ", closed=" + closed +
                 ", description='" + description + '\'' +
