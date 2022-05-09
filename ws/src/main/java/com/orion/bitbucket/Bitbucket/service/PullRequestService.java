@@ -32,14 +32,6 @@ public class PullRequestService extends BaseService implements PullRequestServic
         return this.declinedPRList;
     }
 
-    public ArrayList<PullRequestDO> getAllPRList() {
-        this.allPRList = new ArrayList<PullRequestDO>();
-        allPRList.addAll(this.openPRList);
-        allPRList.addAll(this.mergedPRList);
-        allPRList.addAll(this.declinedPRList);
-        return this.allPRList;
-    }
-
     public ArrayList<PullRequestDO> getMergedPRListByUsername(String username) {
         ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
         for (int i = 0; i < this.mergedPRList.size(); i++) {

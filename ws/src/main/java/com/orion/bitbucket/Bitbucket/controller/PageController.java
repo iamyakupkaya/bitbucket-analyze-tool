@@ -1,5 +1,6 @@
 package com.orion.bitbucket.Bitbucket.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,18 @@ public class PageController {
 
     @Autowired
     private BaseServiceIF baseService;
+
+    @Autowired
     private PullRequestServiceIF pullRequestService;
+
+    @Autowired
     private AuthorServiceIF authorServiceIF;
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String edit(Model model) throws UnirestException {
         baseService.getData(); // Bu metot uygulamanin baslangicinda cagirilmali ki listeler doldurulsun. Hangi kisim ilk calisacaksa bu orada cagirilmali.
+        //List<AuthorDO> getAllAuthor = authorServiceIF.getCountOfPrStatesOfAllAuthor();
         //List<PullRequest> pullrequests = service.reportAll();
         //model.addAttribute("pr", new PullRequest());
         //model.addAttribute("pullrequests", pullrequests);
@@ -34,6 +41,7 @@ public class PageController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test(Model model) throws UnirestException {
+        int pr = pullRequestService.getMergedPRCount();
         List<AuthorDO> getAllAuthor = authorServiceIF.getCountOfPrStatesOfAllAuthor();
         model.addAttribute("tst", new AuthorDO());
         model.addAttribute("getAllAuthor", getAllAuthor);
