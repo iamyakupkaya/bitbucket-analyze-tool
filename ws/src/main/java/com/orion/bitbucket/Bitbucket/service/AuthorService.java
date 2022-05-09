@@ -4,10 +4,14 @@ import java.util.ArrayList;
 
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthorService extends BaseService implements AuthorServiceIF {
 
-    private PullRequestService pullRequestService;
+    @Autowired
+    private PullRequestServiceIF pullRequestServiceIF;
 
     public int getAuthorCount() {
         return getAllAuthor().size();
@@ -15,10 +19,10 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
 
     public ArrayList<String> getAllAuthor() {
         ArrayList<String> authorList = new ArrayList<String>();
-        ArrayList<PullRequestDO> allPRs = pullRequestService.getAllPRList();
-        for (int i = 0; i < allPRs.size(); i++) {
-            if (!authorList.contains(allPRs.get(i).getDisplayName())) {
-                authorList.add(allPRs.get(i).getDisplayName());
+        //ArrayList<PullRequestDO> allPRs = this.allPRList;
+        for (int i = 0; i < this.allPRList.size(); i++) {
+            if (!authorList.contains(this.allPRList.get(i).getDisplayName())) {
+                authorList.add(this.allPRList.get(i).getDisplayName());
             }
         }
         return authorList;
@@ -32,9 +36,9 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         int declined = 0;
         int open = 0;
         for (int i = 0; i < authorList.size(); i++) {
-            merge = pullRequestService.getMergedPRCountByUsername(authorList.get(i));
-            declined = pullRequestService.getDeclinedPRCountByUsername(authorList.get(i));
-            open = pullRequestService.getOpenPRCountByUsername(authorList.get(i));
+            merge = pullRequestServiceIF.getMergedPRCountByUsername(authorList.get(i));
+            declined = pullRequestServiceIF.getDeclinedPRCountByUsername(authorList.get(i));
+            open = pullRequestServiceIF.getOpenPRCountByUsername(authorList.get(i));
             total = merge + open + declined;
             authorDOList.add(new AuthorDO(authorList.get(i), total, merge, open, declined));
         }
