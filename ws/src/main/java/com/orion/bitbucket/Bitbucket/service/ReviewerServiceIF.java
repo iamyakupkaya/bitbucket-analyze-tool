@@ -33,4 +33,6 @@ public interface ReviewerServiceIF {
 
     public HashMap getTopReviewer();
 
+    public ArrayList<ReviewerDO> getAllReview();
+
 }
