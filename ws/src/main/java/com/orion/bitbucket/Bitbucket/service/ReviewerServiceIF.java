@@ -1,6 +1,7 @@
 package com.orion.bitbucket.Bitbucket.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
@@ -30,5 +31,6 @@ public interface ReviewerServiceIF {
 
     public ArrayList<ReviewerDO> getReviewersByPRId(int id);
 
+    public HashMap getTopReviewer();
 
 }
