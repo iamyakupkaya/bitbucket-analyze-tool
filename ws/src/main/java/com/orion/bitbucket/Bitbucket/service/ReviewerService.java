@@ -1,6 +1,13 @@
 package com.orion.bitbucket.Bitbucket.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
@@ -21,7 +28,6 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
             list.add(new ReviewerDO(reviewers.get(j).getDisplayName(), reviewers.get(j).getEmailAddress(), reviewers.get(j).getStatus(), reviewers.get(j).getApproved()));
           }
         }
-        System.out.println(list);
         return list;
     }
 
@@ -35,7 +41,6 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
             list.add(new ReviewerDO(reviewers.get(j).getDisplayName(), reviewers.get(j).getEmailAddress(), reviewers.get(j).getStatus(), reviewers.get(j).getApproved()));
           }
         }
-        System.out.println(list);
         return list;
     }
 
@@ -49,7 +54,6 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
             list.add(new ReviewerDO(reviewers.get(j).getDisplayName(), reviewers.get(j).getEmailAddress(), reviewers.get(j).getStatus(), reviewers.get(j).getApproved()));
           }
         }
-        System.out.println(list);
         return list;
     }
     // En fazla review yapan kisi
@@ -59,18 +63,31 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         allReviewer.addAll(getMergedPRReviewList());
         allReviewer.addAll(getOpenPRReviewList());
         allReviewer.addAll(getDeclinedPRReviewList());
-
         return allReviewer;
     }
 
-
-
-    public String getTopReviewer(){
-
-
-        return null;
+    public HashMap getTopReviewer(){
+        ArrayList<ReviewerDO> allReviewer = getAllReview();
+        ArrayList<String> allReviewerDisplayName = new ArrayList<String>();
+        for(int i = 0; i < allReviewer.size(); i++) {
+            allReviewerDisplayName.add(allReviewer.get(i).getDisplayName());
+        }
+        String topReviewerDisplayName = count(allReviewerDisplayName).entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
+        long topReviewerCount = count(allReviewerDisplayName).entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getValue();
+        HashMap topReviewer = new HashMap<>();
+        topReviewer.put(topReviewerDisplayName, topReviewerCount);
+        return topReviewer;
     }
+    
 
+    @SuppressWarnings("unchecked")
+	public <T> Map<T, Long> count(List<T> inputList) {
+		return (Map<T, Long>) inputList.stream().collect(Collectors.groupingBy(new Function<Object, Object>() {
+			public Object apply(Object k) {
+				return k;
+			}
+		}, Collectors.counting()));
+	}
   
     // En fazla review edilen pull request
     // En fazla review edilen 5 pull request (gereksiz olabilir bu)
@@ -137,8 +154,6 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         return this.getDeclinedPRListReviewedByUsername(username).size();
     }
 
-
-    
     public ArrayList<ReviewerDO> getReviewersByPRId(int id) {
         ArrayList<PullRequestDO> allPR = this.allPRList;
         ArrayList<ReviewerDO> getReviewerWithPrId = new ArrayList<ReviewerDO>();
