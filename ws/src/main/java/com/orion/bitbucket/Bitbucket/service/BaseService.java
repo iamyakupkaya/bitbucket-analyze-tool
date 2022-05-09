@@ -21,11 +21,11 @@ public class BaseService implements BaseServiceIF {
 
     @Autowired
     private JsonResponse response;
-    ArrayList<PullRequestDO> openPRList;
-    ArrayList<PullRequestDO> mergedPRList;
-    ArrayList<PullRequestDO> declinedPRList;
-    ArrayList<PullRequestDO> allPRList;
-    ArrayList<BranchDO> branchList;
+    static ArrayList<PullRequestDO> openPRList;
+    static ArrayList<PullRequestDO> mergedPRList;
+    static ArrayList<PullRequestDO> declinedPRList;
+    static ArrayList<PullRequestDO> allPRList;
+    static ArrayList<BranchDO> branchList;
 
     // Call this method while application is running at first time
     // TODO At future, we have to apply multithreading in below
@@ -39,9 +39,18 @@ public class BaseService implements BaseServiceIF {
             Instant finish = Instant.now();
             Duration timeElapsed = Duration.between(start, finish);
             System.out.println("Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds() + " seconds.");
+            createAllPRList(); // TODO: eski yerine alinabilir?
+
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    public void createAllPRList() {
+        this.allPRList = new ArrayList<PullRequestDO>();
+        allPRList.addAll(this.openPRList);
+        allPRList.addAll(this.mergedPRList);
+        allPRList.addAll(this.declinedPRList);
     }
 
     public ArrayList<PullRequestDO> getPullRequestData(String url) throws UnirestException {
@@ -125,5 +134,4 @@ public class BaseService implements BaseServiceIF {
         String newDate = simpleDateFormat.format(date);
         return newDate;
     }
-
 }
