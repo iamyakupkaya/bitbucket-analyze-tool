@@ -17,15 +17,15 @@ public interface ReviewerServiceIF {
 
     public ArrayList<PullRequestDO> getMergedPRListReviewedByUsername(String username);
 
-    public ArrayList<ReviewerDO> getOpenPRReviewListByUsername(String username);
+    public ArrayList<PullRequestDO> getOpenPRListReviewedByUsername(String username);
 
-    public ArrayList<ReviewerDO> getDeclinedPRReviewListByUsername(String username);
+    public ArrayList<PullRequestDO> getDeclinedPRListReviewedByUsername(String username);
 
     public int getMergedPRCountReviewedByUsername(String username);
 
-    public int getOpenPRReviewCountByUsername(String username);
+    public int getOpenPRCountReviewedByUsername(String username);
 
-    public int getDeclinedPRReviewCountByUsername(String username);
+    public int getDeclinedPRCountReviewedByUsername(String username);
 
 
     public ArrayList<ReviewerDO> getReviewersByPRId(int id);
