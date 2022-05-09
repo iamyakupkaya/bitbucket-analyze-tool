@@ -140,8 +140,16 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
 
     
     public ArrayList<ReviewerDO> getReviewersByPRId(int id) {
-        // TODO Auto-generated method stub
-        return null;
+        ArrayList<PullRequestDO> allPR = this.allPRList;
+        ArrayList<ReviewerDO> getReviewerWithPrId = new ArrayList<ReviewerDO>();
+        for (int i = 0; i < allPR.size(); i++){
+            if(allPR.get(i).getPrId() == id){
+                getReviewerWithPrId.addAll(allPR.get(i).getReviewerList());
+                break;
+            }
+        }
+        return getReviewerWithPrId;
+      
     }
     
 
