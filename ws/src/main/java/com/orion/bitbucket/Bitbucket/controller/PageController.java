@@ -1,6 +1,5 @@
 package com.orion.bitbucket.Bitbucket.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
 import com.orion.bitbucket.Bitbucket.service.AuthorServiceIF;
 import com.orion.bitbucket.Bitbucket.service.BaseServiceIF;
-import com.orion.bitbucket.Bitbucket.service.PullRequestService;
 import com.orion.bitbucket.Bitbucket.service.PullRequestServiceIF;
 
 @Controller
@@ -39,13 +37,12 @@ public class PageController {
         return "index.html";
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    @RequestMapping(value = "/pullRequest-table", method = RequestMethod.GET)
     public String test(Model model) throws UnirestException {
-        int pr = pullRequestService.getMergedPRCount();
         List<AuthorDO> getAllAuthor = authorServiceIF.getCountOfPrStatesOfAllAuthor();
         model.addAttribute("tst", new AuthorDO());
         model.addAttribute("getAllAuthor", getAllAuthor);
-        return "index.html";
+        return "pullRequest-table.html";
     }
 
     @RequestMapping(value = "/api/web-controller/test/@username={userName}")
