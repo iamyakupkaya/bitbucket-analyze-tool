@@ -39,7 +39,7 @@ public class BaseService implements BaseServiceIF {
             Instant finish = Instant.now();
             Duration timeElapsed = Duration.between(start, finish);
             System.out.println("Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds() + " seconds.");
-            createAllPRList(); // TODO: eski yerine alinabilir?
+            createAllPRList();
 
         } catch (Exception e) {
             System.out.println(e);
