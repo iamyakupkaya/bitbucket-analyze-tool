@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public interface PullRequestServiceIF {
 
+    public int getAllPRCount();
+
     public int getMergedPRCount();
 
     public int getOpenPRCount();

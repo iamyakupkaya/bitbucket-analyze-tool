@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class PullRequestService extends BaseService implements PullRequestServiceIF {
 
+    public int getAllPRCount() {
+        return getMergedPRCount() + getOpenPRCount() + getDeclinedPRCount();
+    }
+
     public int getMergedPRCount() {
         return this.mergedPRList.size();
     }
