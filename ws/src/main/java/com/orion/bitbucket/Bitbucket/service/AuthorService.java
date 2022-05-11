@@ -1,9 +1,9 @@
 package com.orion.bitbucket.Bitbucket.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
-import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,6 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
 
     public ArrayList<String> getAllAuthor() {
         ArrayList<String> authorList = new ArrayList<String>();
-        //ArrayList<PullRequestDO> allPRs = this.allPRList;
         for (int i = 0; i < this.allPRList.size(); i++) {
             if (!authorList.contains(this.allPRList.get(i).getDisplayName())) {
                 authorList.add(this.allPRList.get(i).getDisplayName());
@@ -44,4 +43,18 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         }
         return authorDOList;
     }
+
+
+    public HashMap getTopAuthor() {
+        ArrayList<String> allAuthorDisplayName = new ArrayList<String>();
+        for (int i = 0; i < this.allPRList.size(); i++) {
+            allAuthorDisplayName.add(this.allPRList.get(i).getDisplayName());
+        }
+     String topAuthorDisplayName = Helper.count(allAuthorDisplayName).entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
+     long topAuthorCount = Helper.count(allAuthorDisplayName).entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getValue();
+     HashMap topAuthor = new HashMap<>();
+     topAuthor.put(topAuthorDisplayName, topAuthorCount);
+     return topAuthor;
+    }
+
 }
