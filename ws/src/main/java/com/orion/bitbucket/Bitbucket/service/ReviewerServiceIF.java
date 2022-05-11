@@ -35,4 +35,10 @@ public interface ReviewerServiceIF {
 
     public ArrayList<ReviewerDO> getAllReview();
 
+    public ArrayList<String> getAllReviewer();
+
+    public int getAllReviewerCount();
+    
+    public int getAllReviewCount();
+
 }

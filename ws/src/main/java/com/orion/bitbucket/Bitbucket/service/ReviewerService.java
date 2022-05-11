@@ -9,7 +9,31 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReviewerService extends BaseService implements ReviewerServiceIF {
 
+    public ArrayList<String> getAllReviewer() {
+        ArrayList<String> reviewerList = new ArrayList<String>();
+        for (int i = 0; i < getAllReview().size(); i++) {
+            if (!reviewerList.contains(getAllReview().get(i).getDisplayName())) {
+                reviewerList.add(getAllReview().get(i).getDisplayName());
+            }
+        }
+        return reviewerList;
+    }
 
+    public int getAllReviewerCount() {
+        return getAllReviewer().size();
+    }
+
+    public ArrayList<ReviewerDO> getAllReview() {
+        ArrayList<ReviewerDO> allReviewer = new ArrayList<ReviewerDO>();
+        allReviewer.addAll(getMergedPRReviewList());
+        allReviewer.addAll(getOpenPRReviewList());
+        allReviewer.addAll(getDeclinedPRReviewList());
+        return allReviewer;
+    }
+
+    public int getAllReviewCount() {
+        return getAllReview().size();
+    }
 
     public ArrayList<ReviewerDO> getMergedPRReviewList() {
         ArrayList<ReviewerDO> list = new ArrayList<ReviewerDO>();
@@ -49,13 +73,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         return list;
     }
     
-    public ArrayList<ReviewerDO> getAllReview() {
-        ArrayList<ReviewerDO> allReviewer = new ArrayList<ReviewerDO>();
-        allReviewer.addAll(getMergedPRReviewList());
-        allReviewer.addAll(getOpenPRReviewList());
-        allReviewer.addAll(getDeclinedPRReviewList());
-        return allReviewer;
-    }
+   
 
     // En fazla review edilen pull request
     // En fazla review edilen 5 pull request (gereksiz olabilir bu)
