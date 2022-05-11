@@ -44,4 +44,8 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         }
         return authorDOList;
     }
+
+    public int getAllAuthorCount(){
+        return getAllAuthor().size();
+    }
 }
