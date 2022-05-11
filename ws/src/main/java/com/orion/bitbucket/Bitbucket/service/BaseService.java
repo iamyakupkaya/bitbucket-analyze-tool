@@ -86,7 +86,6 @@ public class BaseService implements BaseServiceIF {
         JSONObject author = object.getJSONObject("author");
         JSONObject user = author.getJSONObject("user");
         String emailAddress = user.optString("emailAddress");
-        ;
         String displayName = (String) user.get("displayName");
         String slug = (String) user.get("slug");
 

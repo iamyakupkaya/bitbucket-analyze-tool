@@ -1,6 +1,8 @@
 package com.orion.bitbucket.Bitbucket.service;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 
@@ -93,7 +95,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         return list;
     }
 
-    public HashMap getTopReviewer() {
+    public Map<String, Long> getTopReviewer() {
         ArrayList<ReviewerDO> allReviewer = getAllReview();
         ArrayList<String> allReviewerDisplayName = new ArrayList<String>();
         for (int i = 0; i < allReviewer.size(); i++) {
@@ -101,7 +103,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         }
         String topReviewerDisplayName = Helper.count(allReviewerDisplayName).entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
         long topReviewerCount = Helper.count(allReviewerDisplayName).entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getValue();
-        HashMap topReviewer = new HashMap<>();
+        Map<String, Long> topReviewer = new HashMap<>();
         topReviewer.put(topReviewerDisplayName, topReviewerCount);
         return topReviewer;
     }
