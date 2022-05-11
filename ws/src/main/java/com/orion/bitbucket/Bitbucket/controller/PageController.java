@@ -37,12 +37,12 @@ public class PageController {
         return "index.html";
     }
 
-    @RequestMapping(value = "/pullRequest-table", method = RequestMethod.GET)
-    public String test(Model model) throws UnirestException {
+    @RequestMapping(value = "/pull-requests", method = RequestMethod.GET)
+    public String getPullRequestsPage(Model model) throws UnirestException {
         List<AuthorDO> getAllAuthor = authorServiceIF.getCountOfPrStatesOfAllAuthor();
-        model.addAttribute("tst", new AuthorDO());
-        model.addAttribute("getAllAuthor", getAllAuthor);
-        return "pullRequest-table.html";
+        model.addAttribute("author", new AuthorDO());
+        model.addAttribute("authors", getAllAuthor);
+        return "pull-requests.html";
     }
 
     @RequestMapping(value = "/api/web-controller/test/@username={userName}")
