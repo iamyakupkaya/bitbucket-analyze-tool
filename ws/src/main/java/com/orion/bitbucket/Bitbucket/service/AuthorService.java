@@ -2,6 +2,7 @@ package com.orion.bitbucket.Bitbucket.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +46,14 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
     }
 
 
-    public HashMap getTopAuthor() {
+    public Map<String, Long> getTopAuthor() {
         ArrayList<String> allAuthorDisplayName = new ArrayList<String>();
         for (int i = 0; i < this.allPRList.size(); i++) {
             allAuthorDisplayName.add(this.allPRList.get(i).getDisplayName());
         }
      String topAuthorDisplayName = Helper.count(allAuthorDisplayName).entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
      long topAuthorCount = Helper.count(allAuthorDisplayName).entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getValue();
-     HashMap topAuthor = new HashMap<>();
+     Map<String, Long> topAuthor = new HashMap<>();
      topAuthor.put(topAuthorDisplayName, topAuthorCount);
      return topAuthor;
     }

@@ -1,7 +1,7 @@
 package com.orion.bitbucket.Bitbucket.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
 
@@ -13,6 +13,6 @@ public interface AuthorServiceIF {
 
     public ArrayList<String> getAllAuthor();
 
-    public HashMap getTopAuthor();
+    public Map<String, Long> getTopAuthor();
 
 }
