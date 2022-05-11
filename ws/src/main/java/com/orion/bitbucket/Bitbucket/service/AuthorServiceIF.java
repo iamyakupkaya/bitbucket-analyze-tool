@@ -12,6 +12,4 @@ public interface AuthorServiceIF {
 
     public ArrayList<String> getAllAuthor();
 
-    public int getAllAuthorCount();
-
 }
