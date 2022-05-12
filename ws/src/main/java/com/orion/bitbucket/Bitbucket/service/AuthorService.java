@@ -45,6 +45,16 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         return authorDOList;
     }
 
+    public ArrayList<AuthorDO> getCountOfPrStatesWithDisplayName(String name) {
+        ArrayList<AuthorDO> authorDOList = getCountOfPrStatesOfAllAuthor();
+        ArrayList<AuthorDO> authorDO = new ArrayList<AuthorDO>();
+        for (int i = 0; i < authorDOList.size(); i++) {
+            if (authorDOList.get(i).getName().toString().equals(name)) {
+                authorDO.add(new AuthorDO(authorDOList.get(i).getName(),authorDOList.get(i).getTotalPRs(),authorDOList.get(i).getTotalMergedPRs(),authorDOList.get(i).getTotalOpenPRs(),authorDOList.get(i).getTotalDeclinedPRs()));
+            }
+        }
+        return authorDO;
+    }
 
     public Map<String, Long> getTopAuthor() {
         ArrayList<String> allAuthorDisplayName = new ArrayList<String>();
@@ -57,5 +67,6 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
      topAuthor.put(topAuthorDisplayName, topAuthorCount);
      return topAuthor;
     }
+
 
 }

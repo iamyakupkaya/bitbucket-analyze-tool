@@ -11,6 +11,8 @@ public interface AuthorServiceIF {
 
     public ArrayList<AuthorDO> getCountOfPrStatesOfAllAuthor();
 
+    public ArrayList<AuthorDO> getCountOfPrStatesWithDisplayName(String displayName);
+
     public ArrayList<String> getAllAuthor();
 
     public Map<String, Long> getTopAuthor();
