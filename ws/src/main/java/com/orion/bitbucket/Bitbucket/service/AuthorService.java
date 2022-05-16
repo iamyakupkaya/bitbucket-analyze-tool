@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthorService extends BaseService implements AuthorServiceIF {
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	//@Autowired
+	//private JdbcTemplate jdbcTemplate;
 	
     @Autowired
     private PullRequestServiceIF pullRequestServiceIF;
@@ -32,11 +32,11 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             if (!authorList.contains(this.allPRList.get(i).getDisplayName())) {
                 authorList.add(this.allPRList.get(i).getDisplayName());
                 String sql = "INSERT INTO review (name)" +" VALUES ('"+this.allPRList.get(i).getDisplayName()+"')";
-                int rows = jdbcTemplate.update(sql);
+                //int rows = jdbcTemplate.update(sql);
                
-                if(rows > 0) {
-                	System.out.println("Succes.");
-                }
+                //if(rows > 0) {
+               // 	System.out.println("Succes.");
+               // }
             }
         }
         

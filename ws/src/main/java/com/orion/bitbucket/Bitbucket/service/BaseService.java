@@ -3,6 +3,8 @@ package com.orion.bitbucket.Bitbucket.service;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
+import com.orion.bitbucket.Bitbucket.dbc.DatabaseManager;
 import com.orion.bitbucket.Bitbucket.model.BranchDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO;
@@ -11,6 +13,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -27,6 +30,10 @@ public class BaseService implements BaseServiceIF {
     static ArrayList<PullRequestDO> allPRList;
     static ArrayList<BranchDO> branchList;
 
+    private boolean isDebug = false;
+
+    private final String SQL_INSERT_PULL_REQUEST = "INSERT INTO PULL_REQUEST VALUES({}, {})";
+
     // Call this method while application is running at first time
     // TODO At future, we have to apply multithreading in below
     public void getData() {
@@ -35,12 +42,10 @@ public class BaseService implements BaseServiceIF {
             this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
             this.mergedPRList = getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
             this.declinedPRList = getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
-            // this.branchList = getBranchData();
             Instant finish = Instant.now();
             Duration timeElapsed = Duration.between(start, finish);
             System.out.println("Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds() + " seconds.");
             createAllPRList();
-
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -101,7 +106,31 @@ public class BaseService implements BaseServiceIF {
             boolean reviewerApproved = reviewer.optBoolean("approved");
             reviewerList.add(new ReviewDO(reviewerDisplayName, reviewerEmailAddress, status, reviewerApproved));
         }
-        return new PullRequestDO(prId, title, state, closed, description, updatedDate, convertDate(createdDate), convertDate(closedDate), emailAddress, displayName, slug, reviewerList);
+        return new PullRequestDO(prId, title, state, closed, description, updatedDate, convertDate(createdDate), convertDate(closedDate), emailAddress, displayName, slug, reviewerList); // insertPullRequest();
+    }
+
+    public void insertPullRequest() throws SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(DBConstants.getConnectionURL(), DBConstants.getDBUsername(), DBConstants.getDBPassword());
+            connection.setAutoCommit(false);
+            if (isDebug) {
+                System.out.println("Opened database successfully");
+            }
+            statement = connection.createStatement();
+            String sql = SQL_INSERT_PULL_REQUEST;
+            statement.executeUpdate(sql);
+            statement.close();
+            connection.commit();
+        } catch (Exception e) {
+            System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+            System.exit(0);
+        }
+        finally {
+            connection.close();
+        }
     }
 
     // TODO Branch url will be added onto constants, then we can call it while getting data
