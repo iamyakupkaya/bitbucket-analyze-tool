@@ -10,16 +10,16 @@ public class PullRequestDO {
     private boolean closed;
     private String description;
     private long updatedDate;
-    private long createdDate;
-    private long closedDate;
+    private String createdDate;
+    private String closedDate;
     private String emailAddress;
     private String displayName;
     private String slug;
-    private ArrayList<ReviewerDO> reviewerList;
+    private ArrayList<ReviewDO> reviewerList;
 
     public PullRequestDO(int prId, String title, String state, boolean closed, String description, long updatedDate,
-                         long createdDate, long closedDate, String emailAddress, String displayName, String slug,
-                         ArrayList<ReviewerDO> reviewerList) {
+    String createdDate, String closedDate, String emailAddress, String displayName, String slug,
+                         ArrayList<ReviewDO> reviewerList) {
         this.prId= prId;
         this.title = title;
         this.state = state;
@@ -32,6 +32,10 @@ public class PullRequestDO {
         this.displayName = displayName;
         this.slug = slug;
         this.reviewerList = reviewerList;
+    }
+
+    public PullRequestDO (){
+
     }
 
     public int getPrId() {
@@ -58,11 +62,11 @@ public class PullRequestDO {
         return updatedDate;
     }
 
-    public long getCreatedDate() {
+    public String getCreatedDate() {
         return createdDate;
     }
 
-    public long getClosedDate() {
+    public String getClosedDate() {
         return closedDate;
     }
 
@@ -78,7 +82,7 @@ public class PullRequestDO {
         return slug;
     }
 
-    public ArrayList<ReviewerDO> getReviewerList() {
+    public ArrayList<ReviewDO> getReviewerList() {
         return reviewerList;
     }
 
