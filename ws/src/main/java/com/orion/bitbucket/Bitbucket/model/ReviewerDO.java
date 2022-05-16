@@ -1,41 +1,46 @@
 package com.orion.bitbucket.Bitbucket.model;
 
 public class ReviewerDO {
-    private String displayName;
-    private String emailAddress;
-    private boolean approved;
-    private String status;
+    private String name;
+    private int totalReview;
+    private int totalApprove;
+    private int totalUnApprove;
+    
 
-    public ReviewerDO(String displayName, String emailAddress, String status, boolean approved) {
-        this.displayName = displayName;
-        this.emailAddress = emailAddress;
-        this.status = status;
-        this.approved = approved;
+    public ReviewerDO(String name, int totalReview, int totalApprove, int totalUnApprove) {
+        this.name = name;
+        this.totalReview =totalReview;
+        this.totalApprove = totalApprove;
+        this.totalUnApprove = totalUnApprove;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public ReviewerDO() {
+
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getName() {
+        return name;
     }
 
-    public String getStatus() {
-        return status;
+    public int getTotalReview() {
+        return totalReview;
     }
 
-    public boolean getApproved() {
-        return approved;
+    public int getTotalApprove() {
+        return totalApprove;
     }
 
+    public int getTotalUnApprove() {
+        return totalUnApprove;
+    }
+  
     @Override
     public String toString() {
-        return "ReviewerDO{" +
-                "displayName='" + displayName + '\'' +
-                ", emailAddress='" + emailAddress + '\'' +
-                ", approved=" + approved +
-                ", status='" + status + '\'' +
+        return "ReviewerTotalReview{" +
+                "name='" + name + '\'' +
+                ", totalReview='" + totalReview + '\'' +
+                ", totalApprove='" + totalApprove + '\'' +
+                ", totalUnApprove='" + totalUnApprove +
                 '}';
     }
 }

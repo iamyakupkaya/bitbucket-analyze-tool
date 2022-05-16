@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO;
+import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 
 import org.springframework.stereotype.Service;
 
@@ -93,6 +94,51 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
             }
         }
         return list;
+    }
+
+    public int getReviewerApproveCount(String username) {
+        ArrayList<PullRequestDO> reviewerAllPRReview = new ArrayList<PullRequestDO>();
+        reviewerAllPRReview.addAll(getMergedPRListReviewedByUsername(username));
+        reviewerAllPRReview.addAll(getOpenPRListReviewedByUsername(username));
+        reviewerAllPRReview.addAll(getDeclinedPRListReviewedByUsername(username));
+
+        int totalApprove = 0;
+        String a = "APPROVED";
+        for ( int i = 0; i < reviewerAllPRReview.size(); i++) {
+            if(reviewerAllPRReview.get(i).getReviewerList().get(i).getStatus().toString().equals(a)){
+                totalApprove++;
+            }
+            else {
+                System.out.println(reviewerAllPRReview.get(i).getReviewerList().get(i).getStatus());
+                System.out.println("Değer boş");
+            }
+        }
+
+        return totalApprove;
+    }
+
+    public int getReviewerUnApproveCount(String username) {
+        ArrayList<ReviewerDO> mergedReviewer = new ArrayList<ReviewerDO>();
+
+        
+        ArrayList<PullRequestDO> reviewerAllPRReview = new ArrayList<PullRequestDO>();
+        reviewerAllPRReview.addAll(getMergedPRListReviewedByUsername(username));
+        reviewerAllPRReview.addAll(getOpenPRListReviewedByUsername(username));
+        reviewerAllPRReview.addAll(getDeclinedPRListReviewedByUsername(username));
+
+        int totalUnApprove = 0;
+        String a = "UNAPPROVED";
+        for ( int i = 0; i < reviewerAllPRReview.size(); i++) {
+            if(reviewerAllPRReview.get(i).getReviewerList().get(i).getStatus().equals(a)){
+                totalUnApprove++;
+            }
+            else {
+                System.out.println(reviewerAllPRReview.get(i).getReviewerList().get(i).getStatus());
+                System.out.println("Değer boş");
+            }
+        }
+
+        return totalUnApprove;
     }
 
     public Map<String, Long> getTopReviewer() {

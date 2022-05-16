@@ -1,7 +1,6 @@
 package com.orion.bitbucket.Bitbucket.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
@@ -41,5 +40,9 @@ public interface ReviewServiceIF {
     public int getAllReviewerCount();
     
     public int getAllReviewCount();
+
+    public int getReviewerApproveCount(String username);
+
+    public int getReviewerUnApproveCount(String username);
 
 }
