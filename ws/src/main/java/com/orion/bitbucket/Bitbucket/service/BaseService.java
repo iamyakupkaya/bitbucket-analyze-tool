@@ -5,7 +5,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.orion.bitbucket.Bitbucket.model.BranchDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
-import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
+import com.orion.bitbucket.Bitbucket.model.ReviewDO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,16 +81,16 @@ public class BaseService implements BaseServiceIF {
         long updatedDate = (long) object.get("updatedDate");
         long createdDate = (long) object.get("createdDate");
         long closedDate = object.optLong("closedDate");
-
+        
         // Author Information
         JSONObject author = object.getJSONObject("author");
         JSONObject user = author.getJSONObject("user");
         String emailAddress = user.optString("emailAddress");
         String displayName = (String) user.get("displayName");
         String slug = (String) user.get("slug");
-
+        
         // Reviewer Information
-        ArrayList<ReviewerDO> reviewerList = new ArrayList<ReviewerDO>();
+        ArrayList<ReviewDO> reviewerList = new ArrayList<ReviewDO>();
         JSONArray reviewers = object.getJSONArray("reviewers");
         for (int i = 0; i < reviewers.length(); i++) {
             JSONObject reviewer = reviewers.getJSONObject(i);
@@ -99,9 +99,9 @@ public class BaseService implements BaseServiceIF {
             String reviewerEmailAddress = user.optString("emailAddress");
             String status = reviewer.optString("status");
             boolean reviewerApproved = reviewer.optBoolean("approved");
-            reviewerList.add(new ReviewerDO(reviewerDisplayName, reviewerEmailAddress, status, reviewerApproved));
+            reviewerList.add(new ReviewDO(reviewerDisplayName, reviewerEmailAddress, status, reviewerApproved));
         }
-        return new PullRequestDO(prId, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, reviewerList);
+        return new PullRequestDO(prId, title, state, closed, description, updatedDate, convertDate(createdDate), convertDate(closedDate), emailAddress, displayName, slug, reviewerList);
     }
 
     // TODO Branch url will be added onto constants, then we can call it while getting data
