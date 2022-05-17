@@ -5,6 +5,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.DatabaseManager;
+import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.BranchDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO;
@@ -29,35 +30,47 @@ public class BaseService implements BaseServiceIF {
     static ArrayList<PullRequestDO> mergedPRList;
     static ArrayList<PullRequestDO> declinedPRList;
     static ArrayList<PullRequestDO> allPRList;
-    static ArrayList<BranchDO> branchList;
+
 
     private boolean isDebug = false;
-    // int prId, String title, String state, boolean closed, String description,
-    // String updatedDate, String createdDate, String closedDate, String
-    // emailAddress, String displayName,
-    // String slug;
-    private final String SQL_INSERT_PULL_REQUEST = "INSERT INTO pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    // Call this method while application is running at first time
-    // TODO At future, we have to apply multithreading in below
+    private final String SQL_INSERT_PULL_REQUEST = "INSERT INTO pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String SQL_SELECT_COUNT_PULL_REQUEST = "SELECT COUNT(*) FROM PULLREQUEST;";
+
     public void getData() {
         try {
-            Instant start = Instant.now();
-            //  this.openPRList = getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
-            //  this.mergedPRList =
-            //  getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
-            //  this.declinedPRList =
-            //  getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
-            getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
-            Instant finish = Instant.now();
-            Duration timeElapsed = Duration.between(start, finish);
-            System.out.println("Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds()
-                    + " seconds.");
-            // createAllPRList();
-           
+            if (isFirstTime()) {
+                Instant start = Instant.now();
+                getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
+                getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
+                getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
+                Instant finish = Instant.now();
+                Duration timeElapsed = Duration.between(start, finish);
+                System.out.println("Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds()
+                        + " seconds.");
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    public boolean isFirstTime() {
+        Connection connection = TransactionManager.getConnection();
+        int count = 0;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SQL_SELECT_COUNT_PULL_REQUEST);
+            while (resultSet.next()) {
+                count = resultSet.getInt("count");
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        return count > 0 ? false : true;
     }
 
     public void createAllPRList() {
@@ -85,7 +98,6 @@ public class BaseService implements BaseServiceIF {
        
 
     }
-
     public void commonPullRequestDataParser(JSONObject object) throws SQLException {
         int prId = (int) object.get("id");
         String title = (String) object.get("title");
@@ -119,7 +131,6 @@ public class BaseService implements BaseServiceIF {
         }
         insertPullRequest(prId, title, state, closed, description, updatedDate,
                 createdDate, closedDate, emailAddress, displayName, slug);
-        // insertPullRequest();
     }
 
     public void insertPullRequest(int prId, String title, String state, boolean closed, String description,
@@ -136,6 +147,8 @@ public class BaseService implements BaseServiceIF {
             if (isDebug) {
                 System.out.println("Opened database successfully");
             }
+
+
             preparedStmt = connection.prepareStatement(SQL_INSERT_PULL_REQUEST);
             preparedStmt.setInt(1, prId);
             preparedStmt.setString(2, title);
@@ -148,7 +161,9 @@ public class BaseService implements BaseServiceIF {
             preparedStmt.setString(9, emailAddress);
             preparedStmt.setString(10, displayName);
             preparedStmt.setString(11, slug);
-            preparedStmt.execute();
+            int row = preparedStmt.executeUpdate();
+
+            connection.commit(); // ADDED
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
