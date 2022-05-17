@@ -32,7 +32,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF{
             System.out.println(unApprove);
             approve = reviewServiceIF.getReviewerApproveCount(reviewerList.get(i));
             System.out.println(approve);
-            reviewerDOList.add(new ReviewerDO(reviewerList.get(i), total,approve,unApprove));
+            reviewerDOList.add(new ReviewerDO(0,reviewerList.get(i), total,approve,unApprove)); // id must be added
         }
         return reviewerDOList;
     }

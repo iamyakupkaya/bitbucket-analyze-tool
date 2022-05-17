@@ -77,7 +77,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             declined = pullRequestServiceIF.getDeclinedPRCountByUsername(authorList.get(i));
             open = pullRequestServiceIF.getOpenPRCountByUsername(authorList.get(i));
             total = merge + open + declined;
-            authorDOList.add(new AuthorDO(authorList.get(i), total, merge, open, declined));
+            authorDOList.add(new AuthorDO(0,authorList.get(i), total, merge, open, declined)); // id must be added
         }
         return authorDOList;
     }
@@ -87,7 +87,8 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         ArrayList<AuthorDO> authorDO = new ArrayList<AuthorDO>();
         for (int i = 0; i < authorDOList.size(); i++) {
             if (authorDOList.get(i).getName().toString().equals(name)) {
-                authorDO.add(new AuthorDO(authorDOList.get(i).getName(),authorDOList.get(i).getTotalPRs(),authorDOList.get(i).getTotalMergedPRs(),authorDOList.get(i).getTotalOpenPRs(),authorDOList.get(i).getTotalDeclinedPRs()));
+                // id must be added
+                authorDO.add(new AuthorDO(0,authorDOList.get(i).getName(),authorDOList.get(i).getTotalPRs(),authorDOList.get(i).getTotalMergedPRs(),authorDOList.get(i).getTotalOpenPRs(),authorDOList.get(i).getTotalDeclinedPRs()));
             }
         }
         return authorDO;

@@ -44,7 +44,8 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         for (int i = 0; i < mergePR.size(); i++) {
             ArrayList<ReviewDO> reviewers = mergePR.get(i).getReviewerList();
           for (int j = 0; j< reviewers.size(); j++) {
-            list.add(new ReviewDO(reviewers.get(j).getDisplayName(), reviewers.get(j).getEmailAddress(), reviewers.get(j).getStatus(), reviewers.get(j).getApproved()));
+              // id must be added
+            list.add(new ReviewDO(0,reviewers.get(j).getDisplayName(), reviewers.get(j).getEmailAddress(), reviewers.get(j).getStatus(), reviewers.get(j).getApproved()));
           }
         }
         return list;
@@ -57,7 +58,8 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         for (int i = 0; i < openPR.size(); i++) {
             ArrayList<ReviewDO> reviewers = openPR.get(i).getReviewerList();
           for (int j = 0; j< reviewers.size(); j++) {
-            list.add(new ReviewDO(reviewers.get(j).getDisplayName(), reviewers.get(j).getEmailAddress(), reviewers.get(j).getStatus(), reviewers.get(j).getApproved()));
+              // id must be added
+            list.add(new ReviewDO(0,reviewers.get(j).getDisplayName(), reviewers.get(j).getEmailAddress(), reviewers.get(j).getStatus(), reviewers.get(j).getApproved()));
           }
         }
         return list;
@@ -70,7 +72,8 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         for (int i = 0; i < declinedPR.size(); i++) {
             ArrayList<ReviewDO> reviewers = declinedPR.get(i).getReviewerList();
           for (int j = 0; j< reviewers.size(); j++) {
-            list.add(new ReviewDO(reviewers.get(j).getDisplayName(), reviewers.get(j).getEmailAddress(), reviewers.get(j).getStatus(), reviewers.get(j).getApproved()));
+              // id must be added
+            list.add(new ReviewDO(0,reviewers.get(j).getDisplayName(), reviewers.get(j).getEmailAddress(), reviewers.get(j).getStatus(), reviewers.get(j).getApproved()));
           }
         }
         return list;
