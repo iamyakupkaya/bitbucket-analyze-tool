@@ -9,7 +9,7 @@ public class PullRequestDO {
     private String state;
     private boolean closed;
     private String description;
-    private long updatedDate;
+    private String updatedDate;
     private String createdDate;
     private String closedDate;
     private String emailAddress;
@@ -17,7 +17,7 @@ public class PullRequestDO {
     private String slug;
     private ArrayList<ReviewDO> reviewerList;
 
-    public PullRequestDO(int prId, String title, String state, boolean closed, String description, long updatedDate,
+    public PullRequestDO(int prId, String title, String state, boolean closed, String description, String updatedDate,
     String createdDate, String closedDate, String emailAddress, String displayName, String slug,
                          ArrayList<ReviewDO> reviewerList) {
         this.prId= prId;
@@ -58,7 +58,7 @@ public class PullRequestDO {
         return description;
     }
 
-    public long getUpdatedDate() {
+    public String getUpdatedDate() {
         return updatedDate;
     }
 
