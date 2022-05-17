@@ -72,14 +72,7 @@ public class BaseService implements BaseServiceIF {
         }
         return count > 0 ? false : true;
     }
-
-    public void createAllPRList() {
-        this.allPRList = new ArrayList<PullRequestDO>();
-        allPRList.addAll(this.openPRList);
-        allPRList.addAll(this.mergedPRList);
-        allPRList.addAll(this.declinedPRList);
-    }
-
+    
     public void getPullRequestData(String url) throws UnirestException, JSONException, SQLException {
 
         int start = 0;
