@@ -1,16 +1,22 @@
 package com.orion.bitbucket.Bitbucket.model;
 
 public class ReviewDO {
+    private int id;
     private String displayName;
     private String emailAddress;
     private boolean approved;
     private String status;
 
-    public ReviewDO(String displayName, String emailAddress, String status, boolean approved) {
+    public ReviewDO(int id, String displayName, String emailAddress, String status, boolean approved) {
+        this.id = id;
         this.displayName = displayName;
         this.emailAddress = emailAddress;
         this.status = status;
         this.approved = approved;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getDisplayName() {
@@ -32,6 +38,7 @@ public class ReviewDO {
     @Override
     public String toString() {
         return "ReviewerDO{" +
+                "id='" + id + '\'' +
                 "displayName='" + displayName + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
                 ", approved=" + approved +
