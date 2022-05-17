@@ -31,11 +31,10 @@ public class BaseService implements BaseServiceIF {
     static ArrayList<PullRequestDO> declinedPRList;
     static ArrayList<PullRequestDO> allPRList;
 
-
     private boolean isDebug = false;
 
-    private final String SQL_INSERT_PULL_REQUEST = "INSERT INTO pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String SQL_SELECT_COUNT_PULL_REQUEST = "SELECT COUNT(*) FROM PULLREQUEST;";
+    private final String SQL_INSERT_PULL_REQUEST = "insert into pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String SQL_SELECT_COUNT_PULL_REQUEST = "select count(*) from pullrequest;";
 
     public void getData() {
         try {
@@ -74,7 +73,6 @@ public class BaseService implements BaseServiceIF {
     }
 
     public void getPullRequestData(String url) throws UnirestException, JSONException, SQLException {
-
         int start = 0;
         boolean isLastPage = false;
         while (!isLastPage) {
@@ -88,9 +86,8 @@ public class BaseService implements BaseServiceIF {
             isLastPage = (boolean) body.get("isLastPage");
             start += 100;
         }
-       
-
     }
+
     public void commonPullRequestDataParser(JSONObject object) throws SQLException {
         int prId = (int) object.get("id");
         String title = (String) object.get("title");
@@ -100,14 +97,12 @@ public class BaseService implements BaseServiceIF {
         long updatedDate = (long) object.get("updatedDate");
         String createdDate = convertDate((long) object.get("createdDate"));
         String closedDate = convertDate(object.optLong("closedDate"));
-
         // Author Information
         JSONObject author = object.getJSONObject("author");
         JSONObject user = author.getJSONObject("user");
         String emailAddress = user.optString("emailAddress");
         String displayName = (String) user.get("displayName");
         String slug = (String) user.get("slug");
-
         // Reviewer Information
         ArrayList<ReviewDO> reviewerList = new ArrayList<ReviewDO>();
         JSONArray reviewers = object.getJSONArray("reviewers");
@@ -119,11 +114,9 @@ public class BaseService implements BaseServiceIF {
             String reviewerEmailAddress = user.optString("emailAddress");
             String reviewStatus = reviewer.optString("status");
             boolean reviewerApproved = reviewer.optBoolean("approved");
-            reviewerList
-                    .add(new ReviewDO(id, reviewerDisplayName, reviewerEmailAddress, reviewStatus, reviewerApproved));
+            reviewerList.add(new ReviewDO(id, reviewerDisplayName, reviewerEmailAddress, reviewStatus, reviewerApproved));
         }
-        insertPullRequest(prId, title, state, closed, description, updatedDate,
-                createdDate, closedDate, emailAddress, displayName, slug);
+        insertPullRequest(prId, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug);
     }
 
     public void insertPullRequest(int prId, String title, String state, boolean closed, String description,
@@ -132,9 +125,7 @@ public class BaseService implements BaseServiceIF {
         Connection connection = TransactionManager.getConnection();
 
         try {
-            Statement statement = null;
             PreparedStatement preparedStmt = null;
-
             preparedStmt = connection.prepareStatement(SQL_INSERT_PULL_REQUEST);
             preparedStmt.setInt(1, prId);
             preparedStmt.setString(2, title);
@@ -148,9 +139,7 @@ public class BaseService implements BaseServiceIF {
             preparedStmt.setString(10, displayName);
             preparedStmt.setString(11, slug);
             int row = preparedStmt.executeUpdate();
-
             connection.commit(); // ADDED
-
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -158,6 +147,7 @@ public class BaseService implements BaseServiceIF {
             connection.close();
         }
     }
+
 
     // TODO Branch url will be added onto constants, then we can call it while
     // getting data

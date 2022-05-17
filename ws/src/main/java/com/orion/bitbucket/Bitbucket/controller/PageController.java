@@ -1,5 +1,6 @@
 package com.orion.bitbucket.Bitbucket.controller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -40,23 +41,20 @@ public class PageController {
     
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String edit(Model model) throws UnirestException {
-        baseService.getData(); // Bu metot uygulamanin baslangicinda cagirilmali ki listeler doldurulsun. Hangi kisim ilk calisacaksa bu orada cagirilmali.
+    public String edit(Model model) throws UnirestException, SQLException {
+        baseService.getData();
+        authorServiceIF.getTopAuthor();
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
-        model.addAttribute("reviewerCount", reviewServiceIF.getAllReviewerCount());
-        model.addAttribute("reviewCount", reviewServiceIF.getAllReviewCount());
 
-        String topAuthorDisplayName =null;
-        Long topAuthorPRsCount = null;
-        for (Map.Entry<String, Long> topAuthor : authorServiceIF.getTopAuthor().entrySet()) {
-            topAuthorDisplayName = topAuthor.getKey();
-            topAuthorPRsCount = topAuthor.getValue();
-            
-        }
-        model.addAttribute("topAuthorDisplayName", topAuthorDisplayName);
-        model.addAttribute("topAuthorPRsCount",topAuthorPRsCount); 
-        
+        //model.addAttribute("reviewerCount", reviewServiceIF.getAllReviewerCount());
+        //model.addAttribute("reviewCount", reviewServiceIF.getAllReviewCount());
+
+        AuthorDO.TopAuthor topAuthor = authorServiceIF.getTopAuthor();
+        model.addAttribute("topAuthorDisplayName", topAuthor.getName());
+        model.addAttribute("topAuthorPRsCount", topAuthor.getTotal());
+
+          /*
         String topReviewerDisplayName = null;
         Long topReviewerCount = null;
 
@@ -68,15 +66,16 @@ public class PageController {
 
         model.addAttribute("topReviewerDisplayName", topReviewerDisplayName);
         model.addAttribute("topReviewerCount",topReviewerCount); 
-
+*/
         return "index.html";
     }
 
     @RequestMapping(value = "/pull-requests", method = RequestMethod.GET)
-    public String getPullRequestsPage(Model model) throws UnirestException {
-        ArrayList<AuthorDO> getAllAuthor = authorServiceIF.getCountOfPrStatesOfAllAuthor();
+    public String getPullRequestsPage(Model model) throws UnirestException, SQLException {
+        ArrayList<AuthorDO> authors = authorServiceIF.getAllAuthors();
+
         model.addAttribute("author", new AuthorDO());
-        model.addAttribute("authors", getAllAuthor);
+        model.addAttribute("authors", authors);
         return "pull-requests.html";
     }
 
@@ -92,23 +91,23 @@ public class PageController {
 
     @RequestMapping(value = "/pull-requests/author/{name}")
     public String showAuthorDetails(Model model, @PathVariable(name = "name", required = false) String name) throws UnirestException {
-        ArrayList<AuthorDO> authorDO = authorServiceIF.getCountOfPrStatesWithDisplayName(name);
-        model.addAttribute("author", new AuthorDO());
-        model.addAttribute("getCountOfPrStates", authorDO);
+        //ArrayList<AuthorDO> authorDO = authorServiceIF.getCountOfPrStatesWithDisplayName(name);
+        //model.addAttribute("author", new AuthorDO());
+        //model.addAttribute("getCountOfPrStates", authorDO);
 
-        ArrayList<PullRequestDO> mergedList = pullRequestServiceIF.getMergedPRListByUsername(name);
-        model.addAttribute("merged", new PullRequestDO());
-        model.addAttribute("mergedList", mergedList);
+        //ArrayList<PullRequestDO> mergedList = pullRequestServiceIF.getMergedPRListByUsername(name);
+        //model.addAttribute("merged", new PullRequestDO());
+        //model.addAttribute("mergedList", mergedList);
         ArrayList<ReviewDO> reviewerList = new ArrayList<ReviewDO>();
 
 
-        ArrayList<PullRequestDO> openList = pullRequestServiceIF.getOpenPRListByUsername(name);
-        model.addAttribute("open", new PullRequestDO());
-        model.addAttribute("openList", openList);
+        //ArrayList<PullRequestDO> openList = pullRequestServiceIF.getOpenPRListByUsername(name);
+        //model.addAttribute("open", new PullRequestDO());
+        //model.addAttribute("openList", openList);
 
-        ArrayList<PullRequestDO> declinedList = pullRequestServiceIF.getDeclinedPRListByUsername(name);
-        model.addAttribute("declined", new PullRequestDO());
-        model.addAttribute("declinedList", declinedList);
+        //ArrayList<PullRequestDO> declinedList = pullRequestServiceIF.getDeclinedPRListByUsername(name);
+        //model.addAttribute("declined", new PullRequestDO());
+        //model.addAttribute("declinedList", declinedList);
         
        
         return "author-details.html";

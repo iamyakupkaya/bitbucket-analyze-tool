@@ -22,10 +22,10 @@ public class PullRequestController {
     private AuthorServiceIF authorServiceIF;
 
 
-     @RequestMapping("/api/pull-requests/all/{name}")
-     public ArrayList<AuthorDO> testPrs(@PathVariable String name) throws UnirestException{
-        return authorServiceIF.getCountOfPrStatesWithDisplayName(name);
-     }
+     //@RequestMapping("/api/pull-requests/all/{name}")
+     //public ArrayList<AuthorDO> testPrs(@PathVariable String name) throws UnirestException{
+     //   return authorServiceIF.getCountOfPrStatesWithDisplayName(name);
+     //}
 
 
     // @RequestMapping("/api/pull-requests/open")

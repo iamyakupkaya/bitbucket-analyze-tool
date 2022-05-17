@@ -58,4 +58,23 @@ public class AuthorDO {
                 ", totalDeclinedPRs='" + totalDeclinedPRs +
                 '}';
     }
+
+    // Schema of TopAuthor
+    public static class TopAuthor {
+        private String name;
+        private int total;
+
+        public TopAuthor(String name, int total) {
+            this.name = name;
+            this.total = total;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getTotal() {
+            return total;
+        }
+    }
 }

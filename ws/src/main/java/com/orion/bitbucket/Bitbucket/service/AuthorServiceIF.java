@@ -1,20 +1,20 @@
 package com.orion.bitbucket.Bitbucket.service;
 
+import com.orion.bitbucket.Bitbucket.model.AuthorDO;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.orion.bitbucket.Bitbucket.model.AuthorDO;
-
 public interface AuthorServiceIF {
 
-    public int getAuthorCount();
-
-    public ArrayList<AuthorDO> getCountOfPrStatesOfAllAuthor();
-
-    public ArrayList<AuthorDO> getCountOfPrStatesWithDisplayName(String displayName);
-
-    public ArrayList<String> getAllAuthor();
-
-    public Map<String, Long> getTopAuthor();
+    int getAuthorCount() throws SQLException;
+    ArrayList<String> getAllAuthor() throws SQLException;
+    int getCountPRByStateAndUsername(String state, String username) throws SQLException;
+    AuthorDO.TopAuthor getTopAuthor() throws SQLException;
+    AuthorDO.TopAuthor getTopAuthorAtOpen() throws SQLException;
+    AuthorDO.TopAuthor getTopAuthorAtMerged() throws SQLException;
+    AuthorDO.TopAuthor getTopAuthorAtDeclined() throws SQLException;
+    ArrayList<AuthorDO> getAllAuthors() throws SQLException;
 
 }
