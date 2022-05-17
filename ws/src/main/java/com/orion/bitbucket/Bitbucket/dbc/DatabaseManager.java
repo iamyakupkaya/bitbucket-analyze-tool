@@ -5,15 +5,9 @@ import static com.orion.bitbucket.Bitbucket.dbc.DBConstants.getCreateTableQuerie
 public class DatabaseManager {
 
     public static void run() {
-        Connection connection = null;
-        Statement statement = null;
+        Connection connection = TransactionManager.getConnection();;
         try {
-            Class.forName("org.postgresql.Driver");
-            connection = DriverManager
-                    .getConnection(DBConstants.getConnectionURL(),
-                            DBConstants.getDBUsername(), DBConstants.getDBPassword());
-            System.out.println("Opened database successfully");
-
+            Statement statement = null;
             for (int i=0; i<getCreateTableQueries().size(); i++) {
                 statement = connection.createStatement();
                 String query = getCreateTableQueries().get(i);
