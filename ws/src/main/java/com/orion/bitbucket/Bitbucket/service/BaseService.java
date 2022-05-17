@@ -72,7 +72,7 @@ public class BaseService implements BaseServiceIF {
         }
         return count > 0 ? false : true;
     }
-    
+
     public void getPullRequestData(String url) throws UnirestException, JSONException, SQLException {
 
         int start = 0;
@@ -129,18 +129,11 @@ public class BaseService implements BaseServiceIF {
     public void insertPullRequest(int prId, String title, String state, boolean closed, String description,
             long updatedDate, String createdDate, String closedDate, String emailAddress, String displayName,
             String slug) throws SQLException {
-        Connection connection = null;
-        Statement statement = null;
-        PreparedStatement preparedStmt = null;
-        try {
-            Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(DBConstants.getConnectionURL(), DBConstants.getDBUsername(),
-                    DBConstants.getDBPassword());
-            connection.setAutoCommit(false);
-            if (isDebug) {
-                System.out.println("Opened database successfully");
-            }
+        Connection connection = TransactionManager.getConnection();
 
+        try {
+            Statement statement = null;
+            PreparedStatement preparedStmt = null;
 
             preparedStmt = connection.prepareStatement(SQL_INSERT_PULL_REQUEST);
             preparedStmt.setInt(1, prId);
