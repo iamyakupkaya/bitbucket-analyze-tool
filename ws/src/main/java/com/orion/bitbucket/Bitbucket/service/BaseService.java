@@ -35,6 +35,7 @@ public class BaseService implements BaseServiceIF {
 
     private final String SQL_INSERT_PULL_REQUEST = "insert into pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final String SQL_INSERT_REVIEW = "insert into review (reviewer_id , display_name, email_address, approved, status) values (?, ?, ?, ?, ?)";
+    private final String SQL_INSTER_PULL_REQUEST_REVIEW_RELATION = "insert into PullRequestReviewRelation (pull_request_id, review_id) values (?, ?)";
     private final String SQL_SELECT_COUNT_PULL_REQUEST = "select count(*) from pullrequest;";
     private final String SQL_SELECT_COUNT_REVIEW = "select count(*) from review";
 
@@ -107,7 +108,6 @@ public class BaseService implements BaseServiceIF {
         String displayName = (String) user.get("displayName");
         String slug = (String) user.get("slug");
         // Review Information
-        ArrayList<ReviewDO> reviewerList = new ArrayList<ReviewDO>();
         JSONArray reviewers = object.getJSONArray("reviewers");
         for (int i = 0; i < reviewers.length(); i++) {
             JSONObject reviewer = reviewers.getJSONObject(i);
@@ -117,6 +117,7 @@ public class BaseService implements BaseServiceIF {
             String reviewerEmailAddress = user.optString("emailAddress");
             String reviewStatus = reviewer.optString("status");
             boolean reviewerApproved = reviewer.optBoolean("approved");
+            insertPullRequestReviewRelation(prId,id);
             insertReview(id, reviewerDisplayName, reviewerEmailAddress, reviewerApproved, reviewStatus);
         }
         insertPullRequest(prId, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug);
@@ -161,6 +162,23 @@ public class BaseService implements BaseServiceIF {
             preparedStmt.setString(3,reviewerEmailAddress);
             preparedStmt.setBoolean(4, reviewerApproved);
             preparedStmt.setString(5, reviewStatus);
+            int row = preparedStmt.executeUpdate();
+            connection.commit();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        } finally {
+            connection.close();
+        }
+    }
+
+    public void insertPullRequestReviewRelation (int prId, int reviewerId) throws SQLException {
+        Connection connection = TransactionManager.getConnection();
+        try {
+            PreparedStatement preparedStmt = null;
+            preparedStmt = connection.prepareStatement(SQL_INSTER_PULL_REQUEST_REVIEW_RELATION);
+            preparedStmt.setInt(1, prId);
+            preparedStmt.setInt(2, reviewerId);
             int row = preparedStmt.executeUpdate();
             connection.commit();
         } catch (Exception e) {
