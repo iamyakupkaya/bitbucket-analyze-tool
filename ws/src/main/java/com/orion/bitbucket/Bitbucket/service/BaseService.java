@@ -38,7 +38,7 @@ public class BaseService implements BaseServiceIF {
 
     public void getData() {
         try {
-            if (isFirstTime()) {
+            if (isPullRequestTableEmpty()) {
                 Instant start = Instant.now();
                 getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
                 getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
@@ -53,7 +53,7 @@ public class BaseService implements BaseServiceIF {
         }
     }
 
-    public boolean isFirstTime() {
+    public boolean isPullRequestTableEmpty() {
         Connection connection = TransactionManager.getConnection();
         int count = 0;
         try {
