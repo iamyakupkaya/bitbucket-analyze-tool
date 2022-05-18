@@ -42,7 +42,7 @@ public class PageController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String edit(Model model) throws UnirestException, SQLException {
-        baseService.getData();
+        //baseService.getData();
         authorServiceIF.getTopAuthor();
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());

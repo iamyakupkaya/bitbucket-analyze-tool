@@ -40,6 +40,7 @@ public class BaseService implements BaseServiceIF {
         try {
             if (isPullRequestTableEmpty()) {
                 Instant start = Instant.now();
+                System.out.println("This is first time to retrieve data. Wait for retrieving data and insert into local database have been completed.");
                 getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
                 getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
                 getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);

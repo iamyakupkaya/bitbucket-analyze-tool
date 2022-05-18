@@ -12,6 +12,7 @@ public class DatabaseManager {
                 statement = connection.createStatement();
                 String query = getCreateTableQueries().get(i);
                 statement.executeUpdate(query);
+                connection.commit();
                 statement.close();
                 System.out.println("Table created successfully");
             }

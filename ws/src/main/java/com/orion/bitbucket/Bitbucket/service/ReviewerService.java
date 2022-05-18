@@ -43,7 +43,6 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF{
         return null;
     }
 
-    @Override
     public ArrayList<String> getAllReviewer() {
         ArrayList<String> reviewerList = reviewServiceIF.getAllReviewer();
         ArrayList<String> allReviewerList = new ArrayList<String>();
