@@ -12,4 +12,5 @@ public interface PullRequestServiceIF {
     ArrayList<PullRequestDO> getPRListByState(String status) throws SQLException;
     ArrayList<PullRequestDO> getPRListByStateAndUsername(String status, String username) throws SQLException;
     int getPRCountByStateAndUsername(String state, String username) throws SQLException;
+    PullRequestDO getPullRequestById(int pullRequestId) throws SQLException;
 }

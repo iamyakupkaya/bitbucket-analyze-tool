@@ -38,6 +38,7 @@ public class BaseService implements BaseServiceIF {
     private final String SQL_INSTER_PULL_REQUEST_REVIEW_RELATION = "insert into PullRequestReviewRelation (pull_request_id, review_id) values (?, ?)";
     private final String SQL_SELECT_COUNT_PULL_REQUEST = "select count(*) from pullrequest;";
     private final String SQL_SELECT_COUNT_REVIEW = "select count(*) from review";
+    private final String SQL_GET_REVIEW_ID_BY_USERNAME = "select id from review where display_name=? order by id desc limit 1;";
 
     public void getData() {
         try {
@@ -45,8 +46,8 @@ public class BaseService implements BaseServiceIF {
                 Instant start = Instant.now();
                 System.out.println("This is first time to retrieve data. Wait for retrieving data and insert into local database have been completed.");
                 getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
-                getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
-                getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
+                //getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
+                //getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
                 Instant finish = Instant.now();
                 Duration timeElapsed = Duration.between(start, finish);
                 System.out.println("Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds()
@@ -93,7 +94,7 @@ public class BaseService implements BaseServiceIF {
     }
 
     public void commonPullRequestDataParser(JSONObject object) throws SQLException {
-        int prId = (int) object.get("id");
+        int pullRequestId = (int) object.get("id");
         String title = (String) object.get("title");
         String state = (String) object.get("state");
         boolean closed = (boolean) object.get("closed");
@@ -117,10 +118,28 @@ public class BaseService implements BaseServiceIF {
             String reviewerEmailAddress = user.optString("emailAddress");
             String reviewStatus = reviewer.optString("status");
             boolean reviewerApproved = reviewer.optBoolean("approved");
-            insertPullRequestReviewRelation(prId,id);
             insertReview(id, reviewerDisplayName, reviewerEmailAddress, reviewerApproved, reviewStatus);
+            int reviewId = getReviewIdByUsername(reviewerDisplayName);
+            insertPullRequestReviewRelation(pullRequestId,reviewId);
         }
-        insertPullRequest(prId, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug);
+        insertPullRequest(pullRequestId, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug);
+    }
+
+    public int getReviewIdByUsername(String username) throws SQLException {
+        Connection connection = TransactionManager.getConnection();
+        int id = 0;
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_REVIEW_ID_BY_USERNAME);
+        preparedStmt.setString(1, username);
+        ResultSet resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()) {
+            id = resultSet.getInt("id");
+        }
+        resultSet.close();
+        preparedStmt.close();
+        connection.close();
+        return id;
     }
 
     public void insertPullRequest(int prId, String title, String state, boolean closed, String description,

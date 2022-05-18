@@ -45,4 +45,23 @@ public class ReviewDO {
                 ", status='" + status + '\'' +
                 '}';
     }
+
+    // PullRequestReviewRelation Schema
+    public static class PullRequestReviewRelation {
+        private PullRequestDO pullRequest;
+        private ReviewDO review;
+
+        public PullRequestReviewRelation(PullRequestDO pullRequest, ReviewDO review) {
+            this.pullRequest = pullRequest;
+            this.review = review;
+        }
+
+        public PullRequestDO getPullRequest() {
+            return this.pullRequest;
+        }
+
+        public ReviewDO getReview() {
+            return this.review;
+        }
+    }
 }

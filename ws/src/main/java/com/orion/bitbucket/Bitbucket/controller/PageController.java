@@ -54,6 +54,7 @@ public class PageController {
         model.addAttribute("topAuthorDisplayName", topAuthor.getName());
         model.addAttribute("topAuthorPRsCount", topAuthor.getTotal());
 
+        reviewServiceIF.getReviewsByUsername("ALMAZ, Tuna");
           /*
         String topReviewerDisplayName = null;
         Long topReviewerCount = null;
