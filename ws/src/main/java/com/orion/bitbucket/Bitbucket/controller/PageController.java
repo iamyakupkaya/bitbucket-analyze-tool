@@ -70,6 +70,13 @@ public class PageController {
         return "index.html";
     }
 
+    @RequestMapping(value = "/fill-data", method = RequestMethod.GET)
+    public String getFillDataPage(Model model) throws UnirestException, SQLException {
+        baseService.getData();
+        authorServiceIF.getAllAuthor();
+        return "fill-data.html";
+    }
+
     @RequestMapping(value = "/pull-requests", method = RequestMethod.GET)
     public String getPullRequestsPage(Model model) throws UnirestException, SQLException {
         ArrayList<AuthorDO> authors = authorServiceIF.getAllAuthors();
