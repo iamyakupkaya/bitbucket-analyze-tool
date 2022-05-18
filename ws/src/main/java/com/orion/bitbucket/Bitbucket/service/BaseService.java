@@ -118,6 +118,7 @@ public class BaseService implements BaseServiceIF {
             reviewerList.add(new ReviewDO(id, reviewerDisplayName, reviewerEmailAddress, reviewStatus, reviewerApproved));
         }
         insertPullRequest(prId, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug);
+
     }
 
     public void insertPullRequest(int prId, String title, String state, boolean closed, String description,

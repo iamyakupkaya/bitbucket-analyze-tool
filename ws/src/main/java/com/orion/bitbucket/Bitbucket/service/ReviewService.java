@@ -1,8 +1,10 @@
 package com.orion.bitbucket.Bitbucket.service;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
@@ -12,6 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReviewService extends BaseService implements ReviewServiceIF {
 
+    private final String SQL_GET_ALL_REVIEW_COUNT = "select count(*) from review;";
+    private final String SQL_GET_REVIEWS_BY_USERNAME = "select * from review where display_name=?;";
+
+    // TODO burada olmamali
     public ArrayList<String> getAllReviewer() {
         ArrayList<String> reviewerList = new ArrayList<String>();
         for (int i = 0; i < getAllReview().size(); i++) {
@@ -22,6 +28,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         return reviewerList;
     }
 
+    // TODO burada olmamali
     public int getAllReviewerCount() {
         return getAllReviewer().size();
     }
@@ -34,8 +41,40 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         return allReviewer;
     }
 
-    public int getAllReviewCount() {
-        return getAllReview().size();
+    public int getReviewCount() throws SQLException {
+        Connection connection = TransactionManager.getConnection();
+        int count = 0;
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_REVIEW_COUNT);
+        while (resultSet.next()) {
+            count = resultSet.getInt("count");
+        }
+        resultSet.close();
+        statement.close();
+        connection.close();
+        return count;
+    }
+
+    public ArrayList<ReviewDO> getReviewsByUsername(String username) throws SQLException {
+        ArrayList<ReviewDO> list = new ArrayList<>();
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_REVIEWS_BY_USERNAME);
+        preparedStmt.setString(1, username);
+        ResultSet resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String displayName = resultSet.getString("display_name");
+            String emailAddress = resultSet.getString("emailAddress");
+            boolean approved = resultSet.getBoolean("approved");
+            String status = resultSet.getString("status");
+            list.add(new ReviewDO(id, displayName, emailAddress, status, approved));
+        }
+        resultSet.close();
+        preparedStmt.close();
+        connection.close();
+        return list;
     }
 
     public ArrayList<ReviewDO> getMergedPRReviewList() {
