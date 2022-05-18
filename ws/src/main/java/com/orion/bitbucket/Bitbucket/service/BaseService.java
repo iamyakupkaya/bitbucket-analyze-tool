@@ -34,7 +34,9 @@ public class BaseService implements BaseServiceIF {
     private boolean isDebug = false;
 
     private final String SQL_INSERT_PULL_REQUEST = "insert into pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String SQL_INSERT_REVIEW = "insert into review (reviewer_id , display_name, email_address, approved, status) values (?, ?, ?, ?, ?)";
     private final String SQL_SELECT_COUNT_PULL_REQUEST = "select count(*) from pullrequest;";
+    private final String SQL_SELECT_COUNT_REVIEW = "select count(*) from review";
 
     public void getData() {
         try {
@@ -104,7 +106,7 @@ public class BaseService implements BaseServiceIF {
         String emailAddress = user.optString("emailAddress");
         String displayName = (String) user.get("displayName");
         String slug = (String) user.get("slug");
-        // Reviewer Information
+        // Review Information
         ArrayList<ReviewDO> reviewerList = new ArrayList<ReviewDO>();
         JSONArray reviewers = object.getJSONArray("reviewers");
         for (int i = 0; i < reviewers.length(); i++) {
@@ -115,10 +117,9 @@ public class BaseService implements BaseServiceIF {
             String reviewerEmailAddress = user.optString("emailAddress");
             String reviewStatus = reviewer.optString("status");
             boolean reviewerApproved = reviewer.optBoolean("approved");
-            reviewerList.add(new ReviewDO(id, reviewerDisplayName, reviewerEmailAddress, reviewStatus, reviewerApproved));
+            insertReview(id, reviewerDisplayName, reviewerEmailAddress, reviewerApproved, reviewStatus);
         }
         insertPullRequest(prId, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug);
-
     }
 
     public void insertPullRequest(int prId, String title, String state, boolean closed, String description,
@@ -141,7 +142,27 @@ public class BaseService implements BaseServiceIF {
             preparedStmt.setString(10, displayName);
             preparedStmt.setString(11, slug);
             int row = preparedStmt.executeUpdate();
-            connection.commit(); // ADDED
+            connection.commit();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        } finally {
+            connection.close();
+        }
+    }
+
+    public void insertReview(int id, String reviewerDisplayName, String reviewerEmailAddress, boolean reviewerApproved, String reviewStatus) throws SQLException {
+        Connection connection = TransactionManager.getConnection();
+        try {
+            PreparedStatement preparedStmt = null;
+            preparedStmt = connection.prepareStatement(SQL_INSERT_REVIEW);
+            preparedStmt.setInt(1, id);
+            preparedStmt.setString(2, reviewerDisplayName);
+            preparedStmt.setString(3,reviewerEmailAddress);
+            preparedStmt.setBoolean(4, reviewerApproved);
+            preparedStmt.setString(5, reviewStatus);
+            int row = preparedStmt.executeUpdate();
+            connection.commit();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
