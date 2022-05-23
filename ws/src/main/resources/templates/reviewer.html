@@ -166,7 +166,7 @@
             </a>
             <ul class="menu-sub">
               <li class="menu-item active">
-                <a th:href="@{review}" class="menu-link">
+                <a th:href="@{reviewer}" class="menu-link">
                   <i class="menu-icon tf-icons bx bx-table"></i>
                   <div data-i18n="Tables">All Reviewer</div>
                 </a>
@@ -228,17 +228,6 @@
               </div>
             </div>
             <!-- /Search -->
-
-
-            <ul class="navbar-nav flex-row align-items-center ms-auto">
-
-              <!-- Place this tag where you want the button to render. -->
-              <li class="nav-item lh-1 me-3">
-                <a class="github-button" href="https://github.com/themeselection/sneat-html-admin-template-free"
-                  data-icon="octicon-star" data-size="large" data-show-count="true"
-                  aria-label="Star themeselection/sneat-html-admin-template-free on GitHub">Star</a>
-              </li>
-            </ul>
           </div>
 
 
@@ -260,14 +249,14 @@
 
 
             <h4 class="fw-bold py-3 mb-4">
-              <span class="text-muted fw-light">Pull Requests /</span> All Author Pull Requests
+              <span class="text-muted fw-light">Pull Requests /</span> All Reviewer Reviews
             </h4>
 
             <hr class="my-5">
 
             <!-- Hoverable Table rows -->
             <div class="card">
-              <h5 class="card-header">Pull Requests</h5>
+              <h5 class="card-header">Review</h5>
               <div class="table-responsive text-nowrap">
                 <table class="table table-hover">
                   <thead>
@@ -280,18 +269,18 @@
                   </thead>
                   <tbody class="table-border-bottom-0">
                     <tr th:each="reviewer :${reviewers}">
-                      <td th:text="${reviewer.name}">
+                      <td>
                         <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                          <a target="_blank"><strong >Yusuf AKBAŞ</strong></a>
+                          <a th:href="@{'/'+${reviewer.name}}" target="_blank"><strong th:text="${reviewer.name}">Yusuf AKBAŞ</strong></a>
                         </ul>
                       </td>
                       <td >
-                        <strong >55</strong></td>
+                        <strong th:text="${reviewer.totalReview}">55</strong></td>
                       <td >
-                        <strong >55</strong></td>
+                        <strong th:text="${reviewer.totalApprove}">55</strong></td>
                       <td >
-                        <strong ></strong></td>
-                     
+                        <strong th:text="${reviewer.totalUnApprove}"></strong></td>
+                        
                     </tr>
                   </tbody>
                 </table>

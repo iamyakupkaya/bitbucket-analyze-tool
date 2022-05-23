@@ -27,14 +27,13 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
     private final String SQL_GET_MOST_OF_REVIEWED_PULL_REQUEST = " select pull_request_id,count(*) as mostOf from pullrequestreviewrelation group by pull_request_id having count(*) =(select max(mostOf) from  (select pull_request_id,count(*) as mostOf from pullrequestreviewrelation group by pull_request_id) pullrequestreviewrelation)";
     private final String SQL_GET_REWIEW_ID_FROM_RELATION_TABLE = "select review_id from pullrequestreviewrelation where pull_request_id=?;";
 
-    // TODO : Will it be used?
+    
     public ArrayList<ReviewDO> getAllReview() {
-        ArrayList<ReviewDO> allReviewer = new ArrayList<ReviewDO>();
-
-        return allReviewer;
+       
+        return null;
     }
 
-    public int getReviewCount() throws SQLException {
+    public int getTotalReviewCount() throws SQLException {
         Connection connection = TransactionManager.getConnection();
         int count = 0;
         Statement statement = connection.createStatement();
