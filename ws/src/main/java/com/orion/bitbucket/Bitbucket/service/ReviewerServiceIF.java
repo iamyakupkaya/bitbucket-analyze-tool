@@ -2,7 +2,6 @@ package com.orion.bitbucket.Bitbucket.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Map;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 
 public interface ReviewerServiceIF {

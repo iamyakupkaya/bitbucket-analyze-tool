@@ -41,8 +41,6 @@
     <!-- Helpers -->
     <script th:src="@{/vendor/js/helpers.js}" ></script>
 
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script  th:src="@{/js/config.js}" ></script>
     
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -251,9 +249,6 @@
             <h4 class="fw-bold py-3 mb-4">
               <span class="text-muted fw-light">Pull Requests /</span> All Reviewer Reviews
             </h4>
-
-            <hr class="my-5">
-
             <!-- Hoverable Table rows -->
             <div class="card">
               <h5 class="card-header">Review</h5>
@@ -288,23 +283,12 @@
             </div>
             <!--/ Hoverable Table rows -->
 
-            <hr class="my-5">
-
             <!-- / Content -->
-
-
-
 
             <!-- Footer -->
             <footer class="content-footer footer bg-footer-theme">
               <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-                <div class="mb-2 mb-md-0">
-                  ©
-                  <script>
-                    document.write(new Date().getFullYear())
-                  </script>
-                  , made with ❤️ by <a class="footer-link fw-bolder"></a>
-                </div>
+                
                 <div>
                 </div>
               </div>
