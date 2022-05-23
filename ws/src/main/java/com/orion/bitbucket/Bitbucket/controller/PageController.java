@@ -41,7 +41,7 @@ public class PageController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String edit(Model model) throws UnirestException, SQLException {
 
-        reviewerServiceIF.getCountOfReviewStatesWithDisplayName("SAGLAM, Ridvan");
+        
 
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
@@ -77,7 +77,7 @@ public class PageController {
         return "pull-requests.html";
     }
 
-    @RequestMapping(value = "/review", method = RequestMethod.GET)
+    @RequestMapping(value = "/reviewer", method = RequestMethod.GET)
     public String getReviewPage(Model model) throws UnirestException, SQLException {
         ArrayList<ReviewerDO> reviewers = reviewerServiceIF.getAllReviewers();
         
@@ -93,11 +93,11 @@ public class PageController {
         ArrayList<AuthorDO> authorDO = authorServiceIF.getCountOfPrStatesWithDisplayName(name);
         model.addAttribute("author", new AuthorDO());
         model.addAttribute("getCountOfPrStates", authorDO);
-
+       
         ArrayList<PullRequestDO> mergedList = pullRequestServiceIF.getPRListByStateAndUsername("MERGED",name);
         model.addAttribute("merged", new PullRequestDO());
         model.addAttribute("mergedList", mergedList);
-
+        
         ArrayList<PullRequestDO> openList = pullRequestServiceIF.getPRListByStateAndUsername("OPEN",name);
         model.addAttribute("open", new PullRequestDO());
         model.addAttribute("openList", openList);
@@ -105,6 +105,20 @@ public class PageController {
         ArrayList<PullRequestDO> declinedList = pullRequestServiceIF.getPRListByStateAndUsername("DECLINED",name);
         model.addAttribute("declined", new PullRequestDO());
         model.addAttribute("declinedList", declinedList);
+
+        if(mergedList.isEmpty() != true) {
+            model.addAttribute("authorName",openList.get(0).getDisplayName());
+            model.addAttribute("emailAddres",openList.get(0).getEmailAddress());
+            model.addAttribute("slug", openList.get(0).getSlug());
+        }else if(openList.isEmpty() != true) {
+            model.addAttribute("authorName",openList.get(0).getDisplayName());
+            model.addAttribute("emailAddres",openList.get(0).getEmailAddress());
+            model.addAttribute("slug", openList.get(0).getSlug());
+        }else {
+            model.addAttribute("authorName",declinedList.get(0).getDisplayName());
+            model.addAttribute("emailAddres",declinedList.get(0).getEmailAddress());
+            model.addAttribute("slug", declinedList.get(0).getSlug());
+        }
         
         return "author-details.html";
     }

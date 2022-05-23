@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<!-- beautify ignore:start -->
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="light-style layout-menu-fixed " dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 
   
-<!-- Mirrored from demos.themeselection.com/sneat-bootstrap-html-admin-template-free/html/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 09 May 2022 08:51:14 GMT -->
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
@@ -236,13 +234,11 @@
 
                     <div class="container-xxl flex-grow-1 container-p-y">
                         <div class="row">
-                            <div class="col-lg-12 mb-4 order-0">
+                            <div class="col-lg-8 mb-4 order-0">
                                 <div class="card h-100" th:each="author : ${getCountOfPrStates}">
                                     <div class="card-header d-flex align-items-center justify-content-between pb-0">
                                         <div class="card-title mb-0">
-                                            <h5 class="m-0 me-2">Pull Request Statistics: <small class="text-muted"
-                                                    th:text="${author.name}">Yusuf AKBAS</small></h5>
-                                            <small class="text-muted">MCP_CORE</small>
+                                            <h5 class="m-0 me-2">Pull Request Statistics</h5>
                                         </div>
                                     </div>
                                     <div class="card-body">
@@ -305,8 +301,65 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Transactions -->
+                            <div class="col-md-6 col-lg-4 order-2 mb-4" >
+                                <div class="card h-100" >
+                                    <div class="card-header d-flex align-items-center justify-content-between">
+                                        <ul class="p-0 m-0">
+                                            <li class="d-flex mb-4 pb-1">
+                                                <div class="avatar flex-shrink-0 me-3">
+                                                    <span class="avatar-initial rounded bg-label-info"><i
+                                                            class='bx bx-user'></i></span>
+                                                </div>
+                                                <div
+                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                                    <div class="me-2">
+                                                        <small class="text-muted d-block mb-1">MCP_CORE</small>
+                                                        <h6 class="mb-0" th:text="${authorName}">Yusuf AKBAŞ</h6>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="p-0 m-0">
+                                            <li class="d-flex mb-4 pb-1">
+                                                <div class="avatar flex-shrink-0 me-3">
+                                                    <span class="avatar-initial rounded bg-label-info"><i
+                                                            class='bx bx-mail-send'></i></span>
+                                                </div>
+                                                <div
+                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                                    <div class="me-2">
+                                                        <small class="text-muted d-block mb-1">Email Adress</small>
+                                                        <h6 class="mb-0" th:text="${emailAddres}">yusuf.akbas@orioninc.com</h6>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </li>
+                                            <li class="d-flex mb-4 pb-1">
+                                                <div class="avatar flex-shrink-0 me-3">
+                                                    <span class="avatar-initial rounded bg-label-info"><i
+                                                            class='bx bxs-file-txt'></i></span>
+                                                </div>
+                                                <div
+                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                                    <div class="me-2">
+                                                        <small class="text-muted d-block mb-1">Slug</small>
+                                                        <h6 class="mb-0" th:text="${slug}">yusufakbas</h6>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </li>
 
-                            <!--/ Total Revenue -->
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/ Transactions -->
 
                         </div>
                         <!-- Tabs -->
@@ -344,10 +397,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th>PR ID</th>
-                                                            <th>CLOSED</th>
+                                                            <th>TITLE</th>
                                                             <th>CREATED DATE</th>
-                                                            <th>CLOSED DATE</th>
-                                                            <th>STATE</th>
                                                             <th>DESCRIPTION</th>
                                                             <th>REVİEWER LIST</th>
                                                         </tr>
@@ -357,12 +408,8 @@
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
                                                                 <strong th:text="${merged.prId}">id</strong>
                                                             </td>
-                                                            <td th:text="${merged.closed}">closed</td>
+                                                            <td th:text="${merged.title}">closed</td>
                                                             <td th:text="${merged.createdDate}">createdDate</td>
-                                                            <td th:text="${merged.closedDate}">closedDate</td>
-                                                            <td><span class="badge bg-label-success me-1"
-                                                                    th:text="${merged.state}">state</span>
-                                                            </td>
                                                             <td>
                                                                 <button type="button" class="btn btn-primary"
                                                                     data-bs-toggle="modal"
@@ -404,8 +451,8 @@
                                                                         data-popup="tooltip-custom"
                                                                         data-bs-placement="top"
                                                                         class="avatar avatar-xs pull-up"
-                                                                        title="Lilian Fuller" >
-                                                                        <img th:src="@{/img/avatars/5.png}" alt="Avatar"
+                                                                        title="Lilian Fuller">
+                                                                        <img th:src="@{/img/avatars/test.png}" alt="Avatar"
                                                                             class="rounded-circle">
                                                                     </li>
                                                                 </ul>
@@ -425,10 +472,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th>PR ID</th>
-                                                            <th>CLOSED</th>
+                                                            <th>TITLE</th>
                                                             <th>CREATED DATE</th>
-                                                            <th>CLOSED DATE</th>
-                                                            <th>STATE</th>
                                                             <th>DESCRIPTION</th>
                                                             <th>REVİEWER LIST</th>
                                                         </tr>
@@ -438,12 +483,8 @@
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
                                                                 <strong th:text="${open.prId}">Angular Project</strong>
                                                             </td>
-                                                            <td th:text="${open.closed}">closed</td>
+                                                            <td th:text="${open.title}">title</td>
                                                             <td th:text="${open.createdDate}">createdDate</td>
-                                                            <td th:text="${open.closedDate}">closedDate</td>
-                                                            <td><span class="badge bg-label-primary me-1"
-                                                                    th:text="${open.state}">state</span>
-                                                            </td>
                                                             <td>
                                                                 <button type="button" class="btn btn-primary"
                                                                     data-bs-toggle="modal"
@@ -491,7 +532,7 @@
                                                                         data-bs-placement="top"
                                                                         class="avatar avatar-xs pull-up"
                                                                         title="Lilian Fuller">
-                                                                        <img th:src="@{/img/avatars/5.png}" alt="Avatar"
+                                                                        <img th:src="@{/img/avatars/test.png}" alt="Avatar"
                                                                             class="rounded-circle">
                                                                     </li>
                                                                 </ul>
@@ -511,10 +552,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th>PR ID</th>
-                                                            <th>CLOSED</th>
+                                                            <th>TITLE</th>
                                                             <th>CREATED DATE</th>
-                                                            <th>CLOSED DATE</th>
-                                                            <th>STATE</th>
                                                             <th>DESCRIPTION</th>
                                                             <th>REVİEWER LIST</th>
                                                         </tr>
@@ -524,12 +563,8 @@
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
                                                                 <strong th:text="${declined.prId}">prId</strong>
                                                             </td>
-                                                            <td th:text="${declined.closed}">closed</td>
+                                                            <td th:text="${declined.title}">closed</td>
                                                             <td th:text="${declined.createdDate}">createdDate</td>
-                                                            <td th:text="${declined.closedDate}">closedDate</td>
-                                                            <td><span class="badge bg-label-primary me-1"
-                                                                    th:text="${declined.state}">state</span>
-                                                            </td>
                                                             <td>
                                                                 <button type="button" class="btn btn-primary"
                                                                     data-bs-toggle="modal"
@@ -577,7 +612,7 @@
                                                                         data-bs-placement="top"
                                                                         class="avatar avatar-xs pull-up"
                                                                         title="Lilian Fuller">
-                                                                        <img th:src="@{/img/avatars/5.png}" alt="Avatar"
+                                                                        <img th:src="@{/img/avatars/test.png}" alt="Avatar"
                                                                             class="rounded-circle">
                                                                     </li>
                                                                 </ul>
@@ -620,17 +655,7 @@
                 <!-- Footer -->
                 <footer class="content-footer footer bg-footer-theme">
                     <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-                        <div class="mb-2 mb-md-0">
-                            ©
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script>
-                            , made with by <a target="_blank" class="footer-link fw-bolder">*****</a>
-                        </div>
-                        <div>
-                            <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                                target="_blank" class="footer-link me-4">Documentation</a>
-                        </div>
+                        
                     </div>
                 </footer>
                 <!-- / Footer -->
@@ -674,9 +699,4 @@
 
 </body>
 
-
-<!-- Mirrored from demos.themeselection.com/sneat-bootstrap-html-admin-template-free/html/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 09 May 2022 08:51:34 GMT -->
-
 </html>
-
-
