@@ -2,6 +2,8 @@ package com.orion.bitbucket.Bitbucket.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO;
 
 public interface ReviewServiceIF {
@@ -10,5 +12,5 @@ public interface ReviewServiceIF {
     ArrayList<ReviewDO.PullRequestReviewRelation> getReviewsByUsername(String username) throws SQLException;
     int getReviewIdByUsername(String username) throws SQLException;
     ArrayList<ReviewDO.PullRequestReviewRelation> getReviewsWithPullRequestState(String state) throws SQLException;
-
+    ArrayList<ReviewDO.PullRequestReviewRelation> mostReviewedPullRequest() throws SQLException;
 }
