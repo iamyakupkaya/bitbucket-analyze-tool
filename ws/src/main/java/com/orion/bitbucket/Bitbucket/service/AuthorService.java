@@ -22,6 +22,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
     private final String SQL_GET_TOP_AUTHOR_BY_MERGED = "select name, total_merged_prs from author order by total_merged_prs desc limit 1";
     private final String SQL_GET_TOP_AUTHOR_BY_DECLINED = "select name, total_declined_prs from author order by total_declined_prs desc limit 1";
     private final String SQL_GET_ALL_AUTHORS = "select * from author";
+    private final String SQL_GET_AUTHOR_BY_USERNAME = "select * from author where name=?;";
 
     public int getAuthorCount() throws SQLException {
         Connection connection = TransactionManager.getConnection();
@@ -93,6 +94,33 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         connection.close();
         return count;
     }
+
+    public ArrayList<AuthorDO> getCountOfPrStatesWithDisplayName(String name) throws SQLException {
+        ArrayList<AuthorDO> list = new ArrayList<>();
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_AUTHOR_BY_USERNAME);
+        preparedStmt.setString(1, name);
+        ResultSet resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String authorName = resultSet.getString("name");
+            int totalPrs = resultSet.getInt("total_prs");
+            int totalMerged = resultSet.getInt("total_merged_prs");
+            int totalOpen = resultSet.getInt("total_open_prs");
+            int totalDeclined = resultSet.getInt("total_declined_prs");
+
+            list.add(new AuthorDO(id, authorName, totalPrs, totalMerged, totalOpen, totalDeclined));
+        }
+        resultSet.close();
+        preparedStmt.close();
+        connection.close();
+
+        return list;
+    }
+
+
 
     public void insertAuthorData(String author) throws SQLException {
         int totalMergedPRs = getCountPRByStateAndUsername("MERGED", author);
