@@ -117,7 +117,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         resultSet.close();
         preparedStmt.close();
         connection.close();
-        System.out.println(count);
+        
         return count;
 
     }
@@ -185,7 +185,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         resultSet.close();
         preparedStmt.close();
         connection.close();
-        System.out.println(list.get(0));
+        
         return list;
     }
 

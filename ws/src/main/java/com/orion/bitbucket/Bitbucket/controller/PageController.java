@@ -41,7 +41,6 @@ public class PageController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String edit(Model model) throws UnirestException, SQLException {
 
-        
 
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
@@ -93,6 +92,11 @@ public class PageController {
         ArrayList<AuthorDO> authorDO = authorServiceIF.getCountOfPrStatesWithDisplayName(name);
         model.addAttribute("author", new AuthorDO());
         model.addAttribute("getCountOfPrStates", authorDO);
+        model.addAttribute("totalPRChart", authorDO.get(0).getTotalPRs());
+        model.addAttribute("totalMergedChart", authorDO.get(0).getTotalMergedPRs());
+        model.addAttribute("totalOpenChart", authorDO.get(0).getTotalOpenPRs());
+        model.addAttribute("totalDeclinedChart", authorDO.get(0).getTotalDeclinedPRs());
+
        
         ArrayList<PullRequestDO> mergedList = pullRequestServiceIF.getPRListByStateAndUsername("MERGED",name);
         model.addAttribute("merged", new PullRequestDO());
@@ -107,9 +111,9 @@ public class PageController {
         model.addAttribute("declinedList", declinedList);
 
         if(mergedList.isEmpty() != true) {
-            model.addAttribute("authorName",openList.get(0).getDisplayName());
-            model.addAttribute("emailAddres",openList.get(0).getEmailAddress());
-            model.addAttribute("slug", openList.get(0).getSlug());
+            model.addAttribute("authorName",mergedList.get(0).getDisplayName());
+            model.addAttribute("emailAddres",mergedList.get(0).getEmailAddress());
+            model.addAttribute("slug", mergedList.get(0).getSlug());
         }else if(openList.isEmpty() != true) {
             model.addAttribute("authorName",openList.get(0).getDisplayName());
             model.addAttribute("emailAddres",openList.get(0).getEmailAddress());

@@ -159,7 +159,7 @@
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item active">
-                                <a th:href="@{reviewer}" class="menu-link">
+                                <a th:href="@{/reviewer}" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-table"></i>
                                     <div data-i18n="Tables">All Reviewer</div>
                                 </a>
@@ -247,7 +247,7 @@
                                                 <h2 class="mb-2" th:text="${author.totalPRs}">45</h2>
                                                 <span>Total PRs</span>
                                             </div>
-                                            <div id="orderStatisticsChart">
+                                            <div id="PullRequestStatisticsChart">
 
                                             </div>
                                         </div>
@@ -696,6 +696,89 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer th:src="@{/../../buttons.github.io/buttons.js}"></script>
+
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+
+    const totalPR = /*[[${totalPRChart}]]*/ 'default';
+    const totalMergedPRs = /*[[${totalMergedChart}]]*/ 'default';
+    const totalOpenPRs = /*[[${totalOpenChart}]]*/ 'default';
+    const totalDeclinedPRs = /*[[${totalDeclinedChart}]]*/ 'default';
+
+        /*]]>*/
+
+        var o = config.colors.white,
+        t = config.colors.headingColor,
+        e = config.colors.axisColor,
+        r = config.colors.borderColor,
+         i = document.querySelector("#PullRequestStatisticsChart"), s = {
+        chart: {
+            height: 165,
+            width: 130,
+            type: "donut"
+        },
+        labels: ["Merge", "Declined", "Open"],
+        series: [totalMergedPRs, totalOpenPRs, totalDeclinedPRs],
+        colors: [config.colors.primary, config.colors.secondary, config.colors.info],
+        stroke: {
+            width: 5,
+            colors: o
+        },
+        dataLabels: {
+            enabled: !1,
+            formatter: function (o, t) {
+                return parseInt(o) 
+            }
+        },
+        legend: {
+            show: !1
+        },
+        grid: {
+            padding: {
+                top: 0,
+                bottom: 0,
+                right: 15
+            }
+        },
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: "75%",
+                    labels: {
+                        show: !0,
+                        value: {
+                            fontSize: "1.5rem",
+                            fontFamily: "Public Sans",
+                            color: t,
+                            offsetY: -15,
+                            formatter: function (o) {
+                                return parseInt(o) 
+                            }
+                        },
+                        name: {
+                            offsetY: 20,
+                            fontFamily: "Public Sans"
+                        },
+                        total: {
+                            show: !0,
+                            fontSize: "0.8125rem",
+                            color: e,
+                            label: "All",
+                            formatter: function (o) {
+                                return totalPR
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    if (null !== i) {
+        const d = new ApexCharts(i, s);
+        d.render()
+    }
+    </script>
 
 </body>
 
