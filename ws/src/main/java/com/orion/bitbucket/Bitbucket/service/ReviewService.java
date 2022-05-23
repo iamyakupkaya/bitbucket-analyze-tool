@@ -24,28 +24,13 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
     private final String SQL_GET_REVIEWS_BY_ID = "select * from review where id=?;";
     private final String SQL_GET_PULL_REQUEST_ID_FROM_RELATION_TABLE = "select pull_request_id from pullrequestreviewrelation where review_id=?;";
     private final String SQL_GET_REVIEW_ID_BY_USERNAME = "select id from review where display_name=? order by id desc limit 1;";
+    private final String SQL_GET_MOST_OF_REVIEWED_PULL_REQUEST = " select pull_request_id,count(*) as mostOf from pullrequestreviewrelation group by pull_request_id having count(*) =(select max(mostOf) from  (select pull_request_id,count(*) as mostOf from pullrequestreviewrelation group by pull_request_id) pullrequestreviewrelation)";
+    private final String SQL_GET_REWIEW_ID_FROM_RELATION_TABLE = "select review_id from pullrequestreviewrelation where pull_request_id=?;";
 
-    // TODO burada olmamali
-    public ArrayList<String> getAllReviewer() {
-        ArrayList<String> reviewerList = new ArrayList<String>();
-        for (int i = 0; i < getAllReview().size(); i++) {
-            if (!reviewerList.contains(getAllReview().get(i).getDisplayName())) {
-                reviewerList.add(getAllReview().get(i).getDisplayName());
-            }
-        }
-        return reviewerList;
-    }
-
-    // TODO burada olmamali
-    public int getAllReviewerCount() {
-        return getAllReviewer().size();
-    }
-
+    // TODO : Will it be used?
     public ArrayList<ReviewDO> getAllReview() {
         ArrayList<ReviewDO> allReviewer = new ArrayList<ReviewDO>();
-        allReviewer.addAll(getMergedPRReviewList());
-        allReviewer.addAll(getOpenPRReviewList());
-        allReviewer.addAll(getDeclinedPRReviewList());
+
         return allReviewer;
     }
 
@@ -128,7 +113,6 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         ArrayList<PullRequestDO> pullRequestList = pullRequestServiceIF.getPRListByState(state);
         ArrayList<ReviewDO.PullRequestReviewRelation> pullRequestReviewRelations = new ArrayList<>();
 
-        String SQL_GET_REWIEW_ID_FROM_RELATION_TABLE = "select review_id from pullrequestreviewrelation where pull_request_id=?;";
         for (int i = 0; i < pullRequestList.size(); i++) {
             PullRequestDO pullRequest = pullRequestServiceIF.getPullRequestById(pullRequestList.get(i).getPrId());
             Connection connection = TransactionManager.getConnection();
@@ -164,9 +148,56 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         return pullRequestReviewRelations;
     }
 
-   
-
     // En fazla review edilen pull request
+
+    public ArrayList<ReviewDO.PullRequestReviewRelation> mostReviewedPullRequest() throws SQLException {
+        ArrayList<ReviewDO.PullRequestReviewRelation> pullRequestReviewRelations = new ArrayList<>();
+        Connection connection = TransactionManager.getConnection();
+        int pull_request_id = 0;
+        int reviewCount = 0;
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(SQL_GET_MOST_OF_REVIEWED_PULL_REQUEST);
+        while (resultSet.next()) {
+            pull_request_id = resultSet.getInt("pull_request_id");
+            reviewCount = resultSet.getInt("mostOf");
+        }
+        resultSet.close();
+        statement.close();
+        connection.close();
+        PullRequestDO pullRequest = pullRequestServiceIF.getPullRequestById(pull_request_id);
+        connection = TransactionManager.getConnection();
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_REWIEW_ID_FROM_RELATION_TABLE);
+        preparedStmt.setInt(1, pull_request_id);
+        resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()) {
+            int review_id = resultSet.getInt("review_id");
+            PreparedStatement preparedStmtTwo = null;
+            preparedStmtTwo = connection.prepareStatement(SQL_GET_REVIEWS_BY_ID);
+            preparedStmtTwo.setInt(1, review_id);
+            ResultSet resultSetTwo = preparedStmtTwo.executeQuery();
+            connection.commit();
+            while (resultSetTwo.next()) {
+                int id = resultSetTwo.getInt("id");
+                String displayName = resultSetTwo.getString("display_name");
+                String emailAddress = resultSetTwo.getString("email_address");
+                boolean approved = resultSetTwo.getBoolean("approved");
+                String status = resultSetTwo.getString("status");
+                pullRequestReviewRelations.add(new ReviewDO.PullRequestReviewRelation(pullRequest,
+                        new ReviewDO(id, displayName, emailAddress, status, approved)));
+            }
+            resultSetTwo.close();
+            preparedStmtTwo.close();
+        }
+        resultSet.close();
+        preparedStmt.close();
+        connection.close();
+        
+        return pullRequestReviewRelations;
+
+    }
+
     // En fazla review edilen 5 pull request (gereksiz olabilir bu)
     // En az review yapan kisi
     // Returns a list that is consists of pull request reviewed by username
@@ -182,63 +213,6 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
             }
         }
         return list;
-    }
-
-    public int getReviewerApproveCount(String username) {
-        ArrayList<PullRequestDO> reviewerAllPRReview = new ArrayList<PullRequestDO>();
-        reviewerAllPRReview.addAll(getMergedPRListReviewedByUsername(username));
-        reviewerAllPRReview.addAll(getOpenPRListReviewedByUsername(username));
-        reviewerAllPRReview.addAll(getDeclinedPRListReviewedByUsername(username));
-
-        int totalApprove = 0;
-        String a = "APPROVED";
-        for (int i = 0; i < reviewerAllPRReview.size(); i++) {
-            if (reviewerAllPRReview.get(i).getReviewerList().get(i).getStatus().toString().equals(a)) {
-                totalApprove++;
-            } else {
-                System.out.println(reviewerAllPRReview.get(i).getReviewerList().get(i).getStatus());
-                System.out.println("Değer boş");
-            }
-        }
-
-        return totalApprove;
-    }
-
-    public int getReviewerUnApproveCount(String username) {
-        ArrayList<ReviewerDO> mergedReviewer = new ArrayList<ReviewerDO>();
-
-        ArrayList<PullRequestDO> reviewerAllPRReview = new ArrayList<PullRequestDO>();
-        reviewerAllPRReview.addAll(getMergedPRListReviewedByUsername(username));
-        reviewerAllPRReview.addAll(getOpenPRListReviewedByUsername(username));
-        reviewerAllPRReview.addAll(getDeclinedPRListReviewedByUsername(username));
-
-        int totalUnApprove = 0;
-        String a = "UNAPPROVED";
-        for (int i = 0; i < reviewerAllPRReview.size(); i++) {
-            if (reviewerAllPRReview.get(i).getReviewerList().get(i).getStatus().equals(a)) {
-                totalUnApprove++;
-            } else {
-                System.out.println(reviewerAllPRReview.get(i).getReviewerList().get(i).getStatus());
-                System.out.println("Değer boş");
-            }
-        }
-
-        return totalUnApprove;
-    }
-
-    public Map<String, Long> getTopReviewer() {
-        ArrayList<ReviewDO> allReviewer = getAllReview();
-        ArrayList<String> allReviewerDisplayName = new ArrayList<String>();
-        for (int i = 0; i < allReviewer.size(); i++) {
-            allReviewerDisplayName.add(allReviewer.get(i).getDisplayName());
-        }
-        String topReviewerDisplayName = Helper.count(allReviewerDisplayName).entrySet().stream()
-                .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
-        long topReviewerCount = Helper.count(allReviewerDisplayName).entrySet().stream()
-                .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getValue();
-        Map<String, Long> topReviewer = new HashMap<>();
-        topReviewer.put(topReviewerDisplayName, topReviewerCount);
-        return topReviewer;
     }
 
     public ArrayList<PullRequestDO> getOpenPRListReviewedByUsername(String username) {
@@ -283,7 +257,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         return this.getDeclinedPRListReviewedByUsername(username).size();
     }
 
-    public ArrayList<ReviewDO> getReviewersByPRId(int id) {
+    public ArrayList<ReviewDO> getReviewByPRId(int id) {
         ArrayList<PullRequestDO> allPR = this.allPRList;
         ArrayList<ReviewDO> getReviewerWithPrId = new ArrayList<ReviewDO>();
         for (int i = 0; i < allPR.size(); i++) {
@@ -293,7 +267,6 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
             }
         }
         return getReviewerWithPrId;
-
     }
 
 }
