@@ -2,7 +2,6 @@ package com.orion.bitbucket.Bitbucket.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
-import com.orion.bitbucket.Bitbucket.model.ReviewDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 import com.orion.bitbucket.Bitbucket.service.AuthorServiceIF;
 import com.orion.bitbucket.Bitbucket.service.BaseServiceIF;
@@ -42,32 +40,23 @@ public class PageController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String edit(Model model) throws UnirestException, SQLException {
-        //baseService.getData();
-        authorServiceIF.getTopAuthor();
+
+        reviewerServiceIF.getCountOfReviewStatesWithDisplayName("SAGLAM, Ridvan");
+
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
 
-        //model.addAttribute("reviewerCount", reviewServiceIF.getAllReviewerCount());
-        //model.addAttribute("reviewCount", reviewServiceIF.getAllReviewCount());
+        model.addAttribute("reviewerCount", reviewerServiceIF.getAllReviewerCount());
+        model.addAttribute("reviewCount", reviewServiceIF.getTotalReviewCount());
 
         AuthorDO.TopAuthor topAuthor = authorServiceIF.getTopAuthor();
         model.addAttribute("topAuthorDisplayName", topAuthor.getName());
         model.addAttribute("topAuthorPRsCount", topAuthor.getTotal());
 
-        reviewServiceIF.getReviewsByUsername("ALMAZ, Tuna");
-          /*
-        String topReviewerDisplayName = null;
-        Long topReviewerCount = null;
+        ReviewerDO.TopReviewer topReviewer = reviewerServiceIF.getTopReviewer();
+        model.addAttribute("topReviewerDisplayName", topReviewer.getName());
+        model.addAttribute("topReviewerCount",topReviewer.getTotal()); 
 
-        for (Map.Entry<String, Long> topReviewer : reviewServiceIF.getTopReviewer().entrySet()) {
-            topReviewerDisplayName = topReviewer.getKey();
-            topReviewerCount = topReviewer.getValue();
-            
-        }
-
-        model.addAttribute("topReviewerDisplayName", topReviewerDisplayName);
-        model.addAttribute("topReviewerCount",topReviewerCount); 
-*/
         return "index.html";
     }
 
@@ -75,6 +64,7 @@ public class PageController {
     public String getFillDataPage(Model model) throws UnirestException, SQLException {
         baseService.getData();
         authorServiceIF.getAllAuthor();
+        reviewerServiceIF.getAllReviewer();
         return "fill-data.html";
     }
 
@@ -88,36 +78,34 @@ public class PageController {
     }
 
     @RequestMapping(value = "/review", method = RequestMethod.GET)
-    public String getReviewPage(Model model) throws UnirestException {
-        ArrayList<ReviewerDO> getAllReviewer = reviewerServiceIF.getCountOfReviewStatesOfAllReviewer();
+    public String getReviewPage(Model model) throws UnirestException, SQLException {
+        ArrayList<ReviewerDO> reviewers = reviewerServiceIF.getAllReviewers();
+        
         model.addAttribute("reviewer", new ReviewerDO());
-        model.addAttribute("reviewers", getAllReviewer);
-        return "pull-requests.html";
+        model.addAttribute("reviewers", reviewers);
+        return "reviewer.html";
     }
     
 
 
     @RequestMapping(value = "/pull-requests/author/{name}")
-    public String showAuthorDetails(Model model, @PathVariable(name = "name", required = false) String name) throws UnirestException {
-        //ArrayList<AuthorDO> authorDO = authorServiceIF.getCountOfPrStatesWithDisplayName(name);
-        //model.addAttribute("author", new AuthorDO());
-        //model.addAttribute("getCountOfPrStates", authorDO);
+    public String showAuthorDetails(Model model, @PathVariable(name = "name", required = false) String name) throws UnirestException, SQLException {
+        ArrayList<AuthorDO> authorDO = authorServiceIF.getCountOfPrStatesWithDisplayName(name);
+        model.addAttribute("author", new AuthorDO());
+        model.addAttribute("getCountOfPrStates", authorDO);
 
-        //ArrayList<PullRequestDO> mergedList = pullRequestServiceIF.getMergedPRListByUsername(name);
-        //model.addAttribute("merged", new PullRequestDO());
-        //model.addAttribute("mergedList", mergedList);
-        ArrayList<ReviewDO> reviewerList = new ArrayList<ReviewDO>();
+        ArrayList<PullRequestDO> mergedList = pullRequestServiceIF.getPRListByStateAndUsername("MERGED",name);
+        model.addAttribute("merged", new PullRequestDO());
+        model.addAttribute("mergedList", mergedList);
 
+        ArrayList<PullRequestDO> openList = pullRequestServiceIF.getPRListByStateAndUsername("OPEN",name);
+        model.addAttribute("open", new PullRequestDO());
+        model.addAttribute("openList", openList);
 
-        //ArrayList<PullRequestDO> openList = pullRequestServiceIF.getOpenPRListByUsername(name);
-        //model.addAttribute("open", new PullRequestDO());
-        //model.addAttribute("openList", openList);
-
-        //ArrayList<PullRequestDO> declinedList = pullRequestServiceIF.getDeclinedPRListByUsername(name);
-        //model.addAttribute("declined", new PullRequestDO());
-        //model.addAttribute("declinedList", declinedList);
+        ArrayList<PullRequestDO> declinedList = pullRequestServiceIF.getPRListByStateAndUsername("DECLINED",name);
+        model.addAttribute("declined", new PullRequestDO());
+        model.addAttribute("declinedList", declinedList);
         
-       
         return "author-details.html";
     }
   
