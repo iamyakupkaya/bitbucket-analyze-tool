@@ -95,7 +95,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         return count;
     }
 
-    public ArrayList<AuthorDO> getCountOfPrStatesWithDisplayName(String name) throws SQLException {
+    public ArrayList<AuthorDO> getCountPRStatesByUsername(String name) throws SQLException {
         ArrayList<AuthorDO> list = new ArrayList<>();
         Connection connection = TransactionManager.getConnection();
         PreparedStatement preparedStmt = null;

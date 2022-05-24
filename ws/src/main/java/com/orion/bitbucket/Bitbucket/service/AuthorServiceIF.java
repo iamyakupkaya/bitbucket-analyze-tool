@@ -15,6 +15,6 @@ public interface AuthorServiceIF {
     AuthorDO.TopAuthor getTopAuthorAtOpen() throws SQLException;
     AuthorDO.TopAuthor getTopAuthorAtMerged() throws SQLException;
     AuthorDO.TopAuthor getTopAuthorAtDeclined() throws SQLException;
-    ArrayList<AuthorDO> getCountOfPrStatesWithDisplayName(String name) throws SQLException;
+    ArrayList<AuthorDO> getCountPRStatesByUsername(String name) throws SQLException;
 
 }
