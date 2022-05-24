@@ -11,7 +11,7 @@ public interface ReviewerServiceIF {
     int getCountReviewByStatusAndUsername(String state, String username) throws SQLException;
     ReviewerDO.TopReviewer getTopReviewer() throws SQLException;
     ArrayList<ReviewerDO> getAllReviewers() throws SQLException;
-    ArrayList<ReviewerDO> getCountOfReviewStatesWithDisplayName(String name) throws SQLException;
+    ArrayList<ReviewerDO> getCountReviewStatesByUsername(String name) throws SQLException;
 
     
 }

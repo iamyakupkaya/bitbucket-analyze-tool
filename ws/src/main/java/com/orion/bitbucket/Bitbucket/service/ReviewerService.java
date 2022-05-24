@@ -23,10 +23,10 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
 
     private final String SQL_GET_REVIEWER_COUNT = "select count(name) from reviewer";
     private final String SQL_INSERT_REVIEWER_DATA = "insert into reviewer(id, name, total_review, total_approve, total_unapprove) values (?, ?, ?, ?, ?);";
-    private final String GET_SQL_ALL_REVIEWER_DISPLAY_NAME = "SELECT display_name FROM review GROUP BY display_name";
+    private final String GET_SQL_ALL_REVIEW_DISPLAY_NAME = "SELECT display_name FROM review GROUP BY display_name";
     private final String SQL_GET_COUNT_REVIEW_BY_STATUS_AND_USERNAME = "select count(*) from review where status=? and display_name=?;";
     private final String SQL_IS_REVIEWER_TABLE_EMPTY = "select count(*) from reviewer;";
-    private final String SQL_GET_TOP_REVIEWER = "select name, total_review from reviewer order by total_review desc limit 1";
+    private final String SQL_GET_TOP_REVIEWER = "select name, total_approve from reviewer order by total_approve desc limit 1";
     private final String SQL_GET_ALL_REVIEWER = "select * from reviewer";
     private final String SQL_GET_REVIEWER_BY_USERNAME = "select * from reviewer where name=?;";
 
@@ -34,7 +34,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         ArrayList<String> reviewers = new ArrayList<>();
         Connection connection = TransactionManager.getConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(GET_SQL_ALL_REVIEWER_DISPLAY_NAME);
+        ResultSet resultSet = statement.executeQuery(GET_SQL_ALL_REVIEW_DISPLAY_NAME);
         while (resultSet.next()) {
             reviewers.add(resultSet.getString("display_name"));
         }
@@ -110,7 +110,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         preparedStmt.setString(1, state);
         preparedStmt.setString(2, username);
         ResultSet resultSet = preparedStmt.executeQuery();
-        connection.commit(); // ADDED
+        connection.commit(); 
         while (resultSet.next()) {
             count = resultSet.getInt("count");
         }
@@ -155,8 +155,8 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         ResultSet resultSet = statement.executeQuery(SQL_GET_TOP_REVIEWER);
         while (resultSet.next()) {
             String name = resultSet.getString("name");
-            int totalReviewCount = resultSet.getInt("total_review");
-            topReviewer = new ReviewerDO.TopReviewer(name, totalReviewCount);
+            int totalApprovedCount = resultSet.getInt("total_approve");
+            topReviewer = new ReviewerDO.TopReviewer(name, totalApprovedCount);
         }
         resultSet.close();
         statement.close();
@@ -165,7 +165,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
     }
 
    
-    public ArrayList<ReviewerDO> getCountOfReviewStatesWithDisplayName(String name) throws SQLException {
+    public ArrayList<ReviewerDO> getCountReviewStatesByUsername(String name) throws SQLException {
         ArrayList<ReviewerDO> list = new ArrayList<>();
         Connection connection = TransactionManager.getConnection();
         PreparedStatement preparedStmt = null;
