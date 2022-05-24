@@ -7,6 +7,7 @@ import com.orion.bitbucket.Bitbucket.model.ReviewDO;
 public interface ReviewServiceIF {
 
     int getTotalReviewCount() throws SQLException;
+    ArrayList<ReviewDO.PullRequestReviewRelation> getReviewsByUsernameAndStatus(String username, String status) throws SQLException;
     ArrayList<ReviewDO.PullRequestReviewRelation> getReviewsByUsername(String username) throws SQLException;
     int getReviewIdByUsername(String username) throws SQLException;
     ArrayList<ReviewDO.PullRequestReviewRelation> getReviewsWithPullRequestState(String state) throws SQLException;
