@@ -15,6 +15,10 @@ public class ReviewDO {
         this.approved = approved;
     }
 
+    public ReviewDO (){
+
+    }
+
     public int getId() {
         return id;
     }
@@ -56,6 +60,10 @@ public class ReviewDO {
             this.review = review;
         }
 
+        public PullRequestReviewRelation() {
+            
+        }
+
         public PullRequestDO getPullRequest() {
             return this.pullRequest;
         }
@@ -64,4 +72,6 @@ public class ReviewDO {
             return this.review;
         }
     }
+
+    
 }
