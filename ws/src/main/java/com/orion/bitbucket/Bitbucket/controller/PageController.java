@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
+import com.orion.bitbucket.Bitbucket.model.ReviewDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
+import com.orion.bitbucket.Bitbucket.model.ReviewDO.PullRequestReviewRelation;
 import com.orion.bitbucket.Bitbucket.service.AuthorServiceIF;
 import com.orion.bitbucket.Bitbucket.service.BaseServiceIF;
 import com.orion.bitbucket.Bitbucket.service.PullRequestServiceIF;
@@ -89,7 +91,7 @@ public class PageController {
 
     @RequestMapping(value = "/pull-requests/author/{name}")
     public String showAuthorDetails(Model model, @PathVariable(name = "name", required = false) String name) throws UnirestException, SQLException {
-        ArrayList<AuthorDO> authorDO = authorServiceIF.getCountOfPrStatesWithDisplayName(name);
+        ArrayList<AuthorDO> authorDO = authorServiceIF.getCountPRStatesByUsername(name);
         model.addAttribute("author", new AuthorDO());
         model.addAttribute("getCountOfPrStates", authorDO);
         model.addAttribute("totalPRChart", authorDO.get(0).getTotalPRs());
@@ -125,6 +127,40 @@ public class PageController {
         }
         
         return "author-details.html";
+    }
+
+    @RequestMapping(value = "/reviewer/{name}")
+    public String showReviewerDetails(Model model, @PathVariable(name = "name", required = false) String name) throws UnirestException, SQLException {
+        ArrayList<ReviewerDO> reviewerDO = reviewerServiceIF.getCountReviewStatesByUsername(name);
+        model.addAttribute("reviewer", new ReviewerDO());
+        model.addAttribute("getCount", reviewerDO);
+        model.addAttribute("totalReviewChart", reviewerDO.get(0).getTotalReview());
+        model.addAttribute("totalApproveChart", reviewerDO.get(0).getTotalApprove());
+        model.addAttribute("totalUnapproveChart", reviewerDO.get(0).getTotalUnApprove());
+
+        ArrayList<ReviewDO.PullRequestReviewRelation> reviewApproveList = reviewServiceIF.getReviewsByUsernameAndStatus(name, "APPROVED");
+         model.addAttribute("relationApprove", new PullRequestReviewRelation());
+         model.addAttribute("relationApproveList", reviewApproveList);
+
+         ArrayList<ReviewDO.PullRequestReviewRelation> reviewUnapproveList = reviewServiceIF.getReviewsByUsernameAndStatus(name, "UNAPPROVED");
+         model.addAttribute("relationUnapprove", new PullRequestReviewRelation());
+         model.addAttribute("relationUnapproveList", reviewUnapproveList);
+
+         if(reviewApproveList.isEmpty() != true) {
+            model.addAttribute("reviewerName",reviewApproveList.get(0).getReview().getDisplayName());
+            model.addAttribute("emailAddres",reviewApproveList.get(0).getReview().getEmailAddress());
+            model.addAttribute("id", reviewApproveList.get(0).getReview().getId());
+        }else{
+            model.addAttribute("reviewerName",reviewUnapproveList.get(0).getReview().getDisplayName());
+            model.addAttribute("emailAddres",reviewUnapproveList.get(0).getReview().getEmailAddress());
+            model.addAttribute("id", reviewUnapproveList.get(0).getReview().getId());
+        }
+
+       
+
+        // ArrayList<ReviewDO> reviewDOtoUnapprove = reviewServiceIF.getReviewListByStatusAndUsername("UNAPPROVED", name);
+       
+        return "reviewer-details.html";
     }
   
 
