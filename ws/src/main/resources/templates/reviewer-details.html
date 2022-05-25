@@ -295,6 +295,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>PR ID</th>
+                                                            <th>JIRA ID</th>
                                                             <th>PR TITLE</th>
                                                             <th>PR STATE</th>
                                                         </tr>
@@ -304,6 +305,7 @@
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
                                                                 <strong th:text="${relationApprove.pullRequest.prId}">id</strong>
                                                             </td>
+                                                            <td th:text="${relationApprove.pullRequest.jiraId}"></td>
                                                             <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "  th:text="${relationApprove.pullRequest.title}">title</td>
                                                             <td th:text="${relationApprove.pullRequest.state}">state</td>
                                                         </tr>
@@ -321,6 +323,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>PR ID</th>
+                                                            <th>JIRA ID</th>
                                                             <th>PR TITLE</th>
                                                             <th>PR STATE</th>
                                                         </tr>
@@ -330,6 +333,7 @@
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
                                                                 <strong th:text="${relationUnapprove.pullRequest.prId}">id</strong>
                                                             </td>
+                                                            <td th:text="${relationUnapprove.pullRequest.jiraId}"></td>
                                                             <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "  th:text="${relationUnapprove.pullRequest.title}">title</td>
                                                             <td th:text="${relationUnapprove.pullRequest.state}">state</td>
                                                         </tr>
