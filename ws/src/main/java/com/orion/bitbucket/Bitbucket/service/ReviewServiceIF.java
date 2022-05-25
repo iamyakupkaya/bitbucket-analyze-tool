@@ -12,4 +12,5 @@ public interface ReviewServiceIF {
     int getReviewIdByUsername(String username) throws SQLException;
     ArrayList<ReviewDO.PullRequestReviewRelation> getReviewsWithPullRequestState(String state) throws SQLException;
     ArrayList<ReviewDO.PullRequestReviewRelation> mostReviewedPullRequest() throws SQLException;
+    ArrayList<ReviewDO> getReviewsWithPullRequestIdAndStatus(int id, String status) throws SQLException;
 }

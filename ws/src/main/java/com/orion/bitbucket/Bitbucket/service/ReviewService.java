@@ -23,7 +23,9 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
     private final String SQL_GET_REVIEWS_BY_USERNAME_AND_STATUS = "select * from review where display_name=? and status=?;";
     private final String SQL_GET_REVIEWS_BY_USERNAME = "select * from review where display_name=?;";
     private final String SQL_GET_REVIEWS_BY_ID = "select * from review where id=?;";
+    private final String SQL_GET_REVIEWS_BY_ID_AND_STATUS = "select * from review where id=? and status=?;";
     private final String SQL_GET_PULL_REQUEST_ID_FROM_RELATION_TABLE = "select pull_request_id from pullrequestreviewrelation where review_id=?;";
+    private final String SQL_GET_REVIEW_ID_FROM_RELATION_TABLE = "select review_id from pullrequestreviewrelation where pull_request_id=?;";
     private final String SQL_GET_REVIEW_ID_BY_USERNAME = "select id from review where display_name=? order by id desc limit 1;";
     private final String SQL_GET_MOST_OF_REVIEWED_PULL_REQUEST = " select pull_request_id,count(*) as mostOf from pullrequestreviewrelation group by pull_request_id having count(*) =(select max(mostOf) from  (select pull_request_id,count(*) as mostOf from pullrequestreviewrelation group by pull_request_id) pullrequestreviewrelation)";
     private final String SQL_GET_REWIEW_ID_FROM_RELATION_TABLE = "select review_id from pullrequestreviewrelation where pull_request_id=?;";
@@ -241,6 +243,48 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
 
     }
 
+    public ArrayList<ReviewDO> getReviewsWithPullRequestIdAndStatus(int id, String status) throws SQLException {
+        ArrayList<Integer> reviewIdList = new ArrayList<>();
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_REVIEW_ID_FROM_RELATION_TABLE);
+        preparedStmt.setInt(1, id);
+        ResultSet resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()) {
+            reviewIdList.add(resultSet.getInt("review_id"));
+        }
+        resultSet.close();
+        preparedStmt.close();
+        connection.close();
+        
+        ArrayList<ReviewDO> reviewerList = new ArrayList<>();
+        for (int i = 0; i < reviewIdList.size(); i++) {
+        connection = TransactionManager.getConnection();
+        preparedStmt = connection.prepareStatement(SQL_GET_REVIEWS_BY_ID_AND_STATUS);
+        preparedStmt.setInt(1, reviewIdList.get(i));
+        preparedStmt.setString(2,status);
+        resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()) {
+                int reviewerId = resultSet.getInt("id");
+                String displayName = resultSet.getString("display_name");
+                String emailAddress = resultSet.getString("email_address");
+                boolean approved = resultSet.getBoolean("approved");
+                String state = resultSet.getString("status");
+                reviewerList.add(new ReviewDO(reviewerId, displayName, emailAddress, state, approved));
+        }
+        resultSet.close();
+        preparedStmt.close();
+        connection.close();
+        }
+
+
+
+        ;
+        return reviewerList;
+    }
+
     // En fazla review edilen 5 pull request (gereksiz olabilir bu)
     // En az review yapan kisi
     // Returns a list that is consists of pull request reviewed by username
@@ -311,6 +355,9 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         }
         return getReviewerWithPrId;
     }
+
+   
+   
 
    
 
