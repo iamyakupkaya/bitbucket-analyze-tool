@@ -3,9 +3,9 @@ package com.orion.bitbucket.Bitbucket.model;
 import java.util.ArrayList;
 
 public class PullRequestDO {
-
     private int prId;
     private String title;
+    private String jiraId;
     private String state;
     private boolean closed;
     private String description;
@@ -17,11 +17,12 @@ public class PullRequestDO {
     private String slug;
     private ArrayList<ReviewDO> reviewerList;
 
-    public PullRequestDO(int prId, String title, String state, boolean closed, String description, String updatedDate,
+    public PullRequestDO(int prId, String title, String jiraId, String state, boolean closed, String description, String updatedDate,
     String createdDate, String closedDate, String emailAddress, String displayName, String slug,
                          ArrayList<ReviewDO> reviewerList) {
         this.prId= prId;
         this.title = title;
+        this.jiraId= jiraId;
         this.state = state;
         this.closed = closed;
         this.description = description;
@@ -44,6 +45,10 @@ public class PullRequestDO {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getJiraId() {
+        return jiraId;
     }
 
     public String getState() {
@@ -91,6 +96,7 @@ public class PullRequestDO {
         return "PullRequestDO{" +
                 "id='" + prId + '\'' +
                 ", title='" + title + '\'' +
+                ", jiraId='" + jiraId + '\'' +
                 ", state='" + state + '\'' +
                 ", closed=" + closed +
                 ", description='" + description + '\'' +

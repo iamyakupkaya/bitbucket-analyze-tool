@@ -67,7 +67,17 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String emailAddress = resultSet.getString("email_address");
             String displayName = resultSet.getString("display_name");
             String slug = resultSet.getString("slug");
-            list.add(new PullRequestDO(id, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null));
+            String jiraIdConstant = "AAK-";
+            int indexOf = title.indexOf(jiraIdConstant);
+            String jiraId = null;
+            if(indexOf > 0) {
+                int starting = title.indexOf("AAK-");
+                jiraId = title.substring(starting, starting+9);
+            }
+            else {
+               jiraId = "null";
+            }
+            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null));
         }
         resultSet.close();
         preparedStmt.close();
@@ -96,7 +106,18 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String emailAddress = resultSet.getString("email_address");
             String displayName = resultSet.getString("display_name");
             String slug = resultSet.getString("slug");
-            list.add(new PullRequestDO(id, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null));
+            String jiraIdConstant = "AAK-";
+            int indexOf = title.indexOf(jiraIdConstant);
+            String jiraId = null;
+            if(indexOf > 0) {
+                int starting = title.indexOf("AAK-");
+                jiraId = title.substring(starting, starting+9);
+            }
+            else {
+               jiraId = "null";
+            }
+           
+            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null));
         }
         resultSet.close();
         preparedStmt.close();
@@ -128,7 +149,17 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String emailAddress = resultSet.getString("email_address");
             String displayName = resultSet.getString("display_name");
             String slug = resultSet.getString("slug");
-            pullRequest = new PullRequestDO(id, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null);
+            String jiraIdConstant = "AAK-";
+            int indexOf = title.indexOf(jiraIdConstant);
+            String jiraId = null;
+            if(indexOf > 0) {
+                int starting = title.indexOf("AAK-");
+                jiraId = title.substring(starting, starting+9);
+            }
+            else {
+               jiraId = "null";
+            }
+            pullRequest = new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null);
         }
         resultSet.close();
         preparedStmt.close();
