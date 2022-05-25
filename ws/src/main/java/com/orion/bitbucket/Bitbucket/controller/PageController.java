@@ -58,6 +58,22 @@ public class PageController {
         model.addAttribute("topReviewerDisplayName", topReviewer.getName());
         model.addAttribute("topReviewerCount",topReviewer.getTotal()); 
 
+        AuthorDO.TopAuthor topAuthorMerge = authorServiceIF.getTopAuthorAtMerged();
+        model.addAttribute("topAuthorMerge", topAuthorMerge.getName());
+        model.addAttribute("topAuthorMergePRsCount", topAuthorMerge.getTotal());
+
+        AuthorDO.TopAuthor topAuthorOpen = authorServiceIF.getTopAuthorAtOpen();
+        model.addAttribute("topAuthorOpen", topAuthorOpen.getName());
+        model.addAttribute("topAuthorOpenPRsCount", topAuthorOpen.getTotal());
+
+        AuthorDO.TopAuthor topAuthorDeclined = authorServiceIF.getTopAuthorAtDeclined();
+        model.addAttribute("topAuthorDeclined", topAuthorDeclined.getName());
+        model.addAttribute("topAuthorDeclinedPRsCount", topAuthorDeclined.getTotal());
+
+        ArrayList<ReviewDO.PullRequestReviewRelation> mostOfPrReview = reviewServiceIF.mostReviewedPullRequest();
+        model.addAttribute("size",mostOfPrReview.size());
+            model.addAttribute("id", mostOfPrReview.get(0).getPullRequest().getPrId());
+        
         return "index.html";
     }
 
@@ -156,11 +172,30 @@ public class PageController {
             model.addAttribute("id", reviewUnapproveList.get(0).getReview().getId());
         }
 
-       
-
-        // ArrayList<ReviewDO> reviewDOtoUnapprove = reviewServiceIF.getReviewListByStatusAndUsername("UNAPPROVED", name);
-       
         return "reviewer-details.html";
+    }
+
+    @RequestMapping(value = "/pull-requests/{id}")
+    public String showPullRequestDetails(Model model, @PathVariable(name = "id", required = false) int id) throws UnirestException, SQLException {
+        PullRequestDO getPullRequest = pullRequestServiceIF.getPullRequestById(id);
+        model.addAttribute("prId", getPullRequest.getPrId());
+        model.addAttribute("title", getPullRequest.getTitle());
+        model.addAttribute("description", getPullRequest.getDescription());
+        model.addAttribute("name", getPullRequest.getDisplayName());
+        model.addAttribute("state", getPullRequest.getState());
+        model.addAttribute("createdDate", getPullRequest.getCreatedDate());
+        model.addAttribute("closedDate", getPullRequest.getClosedDate());
+
+        ArrayList<ReviewDO> reviewApprovedList = reviewServiceIF.getReviewsWithPullRequestIdAndStatus(id, "APPROVED");
+        model.addAttribute("approveReviewer", new PullRequestReviewRelation());
+        model.addAttribute("approveReviewerList", reviewApprovedList);
+
+        ArrayList<ReviewDO> reviewUnapprovedList = reviewServiceIF.getReviewsWithPullRequestIdAndStatus(id, "UNAPPROVED");
+        model.addAttribute("unapproveReviewer", new PullRequestReviewRelation());
+        model.addAttribute("unapproveReviewerList", reviewUnapprovedList);
+       
+        
+        return "pull-request-details.html";
     }
   
 
