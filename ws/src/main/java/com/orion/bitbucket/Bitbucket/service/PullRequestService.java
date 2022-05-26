@@ -70,7 +70,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String jiraIdConstant = "AAK-";
             int indexOf = title.indexOf(jiraIdConstant);
             String jiraId = null;
-            if(indexOf > 0) {
+            if(indexOf > -1) {
                 int starting = title.indexOf("AAK-");
                 jiraId = title.substring(starting, starting+9);
             }
@@ -109,7 +109,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String jiraIdConstant = "AAK-";
             int indexOf = title.indexOf(jiraIdConstant);
             String jiraId = null;
-            if(indexOf > 0) {
+            if(indexOf > -1) {
                 int starting = title.indexOf("AAK-");
                 jiraId = title.substring(starting, starting+9);
             }
@@ -152,7 +152,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String jiraIdConstant = "AAK-";
             int indexOf = title.indexOf(jiraIdConstant);
             String jiraId = null;
-            if(indexOf > 0) {
+            if(indexOf > -1) {
                 int starting = title.indexOf("AAK-");
                 jiraId = title.substring(starting, starting+9);
             }
