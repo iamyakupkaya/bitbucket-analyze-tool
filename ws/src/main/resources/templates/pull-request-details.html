@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
-    <title>Reviewer</title>
+    <title>Pull Request</title>
     <meta name="description"
         content="Most Powerful &amp; Comprehensive Bootstrap 5 HTML Admin Dashboard Template built for developers!" />
     <meta name="keywords" content="dashboard, bootstrap 5 dashboard, bootstrap 5 design, bootstrap 5">
@@ -82,7 +82,7 @@
                     <!-- Pull request tables are coming -->
                     <li class="menu-item">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-layout"></i>
+                            <i class="menu-icon tf-icons bx bx-git-pull-request"></i>
                             <div data-i18n="Layouts">Pull Request</div>
                         </a>
                         <ul class="menu-sub">
@@ -93,12 +93,44 @@
                                 </a>
                             </li>
                         </ul>
+                        <ul class="menu-sub">
+                            <li class="menu-item ">
+                              <a th:href="@{/pull-requests}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-table"></i>
+                                <div data-i18n="Tables">NRD1222</div>
+                              </a>
+                            </li>
+                          </ul>
+                          <ul class="menu-sub">
+                            <li class="menu-item ">
+                              <a th:href="@{/pull-requests}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-table"></i>
+                                <div data-i18n="Tables">NRD1212</div>
+                              </a>
+                            </li>
+                          </ul>
+                          <ul class="menu-sub">
+                            <li class="menu-item ">
+                              <a th:href="@{/pull-requests}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-table"></i>
+                                <div data-i18n="Tables">NRD1221</div>
+                              </a>
+                            </li>
+                          </ul>
+                          <ul class="menu-sub">
+                            <li class="menu-item ">
+                              <a th:href="@{/pull-requests}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-table"></i>
+                                <div data-i18n="Tables">NRD1214</div>
+                              </a>
+                            </li>
+                          </ul>
                     </li>
                     <!-- ------------------------------------- -->
                     <!-- Statistics Reviewer -->
                     <li class="menu-item">
                         <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-box"></i>
+                            <i class="menu-icon tf-icons bx bx-comment-detail"></i>
                             <div data-i18n="User interface">Review</div>
                         </a>
                         <ul class="menu-sub">
@@ -208,7 +240,9 @@
                                                     class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                     <div class="me-2">
                                                         <small class="text-muted d-block mb-1">Author</small>
-                                                        <h6 class="mb-0" th:text="${name}">Yusuf</h6>
+                                                        <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                                                            <a th:href="@{'/pull-requests/author/'+${name}}" target="_blank"><strong th:text="${name}">Yusuf AKBAŞ</strong></a>
+                                                          </ul>
                                                     </div>
 
                                                 </div>
@@ -288,9 +322,9 @@
                                                     <tbody class="table-border-bottom-0">
                                                         <tr th:each="approveReviewer : ${approveReviewerList}">
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                                                <strong
-                                                                    th:text="${approveReviewer.id}">id</strong>
+                                                                <a th:href="@{'/reviewer/'+${approveReviewer.displayName}}" target="_blank"><strong th:text="${approveReviewer.id}">id</strong></a>
                                                             </td>
+
                                                             <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
                                                                 th:text="${approveReviewer.displayName}">name
                                                             </td>
@@ -318,8 +352,7 @@
                                                     <tbody class="table-border-bottom-0">
                                                         <tr th:each="unapproveReviewer : ${unapproveReviewerList}">
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                                                <strong
-                                                                    th:text="${unapproveReviewer.id}">id</strong>
+                                                                <a th:href="@{'/reviewer/'+${unapproveReviewer.displayName}}" target="_blank"><strong th:text="${unapproveReviewer.id}">id</strong></a>
                                                             </td>
                                                             <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
                                                                 th:text="${unapproveReviewer.displayName}">name

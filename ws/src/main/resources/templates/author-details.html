@@ -71,7 +71,7 @@
                     <!-- Pull request tables are coming -->
                     <li class="menu-item">
                       <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons bx bx-layout"></i>
+                        <i class="menu-icon tf-icons bx bx-git-pull-request"></i>
                         <div data-i18n="Layouts">Pull Request</div>
                       </a>
                       <ul class="menu-sub">
@@ -82,12 +82,44 @@
                           </a>
                         </li>
                       </ul>
+                      <ul class="menu-sub">
+                        <li class="menu-item ">
+                          <a th:href="@{/pull-requests}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-table"></i>
+                            <div data-i18n="Tables">NRD1222</div>
+                          </a>
+                        </li>
+                      </ul>
+                      <ul class="menu-sub">
+                        <li class="menu-item ">
+                          <a th:href="@{/pull-requests}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-table"></i>
+                            <div data-i18n="Tables">NRD1212</div>
+                          </a>
+                        </li>
+                      </ul>
+                      <ul class="menu-sub">
+                        <li class="menu-item ">
+                          <a th:href="@{/pull-requests}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-table"></i>
+                            <div data-i18n="Tables">NRD1221</div>
+                          </a>
+                        </li>
+                      </ul>
+                      <ul class="menu-sub">
+                        <li class="menu-item ">
+                          <a th:href="@{/pull-requests}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-table"></i>
+                            <div data-i18n="Tables">NRD1214</div>
+                          </a>
+                        </li>
+                      </ul>
                     </li>
                     <!-- ------------------------------------- -->
                     <!-- Statistics Reviewer -->
                     <li class="menu-item">
                       <a href="javascript:void(0)" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons bx bx-box"></i>
+                        <i class="menu-icon tf-icons bx bx-comment-detail"></i>
                         <div data-i18n="User interface">Review</div>
                       </a>
                       <ul class="menu-sub">
@@ -346,7 +378,7 @@
                                                     <tbody class="table-border-bottom-0">
                                                         <tr th:each="open : ${openList}">
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                                                <strong th:text="${open.prId}">Angular Project</strong>
+                                                                <a th:href="@{'/pull-requests/'+${open.prId}}" target="_blank"><strong th:text="${open.prId}">id</strong></a>
                                                             </td>
                                                             <td th:text="${open.jiraId}"></td>
                                                             <td style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"  th:text="${open.title}">title</td>
@@ -374,7 +406,7 @@
                                                     <tbody class="table-border-bottom-0">
                                                         <tr th:each="declined : ${declinedList}">
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                                                <strong th:text="${declined.prId}">prId</strong>
+                                                                <a th:href="@{'/pull-requests/'+${declined.prId}}" target="_blank"><strong th:text="${declined.prId}">id</strong></a>
                                                             </td>
                                                             <td th:text="${declined.jiraId}"></td>
                                                             <td style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" 

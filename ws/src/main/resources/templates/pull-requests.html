@@ -76,7 +76,7 @@
           <!-- Pull request tables are coming -->
           <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <i class="menu-icon tf-icons bx bx-layout"></i>
+              <i class="menu-icon tf-icons bx bx-git-pull-request"></i>
               <div data-i18n="Layouts">Pull Request</div>
             </a>
             <ul class="menu-sub">
@@ -87,12 +87,44 @@
                 </a>
               </li>
             </ul>
+            <ul class="menu-sub">
+              <li class="menu-item ">
+                <a th:href="@{/pull-requests}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-table"></i>
+                  <div data-i18n="Tables">NRD1222</div>
+                </a>
+              </li>
+            </ul>
+            <ul class="menu-sub">
+              <li class="menu-item ">
+                <a th:href="@{/pull-requests}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-table"></i>
+                  <div data-i18n="Tables">NRD1212</div>
+                </a>
+              </li>
+            </ul>
+            <ul class="menu-sub">
+              <li class="menu-item ">
+                <a th:href="@{/pull-requests}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-table"></i>
+                  <div data-i18n="Tables">NRD1221</div>
+                </a>
+              </li>
+            </ul>
+            <ul class="menu-sub">
+              <li class="menu-item ">
+                <a th:href="@{/pull-requests}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-table"></i>
+                  <div data-i18n="Tables">NRD1214</div>
+                </a>
+              </li>
+            </ul>
           </li>
           <!-- ------------------------------------- -->
           <!-- Statistics Reviewer -->
           <li class="menu-item">
             <a href="javascript:void(0)" class="menu-link menu-toggle">
-              <i class="menu-icon tf-icons bx bx-box"></i>
+              <i class="menu-icon tf-icons bx bx-comment-detail"></i>
               <div data-i18n="User interface">Review</div>
             </a>
             <ul class="menu-sub">
@@ -130,7 +162,7 @@
               <div class="nav-item d-flex align-items-center">
                 <i class="bx bx-search fs-4 lh-0"></i>
                 <input type="text" class="form-control border-0 shadow-none" placeholder="Search..."
-                  aria-label="Search...">
+                  aria-label="Search..." >
               </div>
             </div>
             <!-- /Search -->
@@ -176,7 +208,7 @@
                     <tr th:each="author : ${authors}">
                       <td >
                         <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                          <a th:href="@{'pull-requests/author/'+${author.name}}" target="_blank"><strong th:text="${author.name}">Yusuf AKBAŞ</strong></a>
+                          <a th:href="@{'/pull-requests/author/'+${author.name}}" target="_blank"><strong th:text="${author.name}">Yusuf AKBAŞ</strong></a>
                         </ul>
                       </td>
                       <td >
