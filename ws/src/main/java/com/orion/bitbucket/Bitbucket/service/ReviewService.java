@@ -267,7 +267,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-                int reviewerId = resultSet.getInt("id");
+                int reviewerId = resultSet.getInt("reviewer_id");
                 String displayName = resultSet.getString("display_name");
                 String emailAddress = resultSet.getString("email_address");
                 boolean approved = resultSet.getBoolean("approved");
