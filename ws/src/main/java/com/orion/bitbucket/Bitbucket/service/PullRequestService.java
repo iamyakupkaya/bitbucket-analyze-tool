@@ -62,8 +62,8 @@ public class PullRequestService extends BaseService implements PullRequestServic
             boolean closed = resultSet.getBoolean("closed");
             String description = resultSet.getString("description");
             String updatedDate = resultSet.getString("update_date"); // long olsun. db ona gore duzeltilsin
-            String createdDate = resultSet.getString("created_date"); // long olsun. db ona gore duzeltilsin
-            String closedDate = resultSet.getString("closed_date"); // long olsun. db ona gore duzeltilsin
+            Date createdDate = resultSet.getDate("created_date"); // long olsun. db ona gore duzeltilsin
+            Date closedDate = resultSet.getDate("closed_date"); // long olsun. db ona gore duzeltilsin
             String emailAddress = resultSet.getString("email_address");
             String displayName = resultSet.getString("display_name");
             String slug = resultSet.getString("slug");
@@ -101,8 +101,8 @@ public class PullRequestService extends BaseService implements PullRequestServic
             boolean closed = resultSet.getBoolean("closed");
             String description = resultSet.getString("description");
             String updatedDate = resultSet.getString("update_date"); // long olsun. db ona gore duzeltilsin
-            String createdDate = resultSet.getString("created_date"); // long olsun. db ona gore duzeltilsin
-            String closedDate = resultSet.getString("closed_date"); // long olsun. db ona gore duzeltilsin
+            Date createdDate = resultSet.getDate("created_date"); // long olsun. db ona gore duzeltilsin
+            Date closedDate = resultSet.getDate("closed_date"); // long olsun. db ona gore duzeltilsin
             String emailAddress = resultSet.getString("email_address");
             String displayName = resultSet.getString("display_name");
             String slug = resultSet.getString("slug");
@@ -144,8 +144,8 @@ public class PullRequestService extends BaseService implements PullRequestServic
             boolean closed = resultSet.getBoolean("closed");
             String description = resultSet.getString("description");
             String updatedDate = resultSet.getString("update_date"); // long olsun. db ona gore duzeltilsin
-            String createdDate = resultSet.getString("created_date"); // long olsun. db ona gore duzeltilsin
-            String closedDate = resultSet.getString("closed_date"); // long olsun. db ona gore duzeltilsin
+            Date createdDate = resultSet.getDate("created_date"); // long olsun. db ona gore duzeltilsin
+            Date closedDate = resultSet.getDate("closed_date"); // long olsun. db ona gore duzeltilsin
             String emailAddress = resultSet.getString("email_address");
             String displayName = resultSet.getString("display_name");
             String slug = resultSet.getString("slug");

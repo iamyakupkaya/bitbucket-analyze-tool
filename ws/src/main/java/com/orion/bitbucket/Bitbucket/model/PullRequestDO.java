@@ -1,5 +1,6 @@
 package com.orion.bitbucket.Bitbucket.model;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 public class PullRequestDO {
@@ -10,15 +11,15 @@ public class PullRequestDO {
     private boolean closed;
     private String description;
     private String updatedDate;
-    private String createdDate;
-    private String closedDate;
+    private Date createdDate;
+    private Date closedDate;
     private String emailAddress;
     private String displayName;
     private String slug;
     private ArrayList<ReviewDO> reviewerList;
 
     public PullRequestDO(int prId, String title, String jiraId, String state, boolean closed, String description, String updatedDate,
-    String createdDate, String closedDate, String emailAddress, String displayName, String slug,
+    Date createdDate, Date closedDate, String emailAddress, String displayName, String slug,
                          ArrayList<ReviewDO> reviewerList) {
         this.prId= prId;
         this.title = title;
@@ -67,11 +68,11 @@ public class PullRequestDO {
         return updatedDate;
     }
 
-    public String getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public String getClosedDate() {
+    public Date getClosedDate() {
         return closedDate;
     }
 
