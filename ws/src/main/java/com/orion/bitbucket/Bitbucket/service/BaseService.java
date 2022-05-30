@@ -41,14 +41,16 @@ public class BaseService implements BaseServiceIF {
         try {
             if (isPullRequestTableEmpty()) {
                 Instant start = Instant.now();
-                System.out.println("This is first time to retrieve data. Wait for retrieving data and insert into local database have been completed.");
+                System.out.println(
+                        "This is first time to retrieve data. Wait for retrieving data and insert into local database have been completed.");
                 getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
-                //getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
-                //getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
+                // getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
+                // getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
                 Instant finish = Instant.now();
                 Duration timeElapsed = Duration.between(start, finish);
-                System.out.println("Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds()
-                        + " seconds.");
+                System.out.println(
+                        "Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds()
+                                + " seconds.");
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -97,8 +99,8 @@ public class BaseService implements BaseServiceIF {
         boolean closed = (boolean) object.get("closed");
         String description = object.optString("description");
         long updatedDate = (long) object.get("updatedDate");
-        String createdDate = convertDate((long) object.get("createdDate"));
-        String closedDate = convertDate(object.optLong("closedDate"));
+        Long createdDate = (long) object.get("createdDate");
+        Long closedDate = object.optLong("closedDate");
         // Author Information
         JSONObject author = object.getJSONObject("author");
         JSONObject user = author.getJSONObject("user");
@@ -117,9 +119,10 @@ public class BaseService implements BaseServiceIF {
             boolean reviewerApproved = reviewer.optBoolean("approved");
             insertReview(id, reviewerDisplayName, reviewerEmailAddress, reviewerApproved, reviewStatus);
             int reviewId = getReviewIdByUsername(reviewerDisplayName);
-            insertPullRequestReviewRelation(pullRequestId,reviewId);
+            insertPullRequestReviewRelation(pullRequestId, reviewId);
         }
-        insertPullRequest(pullRequestId, title, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug);
+        insertPullRequest(pullRequestId, title, state, closed, description, updatedDate, createdDate, closedDate,
+                emailAddress, displayName, slug);
     }
 
     public int getReviewIdByUsername(String username) throws SQLException {
@@ -140,9 +143,13 @@ public class BaseService implements BaseServiceIF {
     }
 
     public void insertPullRequest(int prId, String title, String state, boolean closed, String description,
-            long updatedDate, String createdDate, String closedDate, String emailAddress, String displayName,
+            long updatedDate, Long createdDate, Long closedDate, String emailAddress, String displayName,
             String slug) throws SQLException {
         Connection connection = TransactionManager.getConnection();
+
+        java.sql.Date sqlPackageDateCreated = new java.sql.Date(createdDate);
+
+        java.sql.Date sqlPackageDateClosed = new java.sql.Date(closedDate);
 
         try {
             PreparedStatement preparedStmt = null;
@@ -153,8 +160,8 @@ public class BaseService implements BaseServiceIF {
             preparedStmt.setBoolean(4, closed);
             preparedStmt.setString(5, description);
             preparedStmt.setLong(6, updatedDate);
-            preparedStmt.setString(7, createdDate);
-            preparedStmt.setString(8, closedDate);
+            preparedStmt.setDate(7, sqlPackageDateCreated);
+            preparedStmt.setDate(8, sqlPackageDateClosed);
             preparedStmt.setString(9, emailAddress);
             preparedStmt.setString(10, displayName);
             preparedStmt.setString(11, slug);
@@ -168,14 +175,15 @@ public class BaseService implements BaseServiceIF {
         }
     }
 
-    public void insertReview(int id, String reviewerDisplayName, String reviewerEmailAddress, boolean reviewerApproved, String reviewStatus) throws SQLException {
+    public void insertReview(int id, String reviewerDisplayName, String reviewerEmailAddress, boolean reviewerApproved,
+            String reviewStatus) throws SQLException {
         Connection connection = TransactionManager.getConnection();
         try {
             PreparedStatement preparedStmt = null;
             preparedStmt = connection.prepareStatement(SQL_INSERT_REVIEW);
             preparedStmt.setInt(1, id);
             preparedStmt.setString(2, reviewerDisplayName);
-            preparedStmt.setString(3,reviewerEmailAddress);
+            preparedStmt.setString(3, reviewerEmailAddress);
             preparedStmt.setBoolean(4, reviewerApproved);
             preparedStmt.setString(5, reviewStatus);
             int row = preparedStmt.executeUpdate();
@@ -188,7 +196,7 @@ public class BaseService implements BaseServiceIF {
         }
     }
 
-    public void insertPullRequestReviewRelation (int prId, int reviewerId) throws SQLException {
+    public void insertPullRequestReviewRelation(int prId, int reviewerId) throws SQLException {
         Connection connection = TransactionManager.getConnection();
         try {
             PreparedStatement preparedStmt = null;
@@ -204,7 +212,6 @@ public class BaseService implements BaseServiceIF {
             connection.close();
         }
     }
-
 
     // TODO Branch url will be added onto constants, then we can call it while
     // getting data
@@ -231,10 +238,4 @@ public class BaseService implements BaseServiceIF {
     public void commonBranchDataParser(JSONObject object) {
     }
 
-    private String convertDate(Long date) {
-        String pattern = "dd.MM.yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String newDate = simpleDateFormat.format(date);
-        return newDate;
-    }
 }
