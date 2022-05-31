@@ -86,32 +86,30 @@ public class PageController {
         model.addAttribute("reviewerCount", reviewerServiceIF.getAllReviewerCount());
         model.addAttribute("reviewCount", reviewServiceIF.getTotalReviewCount());
 
-
-
         AuthorDO.TopAuthor topAuthor = authorServiceIF.getTopAuthorWithDateInterval(date);
         model.addAttribute("topAuthorDisplayName", topAuthor.getName());
         model.addAttribute("topAuthorPRsCount", topAuthor.getTotal());
 
-        // AuthorDO.TopAuthor topAuthorMerge = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"MERGED");
-        // model.addAttribute("topAuthorMerge", topAuthorMerge.getName());
-        // model.addAttribute("topAuthorMergePRsCount", topAuthorMerge.getTotal());
+        AuthorDO.TopAuthor topAuthorMerge = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"MERGED");
+        model.addAttribute("topAuthorMerge", topAuthorMerge.getName());
+        model.addAttribute("topAuthorMergePRsCount", topAuthorMerge.getTotal());
 
         AuthorDO.TopAuthor topAuthorOpen = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"OPEN");
         model.addAttribute("topAuthorOpen", topAuthorOpen.getName());
         model.addAttribute("topAuthorOpenPRsCount", topAuthorOpen.getTotal());
 
-        // AuthorDO.TopAuthor topAuthorDeclined = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"DECLINED");
-        // model.addAttribute("topAuthorDeclined", topAuthorDeclined.getName());
-        // model.addAttribute("topAuthorDeclinedPRsCount", topAuthorDeclined.getTotal());
+        AuthorDO.TopAuthor topAuthorDeclined = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"DECLINED");
+        model.addAttribute("topAuthorDeclined", topAuthorDeclined.getName());
+        model.addAttribute("topAuthorDeclinedPRsCount", topAuthorDeclined.getTotal());
 
 
-
+        // TODO : No date filtering has been written yet, but will be written
         ReviewerDO.TopReviewer topReviewer = reviewerServiceIF.getTopReviewer();
         model.addAttribute("topReviewerDisplayName", topReviewer.getName());
         model.addAttribute("topReviewerCount",topReviewer.getTotal()); 
 
 
-
+        // TODO : No date filtering has been written yet, but will be written
         ArrayList<ReviewDO.PullRequestReviewRelation> mostOfPrReview = reviewServiceIF.mostReviewedPullRequest();
         model.addAttribute("size",mostOfPrReview.size());
             model.addAttribute("id", mostOfPrReview.get(0).getPullRequest().getPrId());
