@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class BaseService implements BaseServiceIF {
 
     private final String SQL_INSERT_PULL_REQUEST = "insert into pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final String SQL_INSERT_REVIEW = "insert into review (reviewer_id , display_name, email_address, approved, status) values (?, ?, ?, ?, ?)";
-    private final String SQL_INSTER_PULL_REQUEST_REVIEW_RELATION = "insert into PullRequestReviewRelation (pull_request_id, review_id) values (?, ?)";
+    private final String SQL_INSERT_PULL_REQUEST_REVIEW_RELATION = "insert into PullRequestReviewRelation (pull_request_id, review_id) values (?, ?)";
     private final String SQL_SELECT_COUNT_PULL_REQUEST = "select count(*) from pullrequest;";
     private final String SQL_SELECT_COUNT_REVIEW = "select count(*) from review";
     private final String SQL_GET_REVIEW_ID_BY_USERNAME = "select id from review where display_name=? order by id desc limit 1;";
@@ -44,8 +43,8 @@ public class BaseService implements BaseServiceIF {
                 System.out.println(
                         "This is first time to retrieve data. Wait for retrieving data and insert into local database have been completed.");
                 getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
-                // getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
-                // getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
+               // getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
+               // getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
                 Instant finish = Instant.now();
                 Duration timeElapsed = Duration.between(start, finish);
                 System.out.println(
@@ -200,7 +199,7 @@ public class BaseService implements BaseServiceIF {
         Connection connection = TransactionManager.getConnection();
         try {
             PreparedStatement preparedStmt = null;
-            preparedStmt = connection.prepareStatement(SQL_INSTER_PULL_REQUEST_REVIEW_RELATION);
+            preparedStmt = connection.prepareStatement(SQL_INSERT_PULL_REQUEST_REVIEW_RELATION);
             preparedStmt.setInt(1, prId);
             preparedStmt.setInt(2, reviewerId);
             int row = preparedStmt.executeUpdate();
