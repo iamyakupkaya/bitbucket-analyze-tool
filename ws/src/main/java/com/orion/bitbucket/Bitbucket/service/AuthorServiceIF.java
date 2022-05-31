@@ -17,4 +17,6 @@ public interface AuthorServiceIF {
     AuthorDO.TopAuthor getTopAuthorAtDeclined() throws SQLException;
     ArrayList<AuthorDO> getCountPRStatesByUsername(String name) throws SQLException;
 
+    AuthorDO.TopAuthor getTopAuthorWithDateInterval(int day) throws SQLException;
+
 }

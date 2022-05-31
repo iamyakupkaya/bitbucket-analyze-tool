@@ -23,6 +23,9 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
     private final String SQL_GET_TOP_AUTHOR_BY_DECLINED = "select name, total_declined_prs from author order by total_declined_prs desc limit 1";
     private final String SQL_GET_ALL_AUTHORS = "select * from author";
     private final String SQL_GET_AUTHOR_BY_USERNAME = "select * from author where name=?;";
+    private final String SQL_GET_TOP_AUTHOR_PR_LIST_BY_DATE_INTERVAL = "SELECT display_name, COUNT(*) AS totalPRCount FROM pullrequest WHERE DATE(created_date) >= DATE(NOW()) - ?::INTERVAL  GROUP BY display_name ORDER BY totalPRCount DESC LIMIT 1;";
+
+    
 
     public int getAuthorCount() throws SQLException {
         Connection connection = TransactionManager.getConnection();
@@ -161,6 +164,31 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         resultSet.close();
         statement.close();
         connection.close();
+        return topAuthor;
+    }
+
+    public AuthorDO.TopAuthor getTopAuthorWithDateInterval(int day) throws SQLException {
+        AuthorDO.TopAuthor topAuthor = null;
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_TOP_AUTHOR_PR_LIST_BY_DATE_INTERVAL);
+        if(day == 30) {
+            preparedStmt.setString(1, "30 DAY");
+        }
+        else if(day == 90){
+            preparedStmt.setString(1, "90 DAY");
+
+        }else if(day == 180){
+            preparedStmt.setString(1, "180 DAY");
+        }
+        ResultSet resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()) {
+            String name = resultSet.getString("display_name");
+            int totalPRCount = resultSet.getInt("totalPRCount");
+            topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
+          
+        }
         return topAuthor;
     }
 
