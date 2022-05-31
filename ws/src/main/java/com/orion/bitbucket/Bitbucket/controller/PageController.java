@@ -41,8 +41,8 @@ public class PageController {
     
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String edit(Model model) throws UnirestException, SQLException {
-
+    public String allTime(Model model) throws UnirestException, SQLException {
+        
 
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
@@ -74,6 +74,48 @@ public class PageController {
         model.addAttribute("size",mostOfPrReview.size());
             model.addAttribute("id", mostOfPrReview.get(0).getPullRequest().getPrId());
         
+        return "index.html";
+    }
+
+    @RequestMapping(value = "/filter/{date}", method = RequestMethod.GET)
+    public String filteringWithDateIndexPage(Model model, @PathVariable(name = "date", required = false) int date) throws UnirestException, SQLException {
+
+        model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
+        model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
+
+        model.addAttribute("reviewerCount", reviewerServiceIF.getAllReviewerCount());
+        model.addAttribute("reviewCount", reviewServiceIF.getTotalReviewCount());
+
+
+
+        AuthorDO.TopAuthor topAuthor = authorServiceIF.getTopAuthorWithDateInterval(date);
+        model.addAttribute("topAuthorDisplayName", topAuthor.getName());
+        model.addAttribute("topAuthorPRsCount", topAuthor.getTotal());
+
+        // AuthorDO.TopAuthor topAuthorMerge = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"MERGED");
+        // model.addAttribute("topAuthorMerge", topAuthorMerge.getName());
+        // model.addAttribute("topAuthorMergePRsCount", topAuthorMerge.getTotal());
+
+        AuthorDO.TopAuthor topAuthorOpen = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"OPEN");
+        model.addAttribute("topAuthorOpen", topAuthorOpen.getName());
+        model.addAttribute("topAuthorOpenPRsCount", topAuthorOpen.getTotal());
+
+        // AuthorDO.TopAuthor topAuthorDeclined = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"DECLINED");
+        // model.addAttribute("topAuthorDeclined", topAuthorDeclined.getName());
+        // model.addAttribute("topAuthorDeclinedPRsCount", topAuthorDeclined.getTotal());
+
+
+
+        ReviewerDO.TopReviewer topReviewer = reviewerServiceIF.getTopReviewer();
+        model.addAttribute("topReviewerDisplayName", topReviewer.getName());
+        model.addAttribute("topReviewerCount",topReviewer.getTotal()); 
+
+
+
+        ArrayList<ReviewDO.PullRequestReviewRelation> mostOfPrReview = reviewServiceIF.mostReviewedPullRequest();
+        model.addAttribute("size",mostOfPrReview.size());
+            model.addAttribute("id", mostOfPrReview.get(0).getPullRequest().getPrId());
+
         return "index.html";
     }
 
