@@ -18,5 +18,6 @@ public interface AuthorServiceIF {
     ArrayList<AuthorDO> getCountPRStatesByUsername(String name) throws SQLException;
 
     AuthorDO.TopAuthor getTopAuthorWithDateInterval(int day) throws SQLException;
+    AuthorDO.TopAuthor getTopAuthorWithDateIntervalAndState(int day, String state) throws SQLException ;
 
 }
