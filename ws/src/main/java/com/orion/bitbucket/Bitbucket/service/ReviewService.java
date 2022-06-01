@@ -2,13 +2,11 @@ package com.orion.bitbucket.Bitbucket.service;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
+import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO;
-import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,11 +57,11 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String displayName = resultSet.getString("display_name");
-            String emailAddress = resultSet.getString("email_address");
-            boolean approved = resultSet.getBoolean("approved");
-            String ReviewStatus = resultSet.getString("status");
+            int id = resultSet.getInt(DBConstants.Review.REVIEW_ID);
+            String displayName = resultSet.getString(DBConstants.Review.REVIEW_DISPLAY_NAME);
+            String emailAddress = resultSet.getString(DBConstants.Review.REVIEW_EMAIL_ADDRESS);
+            boolean approved = resultSet.getBoolean(DBConstants.Review.REVIEW_APPROVED);
+            String ReviewStatus = resultSet.getString(DBConstants.Review.REVIEW_STATUS);
             list.add(new ReviewDO(id, displayName, emailAddress, ReviewStatus, approved));
         }
         resultSet.close();
@@ -80,7 +78,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
             resultSet = preparedStmt.executeQuery();
             connection.commit();
             while (resultSet.next()) {
-                pullRequestId = resultSet.getInt("pull_request_id");
+                pullRequestId = resultSet.getInt(DBConstants.PullRequestReviewRelation.REVIEW_RELATION_PULL_REQUEST_ID);
             }
             resultSet.close();
             preparedStmt.close();
@@ -102,11 +100,11 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String displayName = resultSet.getString("display_name");
-            String emailAddress = resultSet.getString("email_address");
-            boolean approved = resultSet.getBoolean("approved");
-            String ReviewStatus = resultSet.getString("status");
+            int id = resultSet.getInt(DBConstants.Review.REVIEW_ID);
+            String displayName = resultSet.getString(DBConstants.Review.REVIEW_DISPLAY_NAME);
+            String emailAddress = resultSet.getString(DBConstants.Review.REVIEW_EMAIL_ADDRESS);
+            boolean approved = resultSet.getBoolean(DBConstants.Review.REVIEW_APPROVED);
+            String ReviewStatus = resultSet.getString(DBConstants.Review.REVIEW_STATUS);
             list.add(new ReviewDO(id, displayName, emailAddress, ReviewStatus, approved));
         }
         resultSet.close();
@@ -123,7 +121,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
             resultSet = preparedStmt.executeQuery();
             connection.commit();
             while (resultSet.next()) {
-                pullRequestId = resultSet.getInt("pull_request_id");
+                pullRequestId = resultSet.getInt(DBConstants.PullRequestReviewRelation.REVIEW_RELATION_PULL_REQUEST_ID);
             }
             resultSet.close();
             preparedStmt.close();
@@ -145,7 +143,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            id = resultSet.getInt("id");
+            id = resultSet.getInt(DBConstants.Review.REVIEW_ID);
         }
         resultSet.close();
         preparedStmt.close();
@@ -167,20 +165,20 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
             ResultSet resultSet = preparedStmt.executeQuery();
             connection.commit();
             while (resultSet.next()) {
-                int review_id = resultSet.getInt("review_id");
+                int review_id = resultSet.getInt(DBConstants.PullRequestReviewRelation.REVIEW_RELATION_REVIEW_ID);
                 PreparedStatement preparedStmtTwo = null;
                 preparedStmtTwo = connection.prepareStatement(SQL_GET_REVIEWS_BY_ID);
                 preparedStmtTwo.setInt(1, review_id);
                 ResultSet resultSetTwo = preparedStmtTwo.executeQuery();
                 connection.commit();
                 while (resultSetTwo.next()) {
-                    int id = resultSetTwo.getInt("id");
-                    String displayName = resultSetTwo.getString("display_name");
-                    String emailAddress = resultSetTwo.getString("email_address");
-                    boolean approved = resultSetTwo.getBoolean("approved");
-                    String status = resultSetTwo.getString("status");
+                    int id = resultSetTwo.getInt(DBConstants.Review.REVIEW_ID);
+                    String displayName = resultSetTwo.getString(DBConstants.Review.REVIEW_DISPLAY_NAME);
+                    String emailAddress = resultSetTwo.getString(DBConstants.Review.REVIEW_EMAIL_ADDRESS);
+                    boolean approved = resultSetTwo.getBoolean(DBConstants.Review.REVIEW_APPROVED);
+                    String ReviewStatus = resultSetTwo.getString(DBConstants.Review.REVIEW_STATUS);
                     pullRequestReviewRelations.add(new ReviewDO.PullRequestReviewRelation(pullRequest,
-                            new ReviewDO(id, displayName, emailAddress, status, approved)));
+                            new ReviewDO(id, displayName, emailAddress, ReviewStatus, approved)));
                 }
                 resultSetTwo.close();
                 preparedStmtTwo.close();
@@ -203,7 +201,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL_GET_MOST_OF_REVIEWED_PULL_REQUEST);
         while (resultSet.next()) {
-            pull_request_id = resultSet.getInt("pull_request_id");
+            pull_request_id = resultSet.getInt(DBConstants.PullRequestReviewRelation.REVIEW_RELATION_PULL_REQUEST_ID);
             reviewCount = resultSet.getInt("mostOf");
         }
         resultSet.close();
@@ -217,20 +215,20 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            int review_id = resultSet.getInt("review_id");
+            int review_id = resultSet.getInt(DBConstants.PullRequestReviewRelation.REVIEW_RELATION_REVIEW_ID);
             PreparedStatement preparedStmtTwo = null;
             preparedStmtTwo = connection.prepareStatement(SQL_GET_REVIEWS_BY_ID);
             preparedStmtTwo.setInt(1, review_id);
             ResultSet resultSetTwo = preparedStmtTwo.executeQuery();
             connection.commit();
             while (resultSetTwo.next()) {
-                int id = resultSetTwo.getInt("id");
-                String displayName = resultSetTwo.getString("display_name");
-                String emailAddress = resultSetTwo.getString("email_address");
-                boolean approved = resultSetTwo.getBoolean("approved");
-                String status = resultSetTwo.getString("status");
+                    int id = resultSetTwo.getInt(DBConstants.Review.REVIEW_ID);
+                    String displayName = resultSetTwo.getString(DBConstants.Review.REVIEW_DISPLAY_NAME);
+                    String emailAddress = resultSetTwo.getString(DBConstants.Review.REVIEW_EMAIL_ADDRESS);
+                    boolean approved = resultSetTwo.getBoolean(DBConstants.Review.REVIEW_APPROVED);
+                    String ReviewStatus = resultSetTwo.getString(DBConstants.Review.REVIEW_STATUS);
                 pullRequestReviewRelations.add(new ReviewDO.PullRequestReviewRelation(pullRequest,
-                        new ReviewDO(id, displayName, emailAddress, status, approved)));
+                        new ReviewDO(id, displayName, emailAddress, ReviewStatus, approved)));
             }
             resultSetTwo.close();
             preparedStmtTwo.close();
@@ -252,7 +250,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            reviewIdList.add(resultSet.getInt("review_id"));
+            reviewIdList.add(resultSet.getInt(DBConstants.PullRequestReviewRelation.REVIEW_RELATION_REVIEW_ID));
         }
         resultSet.close();
         preparedStmt.close();
@@ -267,12 +265,12 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-                int reviewerId = resultSet.getInt("reviewer_id");
-                String displayName = resultSet.getString("display_name");
-                String emailAddress = resultSet.getString("email_address");
-                boolean approved = resultSet.getBoolean("approved");
-                String state = resultSet.getString("status");
-                reviewerList.add(new ReviewDO(reviewerId, displayName, emailAddress, state, approved));
+            int reviewerId = resultSet.getInt(DBConstants.Review.REVIEW_ID);
+            String displayName = resultSet.getString(DBConstants.Review.REVIEW_DISPLAY_NAME);
+            String emailAddress = resultSet.getString(DBConstants.Review.REVIEW_EMAIL_ADDRESS);
+            boolean approved = resultSet.getBoolean(DBConstants.Review.REVIEW_APPROVED);
+            String ReviewStatus = resultSet.getString(DBConstants.Review.REVIEW_STATUS);
+                reviewerList.add(new ReviewDO(reviewerId, displayName, emailAddress, ReviewStatus, approved));
         }
         resultSet.close();
         preparedStmt.close();

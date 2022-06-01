@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 
@@ -36,7 +37,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(GET_SQL_ALL_REVIEW_DISPLAY_NAME);
         while (resultSet.next()) {
-            reviewers.add(resultSet.getString("display_name"));
+            reviewers.add(resultSet.getString(DBConstants.Review.REVIEW_DISPLAY_NAME));
         }
         resultSet.close();
         statement.close();
@@ -74,12 +75,12 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_REVIEWER);
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            int totalReview = resultSet.getInt("total_review");
-            int totalApprove = resultSet.getInt("total_approve");
-            int totalUnApprove = resultSet.getInt("total_unapprove");
-            reviewers.add(new ReviewerDO(id, name, totalReview, totalApprove, totalUnApprove));
+            int id = resultSet.getInt(DBConstants.Reviewer.REVIEWER_ID);
+            String reviewerName = resultSet.getString(DBConstants.Reviewer.REVIEWER_NAME);
+            int totalReview = resultSet.getInt(DBConstants.Reviewer.REVIEWER_TOTAL_REVIEW);
+            int totalApprove = resultSet.getInt(DBConstants.Reviewer.REVIEWER_TOTAL_APPROVE);
+            int totalUnapprove = resultSet.getInt(DBConstants.Reviewer.REVIEWER_TOTAL_UNAPPROVE);
+            reviewers.add(new ReviewerDO(id, reviewerName, totalReview, totalApprove, totalUnapprove));
         }
         resultSet.close();
         statement.close();
@@ -125,8 +126,8 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
     
     public void insertReviewerData(String reviewer) throws SQLException {
         int totalReview = reviewServiceIF.getReviewsByUsername(reviewer).size();
-        int totalApproved = getCountReviewByStatusAndUsername("APPROVED", reviewer);
-        int totalUnApproved = getCountReviewByStatusAndUsername("UNAPPROVED", reviewer);
+        int totalApproved = getCountReviewByStatusAndUsername(DBConstants.Review.REVIEW_STATUS_APPROVED, reviewer);
+        int totalUnApproved = getCountReviewByStatusAndUsername(DBConstants.Review.REVIEW_STATUS_UNAPPROVED, reviewer);
 
         Connection connection = TransactionManager.getConnection();
         try {
@@ -154,8 +155,8 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL_GET_TOP_REVIEWER);
         while (resultSet.next()) {
-            String name = resultSet.getString("name");
-            int totalApprovedCount = resultSet.getInt("total_approve");
+            String name = resultSet.getString(DBConstants.Reviewer.REVIEWER_NAME);
+            int totalApprovedCount = resultSet.getInt(DBConstants.Reviewer.REVIEWER_TOTAL_APPROVE);
             topReviewer = new ReviewerDO.TopReviewer(name, totalApprovedCount);
         }
         resultSet.close();
@@ -174,18 +175,17 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String reviewerName = resultSet.getString("name");
-            int totalReview = resultSet.getInt("total_review");
-            int totalApprove = resultSet.getInt("total_approve");
-            int totalUnapprove = resultSet.getInt("total_unapprove");
+            int id = resultSet.getInt(DBConstants.Reviewer.REVIEWER_ID);
+            String reviewerName = resultSet.getString(DBConstants.Reviewer.REVIEWER_NAME);
+            int totalReview = resultSet.getInt(DBConstants.Reviewer.REVIEWER_TOTAL_REVIEW);
+            int totalApprove = resultSet.getInt(DBConstants.Reviewer.REVIEWER_TOTAL_APPROVE);
+            int totalUnapprove = resultSet.getInt(DBConstants.Reviewer.REVIEWER_TOTAL_UNAPPROVE);
 
             list.add(new ReviewerDO(id, reviewerName, totalReview, totalApprove, totalUnapprove));
         }
         resultSet.close();
         preparedStmt.close();
         connection.close();
-        
         return list;
     }
 

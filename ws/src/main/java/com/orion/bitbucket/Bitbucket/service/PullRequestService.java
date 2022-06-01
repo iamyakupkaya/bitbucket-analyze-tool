@@ -3,6 +3,7 @@ package com.orion.bitbucket.Bitbucket.service;
 import java.sql.*;
 import java.util.ArrayList;
 
+import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import org.springframework.stereotype.Service;
@@ -56,26 +57,26 @@ public class PullRequestService extends BaseService implements PullRequestServic
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String title = resultSet.getString("title");
-            String state = resultSet.getString("state");
-            boolean closed = resultSet.getBoolean("closed");
-            String description = resultSet.getString("description");
-            String updatedDate = resultSet.getString("update_date"); // long olsun. db ona gore duzeltilsin
-            Date createdDate = resultSet.getDate("created_date"); // long olsun. db ona gore duzeltilsin
-            Date closedDate = resultSet.getDate("closed_date"); // long olsun. db ona gore duzeltilsin
-            String emailAddress = resultSet.getString("email_address");
-            String displayName = resultSet.getString("display_name");
-            String slug = resultSet.getString("slug");
-            String jiraIdConstant = "AAK-";
-            int indexOf = title.indexOf(jiraIdConstant);
+            int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+            String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
+            String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
+            boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
+            String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
+            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE); // long olsun. db ona gore duzeltilsin
+            Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
+            Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
+            String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
+            String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
+            String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
+            
+            int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
             String jiraId = null;
             if(indexOf > -1) {
-                int starting = title.indexOf("AAK-");
+                int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
                 jiraId = title.substring(starting, starting+9);
             }
             else {
-               jiraId = "null";
+                jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
             }
             list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null));
         }
@@ -95,26 +96,26 @@ public class PullRequestService extends BaseService implements PullRequestServic
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String title = resultSet.getString("title");
-            String state = resultSet.getString("state");
-            boolean closed = resultSet.getBoolean("closed");
-            String description = resultSet.getString("description");
-            String updatedDate = resultSet.getString("update_date"); // long olsun. db ona gore duzeltilsin
-            Date createdDate = resultSet.getDate("created_date"); // long olsun. db ona gore duzeltilsin
-            Date closedDate = resultSet.getDate("closed_date"); // long olsun. db ona gore duzeltilsin
-            String emailAddress = resultSet.getString("email_address");
-            String displayName = resultSet.getString("display_name");
-            String slug = resultSet.getString("slug");
-            String jiraIdConstant = "AAK-";
-            int indexOf = title.indexOf(jiraIdConstant);
+            int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+            String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
+            String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
+            boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
+            String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
+            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE); // long olsun. db ona gore duzeltilsin
+            Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
+            Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
+            String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
+            String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
+            String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
+            
+            int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
             String jiraId = null;
             if(indexOf > -1) {
-                int starting = title.indexOf("AAK-");
+                int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
                 jiraId = title.substring(starting, starting+9);
             }
             else {
-               jiraId = "null";
+                jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
             }
            
             list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null));
@@ -138,26 +139,26 @@ public class PullRequestService extends BaseService implements PullRequestServic
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String title = resultSet.getString("title");
-            String state = resultSet.getString("state");
-            boolean closed = resultSet.getBoolean("closed");
-            String description = resultSet.getString("description");
-            String updatedDate = resultSet.getString("update_date"); // long olsun. db ona gore duzeltilsin
-            Date createdDate = resultSet.getDate("created_date"); // long olsun. db ona gore duzeltilsin
-            Date closedDate = resultSet.getDate("closed_date"); // long olsun. db ona gore duzeltilsin
-            String emailAddress = resultSet.getString("email_address");
-            String displayName = resultSet.getString("display_name");
-            String slug = resultSet.getString("slug");
-            String jiraIdConstant = "AAK-";
-            int indexOf = title.indexOf(jiraIdConstant);
+            int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+            String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
+            String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
+            boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
+            String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
+            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE); // long olsun. db ona gore duzeltilsin
+            Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
+            Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
+            String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
+            String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
+            String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
+            
+            int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
             String jiraId = null;
             if(indexOf > -1) {
-                int starting = title.indexOf("AAK-");
+                int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
                 jiraId = title.substring(starting, starting+9);
             }
             else {
-               jiraId = "null";
+               jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
             }
             pullRequest = new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null);
         }

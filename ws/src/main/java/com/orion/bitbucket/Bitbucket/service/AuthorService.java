@@ -3,6 +3,7 @@ package com.orion.bitbucket.Bitbucket.service;
 import java.sql.*;
 import java.util.ArrayList;
 
+import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_AUTHOR);
         while (resultSet.next()) {
-            String displayName = resultSet.getString("display_name");
+            String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
             authors.add(displayName);
         }
         resultSet.close();
@@ -106,13 +107,12 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String authorName = resultSet.getString("name");
-            int totalPrs = resultSet.getInt("total_prs");
-            int totalMerged = resultSet.getInt("total_merged_prs");
-            int totalOpen = resultSet.getInt("total_open_prs");
-            int totalDeclined = resultSet.getInt("total_declined_prs");
-
+            int id = resultSet.getInt(DBConstants.Author.AUTHOR_ID);
+            String authorName = resultSet.getString(DBConstants.Author.AUTHOR_NAME);
+            int totalPrs = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_PRS);
+            int totalMerged = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_MERGED_PRS);
+            int totalOpen = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_OPEN_PRS);
+            int totalDeclined = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_DECLINED_PRS);
             list.add(new AuthorDO(id, authorName, totalPrs, totalMerged, totalOpen, totalDeclined));
         }
         resultSet.close();
@@ -125,9 +125,9 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
 
 
     public void insertAuthorData(String author) throws SQLException {
-        int totalMergedPRs = getCountPRByStateAndUsername("MERGED", author);
-        int totalOpenPRs = getCountPRByStateAndUsername("OPEN", author);
-        int totalDeclinedPRs = getCountPRByStateAndUsername("DECLINED", author);
+        int totalMergedPRs = getCountPRByStateAndUsername(DBConstants.PullRequestState.MERGED, author);
+        int totalOpenPRs = getCountPRByStateAndUsername(DBConstants.PullRequestState.OPEN, author);
+        int totalDeclinedPRs = getCountPRByStateAndUsername(DBConstants.PullRequestState.DECLINED, author);
         int totalPRs = totalMergedPRs + totalOpenPRs + totalDeclinedPRs;
         Connection connection = TransactionManager.getConnection();
         try {
@@ -156,8 +156,8 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL_GET_TOP_AUTHOR);
         while (resultSet.next()) {
-            String name = resultSet.getString("name");
-            int totalPRCount = resultSet.getInt("total_prs");
+            String name = resultSet.getString(DBConstants.Author.AUTHOR_NAME);
+            int totalPRCount = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_PRS);
             topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
         }
         resultSet.close();
@@ -183,7 +183,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            String name = resultSet.getString("display_name");
+            String name = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
             int totalPRCount = resultSet.getInt("totalPRCount");
             topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
           
@@ -211,7 +211,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            String name = resultSet.getString("display_name");
+            String name = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
             int totalPRCount = resultSet.getInt("totalPRCount");
             topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
           
@@ -228,8 +228,8 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL_GET_TOP_AUTHOR_BY_OPEN);
         while (resultSet.next()) {
-            String name = resultSet.getString("name");
-            int totalPRCount = resultSet.getInt("total_open_prs");
+            String name = resultSet.getString(DBConstants.Author.AUTHOR_NAME);
+            int totalPRCount = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_OPEN_PRS);
             topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
         }
         resultSet.close();
@@ -244,8 +244,8 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL_GET_TOP_AUTHOR_BY_MERGED);
         while (resultSet.next()) {
-            String name = resultSet.getString("name");
-            int totalPRCount = resultSet.getInt("total_merged_prs");
+            String name = resultSet.getString(DBConstants.Author.AUTHOR_NAME);
+            int totalPRCount = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_MERGED_PRS);
             topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
         }
         resultSet.close();
@@ -260,8 +260,8 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL_GET_TOP_AUTHOR_BY_DECLINED);
         while (resultSet.next()) {
-            String name = resultSet.getString("name");
-            int totalPRCount = resultSet.getInt("total_declined_prs");
+            String name = resultSet.getString(DBConstants.Author.AUTHOR_NAME);
+            int totalPRCount = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_DECLINED_PRS);
             topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
         }
         resultSet.close();
@@ -276,12 +276,12 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_AUTHORS);
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            int total = resultSet.getInt("total_prs");
-            int merge = resultSet.getInt("total_merged_prs");
-            int open = resultSet.getInt("total_open_prs");
-            int declined = resultSet.getInt("total_declined_prs");
+            int id = resultSet.getInt(DBConstants.Author.AUTHOR_ID);
+            String name = resultSet.getString(DBConstants.Author.AUTHOR_NAME);
+            int total = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_PRS);
+            int merge = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_MERGED_PRS);
+            int open = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_OPEN_PRS);
+            int declined = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_DECLINED_PRS);
             authors.add(new AuthorDO(id, name, total, merge, open, declined));
         }
         resultSet.close();
