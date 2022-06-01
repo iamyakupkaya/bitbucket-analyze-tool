@@ -38,6 +38,89 @@ public class DBConstants {
         list.add(CREATE_PULL_REQUEST_REVIEW_RELATION);
         return list;
     }
+
+    public static final class Author {
+        private Author() {
+        }
+
+        public static final String AUTHOR_ID = "id";
+        public static final String AUTHOR_NAME = "name";
+        public static final String AUTHOR_TOTAL_PRS = "total_prs";
+        public static final String AUTHOR_TOTAL_MERGED_PRS = "total_merged_prs";
+        public static final String AUTHOR_TOTAL_OPEN_PRS = "total_open_prs";
+        public static final String AUTHOR_TOTAL_DECLINED_PRS = "total_declined_prs";
+
+    }
+
+    public static final class PullRequest {
+        private PullRequest() {
+        }
+
+        public static final String PULL_REQUEST_ID = "id";
+        public static final String PULL_REQUEST_TITLE = "title";
+        public static final String PULL_REQUEST_STATE = "state";
+        public static final String PULL_REQUEST_CLOSED = "closed";
+        public static final String PULL_REQUEST_DESCRIPTION = "description";
+        public static final String PULL_REQUEST_UPDATE_DATE = "update_date";
+        public static final String PULL_REQUEST_CREATED_DATE = "created_date";
+        public static final String PULL_REQUEST_CLOSED_DATE = "closed_date";
+        public static final String PULL_REQUEST_AUTHOR_EMAIL_ADDRESS = "email_address";
+        public static final String PULL_REQUEST_AUTHOR_DISPLAY_NAME = "display_name";
+        public static final String PULL_REQUEST_AUTHOR_SLUG = "slug";
+        public static final String PULL_REQUEST_JIRA_ID = "AAK-"; 
+        public static final String PULL_REQUEST_NO_JIRA_ID = "null"; 
+
+    }
+
+    public static final class PullRequestState {
+        private PullRequestState() {
+        }
+
+        public static final String MERGED = "MERGED";
+        public static final String OPEN = "OPEN";
+        public static final String DECLINED = "DECLINED";
+
+    }
+
+    public static final class PullRequestReviewRelation {
+        private PullRequestReviewRelation() {
+        }
+
+        public static final String REVIEW_RELATION_PULL_REQUEST_ID = "pull_request_id";
+        public static final String REVIEW_RELATION_REVIEW_ID = "review_id";
+
+    }
+
+    public static final class Review {
+        private Review() {
+        }
+
+        public static final String REVIEW_ID = "id";
+        public static final String REVIEW_DISPLAY_NAME = "display_name";
+        public static final String REVIEW_EMAIL_ADDRESS = "email_address";
+        public static final String REVIEW_APPROVED = "approved";
+        public static final String REVIEW_STATUS = "status";
+        public static final String REVIEW_STATUS_APPROVED = "APPROVED";
+        public static final String REVIEW_STATUS_UNAPPROVED = "UNAPPROVED";
+
+    }
+
+    public static final class Reviewer {
+        private Reviewer() {
+        }
+
+        public static final String REVIEWER_ID = "id";
+        public static final String REVIEWER_NAME = "name";
+        public static final String REVIEWER_TOTAL_REVIEW = "total_review";
+        public static final String REVIEWER_TOTAL_APPROVE = "total_approve";
+        public static final String REVIEWER_TOTAL_UNAPPROVE = "total_unapprove";
+
+    }
+
+
+
+
+
 }
 
 
