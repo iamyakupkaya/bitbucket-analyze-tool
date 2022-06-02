@@ -90,17 +90,17 @@ public class PageController {
         model.addAttribute("topAuthorDisplayName", topAuthor.getName());
         model.addAttribute("topAuthorPRsCount", topAuthor.getTotal());
 
-        // AuthorDO.TopAuthor topAuthorMerge = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"MERGED");
-        // model.addAttribute("topAuthorMerge", topAuthorMerge.getName());
-        // model.addAttribute("topAuthorMergePRsCount", topAuthorMerge.getTotal());
+         AuthorDO.TopAuthor topAuthorMerge = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"MERGED");
+         model.addAttribute("topAuthorMerge", topAuthorMerge.getName());
+         model.addAttribute("topAuthorMergePRsCount", topAuthorMerge.getTotal());
 
         AuthorDO.TopAuthor topAuthorOpen = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"OPEN");
         model.addAttribute("topAuthorOpen", topAuthorOpen.getName());
         model.addAttribute("topAuthorOpenPRsCount", topAuthorOpen.getTotal());
 
-        // AuthorDO.TopAuthor topAuthorDeclined = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"DECLINED");
-        // model.addAttribute("topAuthorDeclined", topAuthorDeclined.getName());
-        // model.addAttribute("topAuthorDeclinedPRsCount", topAuthorDeclined.getTotal());
+         AuthorDO.TopAuthor topAuthorDeclined = authorServiceIF.getTopAuthorWithDateIntervalAndState(date,"DECLINED");
+         model.addAttribute("topAuthorDeclined", topAuthorDeclined.getName());
+         model.addAttribute("topAuthorDeclinedPRsCount", topAuthorDeclined.getTotal());
 
 
         // TODO : No date filtering has been written yet, but will be written

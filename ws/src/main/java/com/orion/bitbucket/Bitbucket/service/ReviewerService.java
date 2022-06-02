@@ -102,7 +102,6 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         return count;
     }
 
-    @Override
     public int getCountReviewByStatusAndUsername(String state, String username) throws SQLException {
         Connection connection = TransactionManager.getConnection();
         int count = 0;

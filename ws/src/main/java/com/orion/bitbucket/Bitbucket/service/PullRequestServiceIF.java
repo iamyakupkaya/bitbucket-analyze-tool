@@ -3,6 +3,7 @@ package com.orion.bitbucket.Bitbucket.service;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public interface PullRequestServiceIF {
@@ -13,4 +14,10 @@ public interface PullRequestServiceIF {
     ArrayList<PullRequestDO> getPRListByStateAndUsername(String status, String username) throws SQLException;
     int getPRCountByStateAndUsername(String state, String username) throws SQLException;
     PullRequestDO getPullRequestById(int pullRequestId) throws SQLException;
+
+    // TODO : It gives an error
+    ArrayList<PullRequestDO> getPRListByStateAndUsernameAndDateInterval(String status, String username, String startDate, String endDate) throws SQLException, ParseException ;
+
+
+
 }

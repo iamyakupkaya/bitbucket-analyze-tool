@@ -95,36 +95,36 @@
                         </ul>
                         <ul class="menu-sub">
                             <li class="menu-item ">
-                              <a th:href="@{/pull-requests}" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-table"></i>
-                                <div data-i18n="Tables">NRD1222</div>
-                              </a>
+                                <a th:href="@{/pull-requests}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-table"></i>
+                                    <div data-i18n="Tables">NRD1222</div>
+                                </a>
                             </li>
-                          </ul>
-                          <ul class="menu-sub">
+                        </ul>
+                        <ul class="menu-sub">
                             <li class="menu-item ">
-                              <a th:href="@{/pull-requests}" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-table"></i>
-                                <div data-i18n="Tables">NRD1212</div>
-                              </a>
+                                <a th:href="@{/pull-requests}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-table"></i>
+                                    <div data-i18n="Tables">NRD1212</div>
+                                </a>
                             </li>
-                          </ul>
-                          <ul class="menu-sub">
+                        </ul>
+                        <ul class="menu-sub">
                             <li class="menu-item ">
-                              <a th:href="@{/pull-requests}" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-table"></i>
-                                <div data-i18n="Tables">NRD1221</div>
-                              </a>
+                                <a th:href="@{/pull-requests}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-table"></i>
+                                    <div data-i18n="Tables">NRD1221</div>
+                                </a>
                             </li>
-                          </ul>
-                          <ul class="menu-sub">
+                        </ul>
+                        <ul class="menu-sub">
                             <li class="menu-item ">
-                              <a th:href="@{/pull-requests}" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-table"></i>
-                                <div data-i18n="Tables">NRD1214</div>
-                              </a>
+                                <a th:href="@{/pull-requests}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-table"></i>
+                                    <div data-i18n="Tables">NRD1214</div>
+                                </a>
                             </li>
-                          </ul>
+                        </ul>
                     </li>
                     <!-- ------------------------------------- -->
                     <!-- Statistics Reviewer -->
@@ -240,14 +240,17 @@
                                                     class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                     <div class="me-2">
                                                         <small class="text-muted d-block mb-1">Author</small>
-                                                        <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                                            <a th:href="@{'/pull-requests/author/'+${name}}" target="_blank"><strong th:text="${name}">Yusuf AKBAŞ</strong></a>
-                                                          </ul>
+                                                        <ul
+                                                            class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                                                            <a th:href="@{'/pull-requests/author/'+${name}}"
+                                                                target="_blank"><strong th:text="${name}">Yusuf
+                                                                    AKBAŞ</strong></a>
+                                                        </ul>
                                                     </div>
 
                                                 </div>
                                             </li>
-                                           
+
                                             <li class="d-flex mb-4 pb-1">
                                                 <div class="avatar flex-shrink-0 me-3">
                                                     <span class="avatar-initial rounded bg-label-info"><i
@@ -322,7 +325,9 @@
                                                     <tbody class="table-border-bottom-0">
                                                         <tr th:each="approveReviewer : ${approveReviewerList}">
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                                                <a th:href="@{'/reviewer/'+${approveReviewer.displayName}}" target="_blank"><strong th:text="${approveReviewer.id}">id</strong></a>
+                                                                <a th:href="@{'/reviewer/'+${approveReviewer.displayName}}"
+                                                                    target="_blank"><strong
+                                                                        th:text="${approveReviewer.id}">id</strong></a>
                                                             </td>
 
                                                             <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
@@ -352,7 +357,9 @@
                                                     <tbody class="table-border-bottom-0">
                                                         <tr th:each="unapproveReviewer : ${unapproveReviewerList}">
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                                                <a th:href="@{'/reviewer/'+${unapproveReviewer.displayName}}" target="_blank"><strong th:text="${unapproveReviewer.id}">id</strong></a>
+                                                                <a th:href="@{'/reviewer/'+${unapproveReviewer.displayName}}"
+                                                                    target="_blank"><strong
+                                                                        th:text="${unapproveReviewer.id}">id</strong></a>
                                                             </td>
                                                             <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
                                                                 th:text="${unapproveReviewer.displayName}">name

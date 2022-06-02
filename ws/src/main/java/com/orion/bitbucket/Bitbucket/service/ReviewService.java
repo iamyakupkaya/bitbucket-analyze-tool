@@ -2,12 +2,10 @@ package com.orion.bitbucket.Bitbucket.service;
 
 import java.sql.*;
 import java.util.ArrayList;
-
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +26,6 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
     private final String SQL_GET_MOST_OF_REVIEWED_PULL_REQUEST = " select pull_request_id,count(*) as mostOf from pullrequestreviewrelation group by pull_request_id having count(*) =(select max(mostOf) from  (select pull_request_id,count(*) as mostOf from pullrequestreviewrelation group by pull_request_id) pullrequestreviewrelation)";
     private final String SQL_GET_REWIEW_ID_FROM_RELATION_TABLE = "select review_id from pullrequestreviewrelation where pull_request_id=?;";
     
-    public ArrayList<ReviewDO> getAllReview() {
-       
-        return null;
-    }
 
     public int getTotalReviewCount() throws SQLException {
         Connection connection = TransactionManager.getConnection();
@@ -191,7 +185,6 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         return pullRequestReviewRelations;
     }
 
-    // En fazla review edilen pull request
 
     public ArrayList<ReviewDO.PullRequestReviewRelation> mostReviewedPullRequest() throws SQLException {
         ArrayList<ReviewDO.PullRequestReviewRelation> pullRequestReviewRelations = new ArrayList<>();
@@ -277,86 +270,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         connection.close();
         }
 
-
-
-        ;
         return reviewerList;
     }
-
-    // En fazla review edilen 5 pull request (gereksiz olabilir bu)
-    // En az review yapan kisi
-    // Returns a list that is consists of pull request reviewed by username
-    public ArrayList<PullRequestDO> getMergedPRListReviewedByUsername(String username) {
-        ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-        ArrayList<PullRequestDO> mergedPRList = this.mergedPRList;
-        for (int i = 0; i < mergedPRList.size(); i++) {
-            ArrayList<ReviewDO> reviewers = mergedPRList.get(i).getReviewerList();
-            for (int j = 0; j < reviewers.size(); j++) {
-                if (reviewers.get(j).getDisplayName().equals(username)) {
-                    list.add(mergedPRList.get(i));
-                }
-            }
-        }
-        return list;
-    }
-
-    public ArrayList<PullRequestDO> getOpenPRListReviewedByUsername(String username) {
-        ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-        ArrayList<PullRequestDO> openPRList = this.openPRList;
-        for (int i = 0; i < openPRList.size(); i++) {
-            ArrayList<ReviewDO> reviewers = openPRList.get(i).getReviewerList();
-            for (int j = 0; j < reviewers.size(); j++) {
-                if (reviewers.get(j).getDisplayName().equals(username)) {
-                    list.add(openPRList.get(i));
-                }
-            }
-        }
-        return list;
-    }
-
-    public ArrayList<PullRequestDO> getDeclinedPRListReviewedByUsername(String username) {
-        ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-        ArrayList<PullRequestDO> declinedPRList = this.declinedPRList;
-        for (int i = 0; i < declinedPRList.size(); i++) {
-            ArrayList<ReviewDO> reviewers = declinedPRList.get(i).getReviewerList();
-            for (int j = 0; j < reviewers.size(); j++) {
-                if (reviewers.get(j).getDisplayName().equals(username)) {
-                    list.add(declinedPRList.get(i));
-                }
-            }
-        }
-        return list;
-    }
-
-    // Returns a number that indicates a specific user has reviewed pull requests
-    // that are merged
-    public int getMergedPRCountReviewedByUsername(String username) {
-        return this.getMergedPRListReviewedByUsername(username).size();
-    }
-
-    public int getOpenPRCountReviewedByUsername(String username) {
-        return this.getOpenPRListReviewedByUsername(username).size();
-    }
-
-    public int getDeclinedPRCountReviewedByUsername(String username) {
-        return this.getDeclinedPRListReviewedByUsername(username).size();
-    }
-
-    public ArrayList<ReviewDO> getReviewByPRId(int id) {
-        ArrayList<PullRequestDO> allPR = this.allPRList;
-        ArrayList<ReviewDO> getReviewerWithPrId = new ArrayList<ReviewDO>();
-        for (int i = 0; i < allPR.size(); i++) {
-            if (allPR.get(i).getPrId() == id) {
-                getReviewerWithPrId.addAll(allPR.get(i).getReviewerList());
-                break;
-            }
-        }
-        return getReviewerWithPrId;
-    }
-
-   
-   
-
-   
 
 }

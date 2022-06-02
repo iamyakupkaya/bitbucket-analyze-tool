@@ -1,15 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" class="light-style layout-menu-fixed " dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="light-style layout-menu-fixed " dir="ltr"
+    data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <title>Reviewer</title>
-    <meta name="description" content="Most Powerful &amp; Comprehensive Bootstrap 5 HTML Admin Dashboard Template built for developers!" />
+    <meta name="description"
+        content="Most Powerful &amp; Comprehensive Bootstrap 5 HTML Admin Dashboard Template built for developers!" />
     <meta name="keywords" content="dashboard, bootstrap 5 dashboard, bootstrap 5 design, bootstrap 5">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&amp;display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&amp;display=swap"
+        rel="stylesheet">
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" th:href="@{/vendor/fonts/boxicons.css}" />
     <!-- Core CSS -->
@@ -50,13 +56,14 @@
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo ">
                     <a th:href="@{/}" class="app-brand-link">
-                      <h5 class="card-title text-primary">Bitbucket Analyse Tool</h5>
+                        <h5 class="card-title text-primary">Bitbucket Analyse Tool</h5>
                     </a>
-          
-                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-                      <i class="bx bx-chevron-left bx-sm align-middle"></i>
+
+                    <a href="javascript:void(0);"
+                        class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+                        <i class="bx bx-chevron-left bx-sm align-middle"></i>
                     </a>
-                  </div>
+                </div>
 
                 <div class="menu-inner-shadow"></div>
 
@@ -64,85 +71,83 @@
 
                 <ul class="menu-inner py-1">
 
-          <!-- Dashboard -->
-          <li class="menu-item active">
-            <a th:href="@{/}" class="menu-link">
-              <i class="menu-icon tf-icons bx bx-home-circle"></i>
-              <div data-i18n="Analytics">Home</div>
-            </a>
-          </li>
-          <!-- ------------------------------------- -->
-          <!-- Pull request tables are coming -->
-          <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <i class="menu-icon tf-icons bx bx-git-pull-request"></i>
-              <div data-i18n="Layouts">Pull Request</div>
-            </a>
-            <ul class="menu-sub">
-              <li class="menu-item active">
-                <a th:href="@{/pull-requests}" class="menu-link">
-                  <i class="menu-icon tf-icons bx bx-table"></i>
-                  <div data-i18n="Tables">Author List</div>
-                </a>
-              </li>
-            </ul>
-            <ul class="menu-sub">
-                <li class="menu-item ">
-                  <a th:href="@{/pull-requests}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-table"></i>
-                    <div data-i18n="Tables">NRD1222</div>
-                  </a>
-                </li>
-              </ul>
-              <ul class="menu-sub">
-                <li class="menu-item ">
-                  <a th:href="@{/pull-requests}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-table"></i>
-                    <div data-i18n="Tables">NRD1212</div>
-                  </a>
-                </li>
-              </ul>
-              <ul class="menu-sub">
-                <li class="menu-item ">
-                  <a th:href="@{/pull-requests}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-table"></i>
-                    <div data-i18n="Tables">NRD1221</div>
-                  </a>
-                </li>
-              </ul>
-              <ul class="menu-sub">
-                <li class="menu-item ">
-                  <a th:href="@{/pull-requests}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-table"></i>
-                    <div data-i18n="Tables">NRD1214</div>
-                  </a>
-                </li>
-              </ul>
-          </li>
-          <!-- ------------------------------------- -->
-          <!-- Statistics Reviewer -->
-          <li class="menu-item">
-            <a href="javascript:void(0)" class="menu-link menu-toggle">
-              <i class="menu-icon tf-icons bx bx-comment-detail"></i>
-              <div data-i18n="User interface">Review</div>
-            </a>
-            <ul class="menu-sub">
-              <li class="menu-item active">
-                <a th:href="@{/reviewer}" class="menu-link">
-                  <i class="menu-icon tf-icons bx bx-table"></i>
-                  <div data-i18n="Tables">Reviewer List</div>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <!-- Misc -->
-        </ul>
+                    <!-- Dashboard -->
+                    <li class="menu-item active">
+                        <a th:href="@{/}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">Home</div>
+                        </a>
+                    </li>
+                    <!-- ------------------------------------- -->
+                    <!-- Pull request tables are coming -->
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-git-pull-request"></i>
+                            <div data-i18n="Layouts">Pull Request</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item active">
+                                <a th:href="@{/pull-requests}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-table"></i>
+                                    <div data-i18n="Tables">Author List</div>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="menu-sub">
+                            <li class="menu-item ">
+                                <a th:href="@{/pull-requests}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-table"></i>
+                                    <div data-i18n="Tables">NRD1222</div>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="menu-sub">
+                            <li class="menu-item ">
+                                <a th:href="@{/pull-requests}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-table"></i>
+                                    <div data-i18n="Tables">NRD1212</div>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="menu-sub">
+                            <li class="menu-item ">
+                                <a th:href="@{/pull-requests}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-table"></i>
+                                    <div data-i18n="Tables">NRD1221</div>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="menu-sub">
+                            <li class="menu-item ">
+                                <a th:href="@{/pull-requests}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-table"></i>
+                                    <div data-i18n="Tables">NRD1214</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- ------------------------------------- -->
+                    <!-- Statistics Reviewer -->
+                    <li class="menu-item">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-comment-detail"></i>
+                            <div data-i18n="User interface">Review</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item active">
+                                <a th:href="@{/reviewer}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-table"></i>
+                                    <div data-i18n="Tables">Reviewer List</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Misc -->
+                </ul>
                 <!-- / Menu -->
 
             </aside>
             <!-- / Menu -->
-
-
 
             <!-- Layout container -->
             <div class="layout-page">
@@ -159,7 +164,7 @@
                         <!-- Search -->
                         <div class="navbar-nav align-items-center">
                             <div class="nav-item d-flex align-items-center">
-                             
+
                             </div>
                         </div>
                         <!-- /Search -->
@@ -223,14 +228,14 @@
                                                     </div>
                                                 </div>
                                             </li>
-                                           
+
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <!-- Transactions -->
-                            <div class="col-md-6 col-lg-4 order-2 mb-4" >
-                                <div class="card h-100" >
+                            <div class="col-md-6 col-lg-4 order-2 mb-4">
+                                <div class="card h-100">
                                     <div class="card-body">
                                         <ul class="p-0 m-0">
                                             <li class="d-flex mb-4 pb-1">
@@ -242,9 +247,9 @@
                                                     class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                     <div class="me-2">
                                                         <small class="text-muted d-block mb-1">Project</small>
-                                                        <h6 class="mb-0" >mcp_core_root</h6>
+                                                        <h6 class="mb-0">mcp_core_root</h6>
                                                     </div>
-                                                    
+
                                                 </div>
                                             </li>
                                             <li class="d-flex mb-4 pb-1">
@@ -269,9 +274,10 @@
                                                     class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                     <div class="me-2">
                                                         <small class="text-muted d-block mb-1">Email Address</small>
-                                                        <h6 class="mb-0" th:text="${emailAddres}">yusuf.akbas@orioninc.com</h6>
+                                                        <h6 class="mb-0" th:text="${emailAddres}">
+                                                            yusuf.akbas@orioninc.com</h6>
                                                     </div>
-                                                    
+
                                                 </div>
                                             </li>
                                             <li class="d-flex mb-4 pb-1">
@@ -285,7 +291,7 @@
                                                         <small class="text-muted d-block mb-1">Id</small>
                                                         <h6 class="mb-0" th:text="${id}">yusufakbas</h6>
                                                     </div>
-                                                    
+
                                                 </div>
                                             </li>
 
@@ -335,11 +341,16 @@
                                                     <tbody class="table-border-bottom-0">
                                                         <tr th:each="relationApprove : ${relationApproveList}">
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                                                <a th:href="@{'/pull-requests/'+${relationApprove.pullRequest.prId}}" target="_blank"><strong th:text="${relationApprove.pullRequest.prId}">id</strong></a>
+                                                                <a th:href="@{'/pull-requests/'+${relationApprove.pullRequest.prId}}"
+                                                                    target="_blank"><strong
+                                                                        th:text="${relationApprove.pullRequest.prId}">id</strong></a>
                                                             </td>
                                                             <td th:text="${relationApprove.pullRequest.jiraId}"></td>
-                                                            <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "  th:text="${relationApprove.pullRequest.title}">title</td>
-                                                            <td th:text="${relationApprove.pullRequest.state}">state</td>
+                                                            <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
+                                                                th:text="${relationApprove.pullRequest.title}">title
+                                                            </td>
+                                                            <td th:text="${relationApprove.pullRequest.state}">state
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -348,7 +359,7 @@
                                     </div>
                                     <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
                                         <div class="card">
-                                             <!-- Hoverable Table rows -->
+                                            <!-- Hoverable Table rows -->
                                             <h5 class="card-header">Pull Requests</h5>
                                             <div class="table-responsive text-nowrap">
                                                 <table class="table table-hover">
@@ -363,17 +374,22 @@
                                                     <tbody class="table-border-bottom-0">
                                                         <tr th:each="relationUnapprove : ${relationUnapproveList}">
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                                                <a th:href="@{'/pull-requests/'+${relationUnapprove.pullRequest.prId}}" target="_blank"><strong th:text="${relationUnapprove.pullRequest.prId}">id</strong></a>
+                                                                <a th:href="@{'/pull-requests/'+${relationUnapprove.pullRequest.prId}}"
+                                                                    target="_blank"><strong
+                                                                        th:text="${relationUnapprove.pullRequest.prId}">id</strong></a>
                                                             </td>
                                                             <td th:text="${relationUnapprove.pullRequest.jiraId}"></td>
-                                                            <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "  th:text="${relationUnapprove.pullRequest.title}">title</td>
-                                                            <td th:text="${relationUnapprove.pullRequest.state}">state</td>
+                                                            <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
+                                                                th:text="${relationUnapprove.pullRequest.title}">title
+                                                            </td>
+                                                            <td th:text="${relationUnapprove.pullRequest.state}">state
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -406,7 +422,7 @@
                 <!-- Footer -->
                 <footer class="content-footer footer bg-footer-theme">
                     <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-                        
+
                     </div>
                 </footer>
                 <!-- / Footer -->
@@ -421,8 +437,6 @@
 
     <!-- Overlay -->
     <div class="layout-overlay layout-menu-toggle"></div>
-
-
     </div>
     <!-- / Layout wrapper -->
 
@@ -449,86 +463,85 @@
     <script async defer th:src="@{/../../buttons.github.io/buttons.js}"></script>
 
     <script th:inline="javascript">
-      /*<![CDATA[*/
+        /*<![CDATA[*/
 
-    const totalReview = /*[[${totalReviewChart}]]*/ 'default';
-    const totalApprove = /*[[${totalApproveChart}]]*/ 'default';
-    const totalUnapprove = /*[[${totalUnapproveChart}]]*/ 'default';
-    
+        const totalReview = /*[[${totalReviewChart}]]*/ 'default';
+        const totalApprove = /*[[${totalApproveChart}]]*/ 'default';
+        const totalUnapprove = /*[[${totalUnapproveChart}]]*/ 'default';
 
         /*]]>*/
 
         var o = config.colors.white,
-        t = config.colors.headingColor,
-        e = config.colors.axisColor,
-        r = config.colors.borderColor,
-         i = document.querySelector("#PullRequestStatisticsChart"), s = {
-        chart: {
-            height: 165,
-            width: 130,
-            type: "donut"
-        },
-        labels: ["Approve", "Unapprove", "Declined"],
-        series: [totalApprove, totalUnapprove],
-        colors: [config.colors.primary, config.colors.secondary],
-        stroke: {
-            width: 5,
-            colors: o
-        },
-        dataLabels: {
-            enabled: !1,
-            formatter: function (o, t) {
-                return parseInt(o) 
-            }
-        },
-        legend: {
-            show: !1
-        },
-        grid: {
-            padding: {
-                top: 0,
-                bottom: 0,
-                right: 15
-            }
-        },
-        plotOptions: {
-            pie: {
-                donut: {
-                    size: "75%",
-                    labels: {
-                        show: !0,
-                        value: {
-                            fontSize: "1.5rem",
-                            fontFamily: "Public Sans",
-                            color: t,
-                            offsetY: -15,
-                            formatter: function (o) {
-                                return parseInt(o) 
-                            }
-                        },
-                        name: {
-                            offsetY: 20,
-                            fontFamily: "Public Sans"
-                        },
-                        total: {
-                            show: !0,
-                            fontSize: "0.8125rem",
-                            color: e,
-                            label: "All",
-                            formatter: function (o) {
-                                return totalReview
+            t = config.colors.headingColor,
+            e = config.colors.axisColor,
+            r = config.colors.borderColor,
+            i = document.querySelector("#PullRequestStatisticsChart"), s = {
+                chart: {
+                    height: 165,
+                    width: 130,
+                    type: "donut"
+                },
+                labels: ["Approve", "Unapprove", "Declined"],
+                series: [totalApprove, totalUnapprove],
+                colors: [config.colors.primary, config.colors.secondary],
+                stroke: {
+                    width: 5,
+                    colors: o
+                },
+                dataLabels: {
+                    enabled: !1,
+                    formatter: function (o, t) {
+                        return parseInt(o)
+                    }
+                },
+                legend: {
+                    show: !1
+                },
+                grid: {
+                    padding: {
+                        top: 0,
+                        bottom: 0,
+                        right: 15
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: "75%",
+                            labels: {
+                                show: !0,
+                                value: {
+                                    fontSize: "1.5rem",
+                                    fontFamily: "Public Sans",
+                                    color: t,
+                                    offsetY: -15,
+                                    formatter: function (o) {
+                                        return parseInt(o)
+                                    }
+                                },
+                                name: {
+                                    offsetY: 20,
+                                    fontFamily: "Public Sans"
+                                },
+                                total: {
+                                    show: !0,
+                                    fontSize: "0.8125rem",
+                                    color: e,
+                                    label: "All",
+                                    formatter: function (o) {
+                                        return totalReview
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
-        }
-    };
+            };
 
-    if (null !== i) {
-        const d = new ApexCharts(i, s);
-        d.render()
-    }
+        if (null !== i) {
+            const d = new ApexCharts(i, s);
+            d.render()
+        }
     </script>
 
 </body>

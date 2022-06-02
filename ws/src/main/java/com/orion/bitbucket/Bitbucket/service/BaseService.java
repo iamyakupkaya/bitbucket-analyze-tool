@@ -43,8 +43,8 @@ public class BaseService implements BaseServiceIF {
                 System.out.println(
                         "This is first time to retrieve data. Wait for retrieving data and insert into local database have been completed.");
                 getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
-               // getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
-               // getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
+                getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
+                getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
                 Instant finish = Instant.now();
                 Duration timeElapsed = Duration.between(start, finish);
                 System.out.println(

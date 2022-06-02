@@ -1,40 +1,45 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" class="light-style layout-menu-fixed " dir="ltr" data-theme="theme-default" data-assets-path="static/" data-template="vertical-menu-template-free">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="light-style layout-menu-fixed " dir="ltr"
+  data-theme="theme-default" data-assets-path="static/" data-template="vertical-menu-template-free">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
-    <title>Pull Request</title>
-    <meta name="description" content="Most Powerful &amp; Comprehensive Bootstrap 5 HTML Admin Dashboard Template built for developers!" />
-    <meta name="keywords" content="dashboard, bootstrap 5 dashboard, bootstrap 5 design, bootstrap 5">
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com/">
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&amp;display=swap" rel="stylesheet">
-    <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" th:href="@{/vendor/fonts/boxicons.css}"/>
-    <!-- Core CSS -->
-    <link rel="stylesheet" th:href="@{/vendor/css/core.css}" class="template-customizer-core-css" />
-    <link rel="stylesheet" th:href="@{/vendor/css/theme-default.css}" class="template-customizer-theme-css" />
-    <link rel="stylesheet" th:href="@{/css/demo.css}" />
-    <!-- Vendors CSS -->
-    <link rel="stylesheet" th:href="@{/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
-    <!-- Helpers -->
-    <script th:src="@{/vendor/js/helpers.js}" ></script>
-    <script  th:src="@{/js/config.js}" ></script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
+  <meta charset="utf-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  <title>Pull Request</title>
+  <meta name="description"
+    content="Most Powerful &amp; Comprehensive Bootstrap 5 HTML Admin Dashboard Template built for developers!" />
+  <meta name="keywords" content="dashboard, bootstrap 5 dashboard, bootstrap 5 design, bootstrap 5">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&amp;display=swap"
+    rel="stylesheet">
+  <!-- Icons. Uncomment required icon fonts -->
+  <link rel="stylesheet" th:href="@{/vendor/fonts/boxicons.css}" />
+  <!-- Core CSS -->
+  <link rel="stylesheet" th:href="@{/vendor/css/core.css}" class="template-customizer-core-css" />
+  <link rel="stylesheet" th:href="@{/vendor/css/theme-default.css}" class="template-customizer-theme-css" />
+  <link rel="stylesheet" th:href="@{/css/demo.css}" />
+  <!-- Vendors CSS -->
+  <link rel="stylesheet" th:href="@{/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
+  <!-- Helpers -->
+  <script th:src="@{/vendor/js/helpers.js}"></script>
+  <script th:src="@{/js/config.js}"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async="async" src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'GA_MEASUREMENT_ID');
-    </script>
-    <!-- Custom notification for demo -->
-    <!-- beautify ignore:end -->
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID');
+  </script>
+  <!-- Custom notification for demo -->
+  <!-- beautify ignore:end -->
 
 </head>
 
@@ -138,7 +143,7 @@
           </li>
           <!-- Misc -->
         </ul>
-        
+
         <!-- / Menu -->
 
       </aside>
@@ -167,16 +172,8 @@
             </div>
             <!-- /Search -->
           </div>
-
-
-
         </nav>
-
-
-
         <!-- / Navbar -->
-
-
 
         <!-- Content wrapper -->
         <div class="content-wrapper">
@@ -206,19 +203,24 @@
                   </thead>
                   <tbody class="table-border-bottom-0">
                     <tr th:each="author : ${authors}">
-                      <td >
+                      <td>
                         <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                          <a th:href="@{'/pull-requests/author/'+${author.name}}" target="_blank"><strong th:text="${author.name}">Yusuf AKBAŞ</strong></a>
+                          <a th:href="@{'/pull-requests/author/'+${author.name}}" target="_blank"><strong
+                              th:text="${author.name}">Yusuf AKBAŞ</strong></a>
                         </ul>
                       </td>
-                      <td >
-                        <strong th:text="${author.totalPRs}">55</strong></td>
-                      <td >
-                        <strong th:text="${author.totalMergedPRs}">55</strong></td>
-                      <td >
-                        <strong th:text="${author.totalOpenPRs}"></strong></td>
-                      <td >
-                        <strong th:text="${author.totalDeclinedPRs}">55</strong></td>
+                      <td>
+                        <strong th:text="${author.totalPRs}">55</strong>
+                      </td>
+                      <td>
+                        <strong th:text="${author.totalMergedPRs}">55</strong>
+                      </td>
+                      <td>
+                        <strong th:text="${author.totalOpenPRs}"></strong>
+                      </td>
+                      <td>
+                        <strong th:text="${author.totalDeclinedPRs}">55</strong>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -232,8 +234,8 @@
             <!-- Footer -->
             <footer class="content-footer footer bg-footer-theme">
               <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-               
-                
+
+
               </div>
             </footer>
             <!-- / Footer -->
@@ -282,7 +284,7 @@
     <script async defer src="../../../buttons.github.io/buttons.js"></script>
 
     <script>
-      </script>
+    </script>
 </body>
 
 </html>
