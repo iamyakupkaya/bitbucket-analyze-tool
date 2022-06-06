@@ -33,6 +33,6 @@ public final class BitbucketConstants {
         private Bearer() {
         }
 
-        public static final String TOKEN = "NzA0NjI1MDc4NTgxOtaTzOS/slQKsSRTcPEbHYsezwx+";
+        public static final String TOKEN = "MDc1NzM0ODQ5MTc0OnEr6FefAIOG7YFCzWsFI0EWpM6J";
     }
 }
