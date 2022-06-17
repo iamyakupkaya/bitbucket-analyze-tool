@@ -1,8 +1,11 @@
 package com.orion.bitbucket.Bitbucket.service;
 
 import java.sql.*;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
@@ -82,7 +85,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             else {
                 jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
             }
-            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null));
+            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,0));
         }
         resultSet.close();
         preparedStmt.close();
@@ -111,7 +114,14 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
             String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
             String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
-            
+
+            Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String date = formatter.format(createdDate);
+            String date2 = formatter.format(closedDate);
+            LocalDate localDate1 = LocalDate.parse(date);
+            LocalDate localDate2 = LocalDate.parse(date2);
+            long dayDiff = (ChronoUnit.DAYS.between(localDate1, localDate2)+1);
+
             int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
             String jiraId = null;
             if(indexOf > -1) {
@@ -121,8 +131,8 @@ public class PullRequestService extends BaseService implements PullRequestServic
             else {
                 jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
             }
-           
-            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null));
+
+            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,dayDiff));
         }
         resultSet.close();
         preparedStmt.close();
@@ -164,7 +174,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             else {
                jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
             }
-            pullRequest = new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null);
+            pullRequest = new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,0);
         }
         resultSet.close();
         preparedStmt.close();
@@ -214,7 +224,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
                         jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
                     }
                    
-                    list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null));
+                    list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,0));
                 }
                 resultSet.close();
                 preparedStmt.close();

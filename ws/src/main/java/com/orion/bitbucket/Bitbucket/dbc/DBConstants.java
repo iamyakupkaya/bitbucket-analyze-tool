@@ -68,7 +68,7 @@ public class DBConstants {
         public static final String PULL_REQUEST_AUTHOR_DISPLAY_NAME = "display_name";
         public static final String PULL_REQUEST_AUTHOR_SLUG = "slug";
         public static final String PULL_REQUEST_JIRA_ID = "AAK-"; 
-        public static final String PULL_REQUEST_NO_JIRA_ID = "null"; 
+        public static final String PULL_REQUEST_NO_JIRA_ID = "-";
 
     }
 

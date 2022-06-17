@@ -17,10 +17,11 @@ public class PullRequestDO {
     private String displayName;
     private String slug;
     private ArrayList<ReviewDO> reviewerList;
+    private long dayDiff;
 
     public PullRequestDO(int prId, String title, String jiraId, String state, boolean closed, String description, String updatedDate,
     Date createdDate, Date closedDate, String emailAddress, String displayName, String slug,
-                         ArrayList<ReviewDO> reviewerList) {
+                         ArrayList<ReviewDO> reviewerList, long dayDiff) {
         this.prId= prId;
         this.title = title;
         this.jiraId= jiraId;
@@ -34,6 +35,7 @@ public class PullRequestDO {
         this.displayName = displayName;
         this.slug = slug;
         this.reviewerList = reviewerList;
+        this.dayDiff = dayDiff;
     }
 
     public PullRequestDO (){
@@ -91,6 +93,9 @@ public class PullRequestDO {
     public ArrayList<ReviewDO> getReviewerList() {
         return reviewerList;
     }
+    public long getDayDiff() {
+        return dayDiff;
+    }
 
     @Override
     public String toString() {
@@ -108,6 +113,7 @@ public class PullRequestDO {
                 ", displayName='" + displayName + '\'' +
                 ", slug='" + slug + '\'' +
                 ", Reviewers = {'" + reviewerList + "}" + '\'' +
+                ", dayDiff ='" + dayDiff + '\'' +
                 '}';
     }
 }
