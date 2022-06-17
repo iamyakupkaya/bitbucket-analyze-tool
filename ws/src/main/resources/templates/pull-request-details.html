@@ -265,7 +265,7 @@
 
                                                 </div>
                                             </li>
-                                            <li class="d-flex mb-4 pb-1">
+                                            <li class="d-flex mb-4 pb-1" id="hideForOpen">
                                                 <div class="avatar flex-shrink-0 me-3">
                                                     <span class="avatar-initial rounded bg-label-info"><i
                                                             class='bx bxs-calendar'></i></span>
@@ -445,6 +445,15 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer th:src="@{/../../buttons.github.io/buttons.js}"></script>
+    <!-- Hide close date for open state -->
+    <script th:inline="javascript">
+       /*<![CDATA[*/
+        var isOpenState = /*[[${state}]]*/ 'default';
+        if(isOpenState == "OPEN"){
+            document.getElementById("hideForOpen").style.visibility = "hidden";
+        }
+    /*]]>*/
+    </script>
 
 </body>
 
