@@ -19,5 +19,6 @@ public interface AuthorServiceIF {
 
     AuthorDO.TopAuthor getTopAuthorWithDateInterval(int day) throws SQLException;
     AuthorDO.TopAuthor getTopAuthorWithDateIntervalAndState(int day, String state) throws SQLException ;
+    ArrayList<AuthorDO> getAllAuthorsUpdateWithFilter(String startDate,String endDate) throws SQLException;
 
 }

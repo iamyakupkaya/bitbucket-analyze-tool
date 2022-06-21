@@ -20,6 +20,7 @@ import com.orion.bitbucket.Bitbucket.service.BaseServiceIF;
 import com.orion.bitbucket.Bitbucket.service.PullRequestServiceIF;
 import com.orion.bitbucket.Bitbucket.service.ReviewServiceIF;
 import com.orion.bitbucket.Bitbucket.service.ReviewerServiceIF;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PageController {
@@ -133,7 +134,14 @@ public class PageController {
         model.addAttribute("authors", authors);
         return "pull-requests.html";
     }
+    @RequestMapping(value = "/pull-requests/filter/")
+    public String showPullRequestsPage(Model model,@RequestParam String startDate,@RequestParam String endDate )throws UnirestException, SQLException{
+        ArrayList<AuthorDO> authors = authorServiceIF.getAllAuthorsUpdateWithFilter(startDate,endDate);
 
+        model.addAttribute("author", new AuthorDO());
+        model.addAttribute("authors",authors);
+        return "pull-requests.html";
+    }
     @RequestMapping(value = "/reviewer", method = RequestMethod.GET)
     public String getReviewPage(Model model) throws UnirestException, SQLException {
         ArrayList<ReviewerDO> reviewers = reviewerServiceIF.getAllReviewers();

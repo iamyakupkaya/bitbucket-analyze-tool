@@ -49,6 +49,7 @@ public class DBConstants {
         public static final String AUTHOR_TOTAL_MERGED_PRS = "total_merged_prs";
         public static final String AUTHOR_TOTAL_OPEN_PRS = "total_open_prs";
         public static final String AUTHOR_TOTAL_DECLINED_PRS = "total_declined_prs";
+        public static final String AUTHOR_UPDATE_FILTER = "count";
 
     }
 

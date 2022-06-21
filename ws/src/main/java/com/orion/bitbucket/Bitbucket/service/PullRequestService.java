@@ -85,7 +85,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             else {
                 jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
             }
-            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,0));
+            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,null));
         }
         resultSet.close();
         preparedStmt.close();
@@ -120,7 +120,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String date2 = formatter.format(closedDate);
             LocalDate localDate1 = LocalDate.parse(date);
             LocalDate localDate2 = LocalDate.parse(date2);
-            long dayDiff = (ChronoUnit.DAYS.between(localDate1, localDate2)+1);
+            Long dayDiff = (ChronoUnit.DAYS.between(localDate1, localDate2)+1);
 
             int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
             String jiraId = null;
@@ -174,7 +174,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             else {
                jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
             }
-            pullRequest = new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,0);
+            pullRequest = new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,null);
         }
         resultSet.close();
         preparedStmt.close();
@@ -224,7 +224,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
                         jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
                     }
                    
-                    list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,0));
+                    list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,null));
                 }
                 resultSet.close();
                 preparedStmt.close();

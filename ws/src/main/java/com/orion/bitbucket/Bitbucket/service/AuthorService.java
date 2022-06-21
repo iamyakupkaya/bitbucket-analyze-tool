@@ -1,11 +1,15 @@
 package com.orion.bitbucket.Bitbucket.service;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
+import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,7 +30,9 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
     private final String SQL_GET_AUTHOR_BY_USERNAME = "select * from author where name=?;";
     private final String SQL_GET_TOP_AUTHOR_PR_LIST_BY_DATE_INTERVAL = "SELECT display_name, COUNT(*) AS totalPRCount FROM pullrequest WHERE DATE(created_date) >= DATE(NOW()) - ?::INTERVAL  GROUP BY display_name ORDER BY totalPRCount DESC LIMIT 1;";
     private final String SQL_GET_TOP_AUTHOR_PR_LIST_BY_DATE_INTERVAL_AND_PR_STATE = "SELECT display_name, COUNT(*) AS totalPRCount FROM pullrequest WHERE state=? AND DATE(created_date) >= DATE(NOW()) - ?::INTERVAL  GROUP BY display_name ORDER BY totalPRCount DESC LIMIT 1;";
-
+    private final String SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER = "select count(state) as count from ( select name,created_date,state from author \n" +
+            "inner join pullrequest on name = display_name where state=? and\n" +
+            "created_date between ? and ? order by total_prs desc) as count where name=?";
     public int getAuthorCount() throws SQLException {
         Connection connection = TransactionManager.getConnection();
         int count = 0;
@@ -290,4 +296,57 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         return authors;
     }
 
+    public ArrayList<AuthorDO> getAllAuthorsUpdateWithFilter(String startDate,String endDate) throws SQLException {
+        ArrayList<AuthorDO> authors = new ArrayList<AuthorDO>();
+        Connection connection = TransactionManager.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_AUTHORS);
+        while (resultSet.next()) {
+            int id = resultSet.getInt(DBConstants.Author.AUTHOR_ID);
+            String name = resultSet.getString(DBConstants.Author.AUTHOR_NAME);
+            int total = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_PRS);
+            int merge = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_MERGED_PRS);
+            int open = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_OPEN_PRS);
+            int declined = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_DECLINED_PRS);
+
+            String sDate1 = startDate;
+            String sDate2 = endDate;
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+            Date date1 = Date.valueOf(LocalDate.parse(sDate1, formatter));
+            Date date2 = Date.valueOf(LocalDate.parse(sDate2, formatter));
+
+            int i = 0;
+            String[] state = {"MERGED","OPEN","DECLINED"};
+            while(i < 3){
+                PreparedStatement preparedStmt = null;
+                preparedStmt = connection.prepareStatement(SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER);
+                preparedStmt.setString(1, state[i]);
+                preparedStmt.setDate(2,date1);
+                preparedStmt.setDate(3,date2);
+                preparedStmt.setString(4,name);
+                ResultSet resultSet1 = preparedStmt.executeQuery();
+                connection.commit();
+                while (resultSet1.next()) {
+                    int count =resultSet1.getInt(DBConstants.Author.AUTHOR_UPDATE_FILTER);
+                    if (i < 1){
+                        merge = count;
+                    }else if (i < 2){
+                        open = count;
+                    }else{
+                        declined = count;
+                    }
+                    total = merge + open + declined;
+                }
+                resultSet1.close();
+                preparedStmt.close();
+                i++;
+            }
+            authors.add(new AuthorDO(id, name, total, merge, open, declined));
+        }
+        resultSet.close();
+        statement.close();
+        connection.close();
+        return authors;
+    }
 }
