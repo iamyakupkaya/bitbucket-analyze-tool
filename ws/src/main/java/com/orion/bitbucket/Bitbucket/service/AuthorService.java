@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
-
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
@@ -193,6 +192,8 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
           
         }
+        resultSet.close();
+        connection.close();
         return topAuthor;
     }
 
@@ -201,16 +202,14 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         Connection connection = TransactionManager.getConnection();
         PreparedStatement preparedStmt = null;
         preparedStmt = connection.prepareStatement(SQL_GET_TOP_AUTHOR_PR_LIST_BY_DATE_INTERVAL_AND_PR_STATE);
+        preparedStmt.setString(1, state);
         if(day == 30) {
-            preparedStmt.setString(1, state);
             preparedStmt.setString(2, "30 DAY");
         }
         else if(day == 90){
-            preparedStmt.setString(1, state);
             preparedStmt.setString(2, "90 DAY");
 
         }else if(day == 180){
-            preparedStmt.setString(1, state);
             preparedStmt.setString(2, "180 DAY");
         }
         ResultSet resultSet = preparedStmt.executeQuery();
@@ -221,6 +220,8 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
           
         }
+        resultSet.close();
+        connection.close();
         return topAuthor;
     }
 
@@ -294,7 +295,6 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         connection.close();
         return authors;
     }
-
     public ArrayList<AuthorDO> getAllAuthorsUpdateWithFilter(String startDate,String endDate) throws SQLException {
         ArrayList<AuthorDO> authors = new ArrayList<AuthorDO>();
         Connection connection = TransactionManager.getConnection();
@@ -309,17 +309,17 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             int declined = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_DECLINED_PRS);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
-            Date date1 = Date.valueOf(LocalDate.parse(startDate, formatter));
-            Date date2 = Date.valueOf(LocalDate.parse(endDate, formatter));
+            Date startDateFormat = Date.valueOf(LocalDate.parse(startDate, formatter));
+            Date endDateFormat = Date.valueOf(LocalDate.parse(endDate, formatter));
 
             int i = 0;
-            String[] state = {"MERGED","OPEN","DECLINED"};
+            String[] state = {DBConstants.PullRequestState.MERGED,DBConstants.PullRequestState.OPEN,DBConstants.PullRequestState.DECLINED};
             while(i < 3){
                 PreparedStatement preparedStmt = null;
                 preparedStmt = connection.prepareStatement(SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER);
                 preparedStmt.setString(1, state[i]);
-                preparedStmt.setDate(2,date1);
-                preparedStmt.setDate(3,date2);
+                preparedStmt.setDate(2,startDateFormat);
+                preparedStmt.setDate(3,endDateFormat);
                 preparedStmt.setString(4,name);
                 ResultSet resultSet1 = preparedStmt.executeQuery();
                 connection.commit();

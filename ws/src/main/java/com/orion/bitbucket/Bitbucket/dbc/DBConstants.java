@@ -40,9 +40,6 @@ public class DBConstants {
     }
 
     public static final class Author {
-        private Author() {
-        }
-
         public static final String AUTHOR_ID = "id";
         public static final String AUTHOR_NAME = "name";
         public static final String AUTHOR_TOTAL_PRS = "total_prs";
@@ -54,9 +51,6 @@ public class DBConstants {
     }
 
     public static final class PullRequest {
-        private PullRequest() {
-        }
-
         public static final String PULL_REQUEST_ID = "id";
         public static final String PULL_REQUEST_TITLE = "title";
         public static final String PULL_REQUEST_STATE = "state";
@@ -70,13 +64,10 @@ public class DBConstants {
         public static final String PULL_REQUEST_AUTHOR_SLUG = "slug";
         public static final String PULL_REQUEST_JIRA_ID = "AAK-"; 
         public static final String PULL_REQUEST_NO_JIRA_ID = "-";
-
+        public static final String PULL_REQUEST_COUNT_BY_STATE = "count";
     }
 
     public static final class PullRequestState {
-        private PullRequestState() {
-        }
-
         public static final String MERGED = "MERGED";
         public static final String OPEN = "OPEN";
         public static final String DECLINED = "DECLINED";
@@ -84,18 +75,12 @@ public class DBConstants {
     }
 
     public static final class PullRequestReviewRelation {
-        private PullRequestReviewRelation() {
-        }
-
         public static final String REVIEW_RELATION_PULL_REQUEST_ID = "pull_request_id";
         public static final String REVIEW_RELATION_REVIEW_ID = "review_id";
 
     }
 
     public static final class Review {
-        private Review() {
-        }
-
         public static final String REVIEW_ID = "id";
         public static final String REVIEW_DISPLAY_NAME = "display_name";
         public static final String REVIEW_EMAIL_ADDRESS = "email_address";
@@ -107,21 +92,10 @@ public class DBConstants {
     }
 
     public static final class Reviewer {
-        private Reviewer() {
-        }
-
         public static final String REVIEWER_ID = "id";
         public static final String REVIEWER_NAME = "name";
         public static final String REVIEWER_TOTAL_REVIEW = "total_review";
         public static final String REVIEWER_TOTAL_APPROVE = "total_approve";
         public static final String REVIEWER_TOTAL_UNAPPROVE = "total_unapprove";
-
     }
-
-
-
-
-
 }
-
-

@@ -363,7 +363,7 @@
                                                             <td style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
                                                                 th:text="${merged.title}">closed</td>
                                                             <td th:text="${merged.closedDate}">closedDate</td>
-                                                            <td th:text="|${merged.dayDiff}   Day|"> 30 Day</td>
+                                                            <td th:text="|${merged.timeSpent}   Day|"> 30 Day</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -427,7 +427,7 @@
                                                             <td style="max-width: 300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
                                                                 th:text="${declined.title}">closed</td>
                                                             <td th:text="${declined.closedDate}">closedDate</td>
-                                                            <td th:text="|${declined.dayDiff}   Day|"> 30 Day</td>
+                                                            <td th:text="|${declined.timeSpent}   Day|"> 30 Day</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

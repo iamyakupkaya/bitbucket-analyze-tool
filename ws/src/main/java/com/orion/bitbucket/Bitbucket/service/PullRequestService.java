@@ -47,7 +47,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit();
         while (resultSet.next()) {
-            count = resultSet.getInt("count");
+            count = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_COUNT_BY_STATE);
         }
         resultSet.close();
         preparedStmt.close();
@@ -116,11 +116,9 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
 
             Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String date = formatter.format(createdDate);
-            String date2 = formatter.format(closedDate);
-            LocalDate localDate1 = LocalDate.parse(date);
-            LocalDate localDate2 = LocalDate.parse(date2);
-            Long dayDiff = (ChronoUnit.DAYS.between(localDate1, localDate2)+1);
+            LocalDate localDateCreated = LocalDate.parse(formatter.format(createdDate));
+            LocalDate localDateClosed = LocalDate.parse(formatter.format(closedDate));
+            Long timeSpent = (ChronoUnit.DAYS.between(localDateCreated, localDateClosed)+1);
 
             int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
             String jiraId = null;
@@ -132,7 +130,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
                 jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
             }
 
-            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,dayDiff));
+            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,timeSpent));
         }
         resultSet.close();
         preparedStmt.close();
