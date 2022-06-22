@@ -9,7 +9,6 @@ import java.util.Locale;
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
-import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -309,12 +308,9 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             int open = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_OPEN_PRS);
             int declined = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_DECLINED_PRS);
 
-            String sDate1 = startDate;
-            String sDate2 = endDate;
-
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
-            Date date1 = Date.valueOf(LocalDate.parse(sDate1, formatter));
-            Date date2 = Date.valueOf(LocalDate.parse(sDate2, formatter));
+            Date date1 = Date.valueOf(LocalDate.parse(startDate, formatter));
+            Date date2 = Date.valueOf(LocalDate.parse(endDate, formatter));
 
             int i = 0;
             String[] state = {"MERGED","OPEN","DECLINED"};
