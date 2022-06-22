@@ -196,7 +196,7 @@
               <input type="date" class="date_input" id="startDate" name="startDate">
             <label>End Date:</label>
               <input type="date" class="date_input" id="endDate" name="endDate">
-              <button type="submit" class="btn btn-primary">Filter</button>
+              <button type="submit" class="btn btn-primary" onclick="buttonClickFilter()">Filter</button>
               <button type="button" class="btn btn-light" onclick="buttonClickReset()">Reset</button>
             </form>
 
@@ -269,9 +269,8 @@
 
       <!-- Overlay -->
       <div class="layout-overlay layout-menu-toggle"></div>
-
-
     </div>
+  </div>
     <!-- / Layout wrapper -->
 
     <!-- Core JS -->
@@ -306,7 +305,16 @@
       window.location = url;
     }
     </script>
-  </div>
-</body>
-
+    <script>
+    function buttonClickFilter() {
+      var startDate = document.getElementById("startDate");
+      var endDate = document.getElementById("endDate");
+        if(startDate.value.length == 0){
+         alert("Please select valid date");
+        }else if(endDate.value.length == 0){
+          alert("Please select valid date");
+        }
+     }
+    </script>
+  </body>
 </html>

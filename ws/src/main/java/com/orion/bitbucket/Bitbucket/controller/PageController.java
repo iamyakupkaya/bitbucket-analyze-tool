@@ -1,8 +1,8 @@
 package com.orion.bitbucket.Bitbucket.controller;
 
 import java.sql.SQLException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -136,11 +136,21 @@ public class PageController {
     }
     @RequestMapping(value = "/pull-requests/filter/")
     public String showPullRequestsPage(Model model,@RequestParam String startDate,@RequestParam String endDate )throws UnirestException, SQLException{
-        ArrayList<AuthorDO> authors = authorServiceIF.getAllAuthorsUpdateWithFilter(startDate,endDate);
 
-        model.addAttribute("author", new AuthorDO());
-        model.addAttribute("authors",authors);
-        return "pull-requests.html";
+        try {
+            ArrayList<AuthorDO> authors = authorServiceIF.getAllAuthorsUpdateWithFilter(startDate,endDate);
+
+            model.addAttribute("author", new AuthorDO());
+            model.addAttribute("authors",authors);
+            return "pull-requests.html";
+
+        }catch (DateTimeParseException dateTimeParseException){
+            ArrayList<AuthorDO> authors = authorServiceIF.getAllAuthors();
+
+            model.addAttribute("author", new AuthorDO());
+            model.addAttribute("authors",authors);
+            return  "pull-requests.html";
+        }
     }
     @RequestMapping(value = "/reviewer", method = RequestMethod.GET)
     public String getReviewPage(Model model) throws UnirestException, SQLException {
@@ -150,9 +160,6 @@ public class PageController {
         model.addAttribute("reviewers", reviewers);
         return "reviewer.html";
     }
-    
-
-
     @RequestMapping(value = "/pull-requests/author/{name}")
     public String showAuthorDetails(Model model, @PathVariable(name = "name", required = false) String name) throws UnirestException, SQLException {
         ArrayList<AuthorDO> authorDO = authorServiceIF.getCountPRStatesByUsername(name);
