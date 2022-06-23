@@ -28,9 +28,9 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
     private final String SQL_GET_AUTHOR_BY_USERNAME = "select * from author where name=?;";
     private final String SQL_GET_TOP_AUTHOR_PR_LIST_BY_DATE_INTERVAL = "SELECT display_name, COUNT(*) AS totalPRCount FROM pullrequest WHERE DATE(created_date) >= DATE(NOW()) - ?::INTERVAL  GROUP BY display_name ORDER BY totalPRCount DESC LIMIT 1;";
     private final String SQL_GET_TOP_AUTHOR_PR_LIST_BY_DATE_INTERVAL_AND_PR_STATE = "SELECT display_name, COUNT(*) AS totalPRCount FROM pullrequest WHERE state=? AND DATE(created_date) >= DATE(NOW()) - ?::INTERVAL  GROUP BY display_name ORDER BY totalPRCount DESC LIMIT 1;";
-    private final String SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER = "select count(state) as count from ( select name,created_date,state from author \n" +
-            "inner join pullrequest on name = display_name where state=? and\n" +
-            "created_date between ? and ? order by total_prs desc) as count where name=?";
+    private final String SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_MERGED_PR = "select count(state) as count from ( select name,created_date,state from author inner join pullrequest on name = display_name where state='MERGED' and closed_date between ? and ? order by total_prs desc) as count where name=?";
+    private final String SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_DECLINED_PR = "select count(state) as count from ( select name,created_date,state from author inner join pullrequest on name = display_name where state='DECLINED' and closed_date between ? and ? order by total_prs desc) as count where name=?";
+    private final String SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_OPEN_PR = "select count(state) as count from ( select name,created_date,state from author inner join pullrequest on name = display_name where state='OPEN' and created_date between ? and ? order by total_prs desc) as count where name=?";
     public int getAuthorCount() throws SQLException {
         Connection connection = TransactionManager.getConnection();
         int count = 0;
@@ -303,46 +303,81 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         while (resultSet.next()) {
             int id = resultSet.getInt(DBConstants.Author.AUTHOR_ID);
             String name = resultSet.getString(DBConstants.Author.AUTHOR_NAME);
-            int total = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_PRS);
-            int merge = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_MERGED_PRS);
-            int open = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_OPEN_PRS);
-            int declined = resultSet.getInt(DBConstants.Author.AUTHOR_TOTAL_DECLINED_PRS);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
             Date startDateFormat = Date.valueOf(LocalDate.parse(startDate, formatter));
             Date endDateFormat = Date.valueOf(LocalDate.parse(endDate, formatter));
 
-            int i = 0;
-            String[] state = {DBConstants.PullRequestState.MERGED,DBConstants.PullRequestState.OPEN,DBConstants.PullRequestState.DECLINED};
-            while(i < 3){
-                PreparedStatement preparedStmt = null;
-                preparedStmt = connection.prepareStatement(SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER);
-                preparedStmt.setString(1, state[i]);
-                preparedStmt.setDate(2,startDateFormat);
-                preparedStmt.setDate(3,endDateFormat);
-                preparedStmt.setString(4,name);
-                ResultSet resultSet1 = preparedStmt.executeQuery();
-                connection.commit();
-                while (resultSet1.next()) {
-                    int count =resultSet1.getInt(DBConstants.Author.AUTHOR_UPDATE_FILTER);
-                    if (i < 1){
-                        merge = count;
-                    }else if (i < 2){
-                        open = count;
-                    }else{
-                        declined = count;
-                    }
-                    total = merge + open + declined;
-                }
-                resultSet1.close();
-                preparedStmt.close();
-                i++;
-            }
+            int merge = getAuthorUpdateTotalMergedPR(startDateFormat,endDateFormat,name);
+            int open = getAuthorUpdateTotalOpenPR(startDateFormat,endDateFormat,name);
+            int declined = getAuthorUpdateTotalDeclinedPR(startDateFormat,endDateFormat,name);
+
+            int total = merge + open + declined;
+
             authors.add(new AuthorDO(id, name, total, merge, open, declined));
         }
         resultSet.close();
         statement.close();
         connection.close();
         return authors;
+    }
+    public int getAuthorUpdateTotalOpenPR(Date startDateFormat, Date endDateFormat, String name) throws SQLException{
+        int updateOpenPR = 0;
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_OPEN_PR);
+        preparedStmt.setDate(1,startDateFormat);
+        preparedStmt.setDate(2,endDateFormat);
+        preparedStmt.setString(3,name);
+        ResultSet resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()){
+            int count = resultSet.getInt(DBConstants.Author.AUTHOR_UPDATE_FILTER);
+             updateOpenPR = count;
+        }
+        preparedStmt.close();
+        resultSet.close();
+        connection.close();
+        return updateOpenPR;
+    }
+    public int getAuthorUpdateTotalMergedPR(Date startDateFormat, Date endDateFormat, String name) throws SQLException{
+        int updateMergedPR = 0;
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_MERGED_PR);
+        preparedStmt.setDate(1,startDateFormat);
+        preparedStmt.setDate(2,endDateFormat);
+        preparedStmt.setString(3,name);
+        ResultSet resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()){
+            int count = resultSet.getInt(DBConstants.Author.AUTHOR_UPDATE_FILTER);
+            updateMergedPR = count;
+        }
+        preparedStmt.close();
+        resultSet.close();
+        connection.close();
+
+       return updateMergedPR;
+    }
+    public int getAuthorUpdateTotalDeclinedPR(Date startDateFormat, Date endDateFormat, String name) throws SQLException{
+        int updateDeclineddPR = 0;
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_DECLINED_PR);
+        preparedStmt.setDate(1,startDateFormat);
+        preparedStmt.setDate(2,endDateFormat);
+        preparedStmt.setString(3,name);
+        ResultSet resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()){
+            int count = resultSet.getInt(DBConstants.Author.AUTHOR_UPDATE_FILTER);
+            updateDeclineddPR = count;
+        }
+        preparedStmt.close();
+        resultSet.close();
+        connection.close();
+
+        return updateDeclineddPR;
     }
 }
