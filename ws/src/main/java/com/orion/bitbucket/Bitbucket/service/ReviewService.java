@@ -8,7 +8,7 @@ import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.orion.bitbucket.Bitbucket.log.Log;
 @Service
 public class ReviewService extends BaseService implements ReviewServiceIF {
 

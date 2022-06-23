@@ -12,6 +12,7 @@ import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import org.springframework.stereotype.Service;
+import com.orion.bitbucket.Bitbucket.log.Log;
 
 @Service
 public class PullRequestService extends BaseService implements PullRequestServiceIF {

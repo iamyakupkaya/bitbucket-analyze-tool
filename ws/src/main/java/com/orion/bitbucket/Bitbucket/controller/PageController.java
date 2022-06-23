@@ -20,6 +20,7 @@ import com.orion.bitbucket.Bitbucket.service.BaseServiceIF;
 import com.orion.bitbucket.Bitbucket.service.PullRequestServiceIF;
 import com.orion.bitbucket.Bitbucket.service.ReviewServiceIF;
 import com.orion.bitbucket.Bitbucket.service.ReviewerServiceIF;
+import com.orion.bitbucket.Bitbucket.log.Log;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller

@@ -6,13 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.orion.bitbucket.Bitbucket.log.Log;
 
 @Service
 public class ReviewerService extends BaseService implements ReviewerServiceIF {
