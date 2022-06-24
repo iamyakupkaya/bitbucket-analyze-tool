@@ -27,7 +27,7 @@ public class BaseService implements BaseServiceIF {
     static ArrayList<PullRequestDO> declinedPRList;
     static ArrayList<PullRequestDO> allPRList;
 
-    private boolean isDebug = false;
+    private boolean IS_BASE_LOGGING = false;
 
     private final String SQL_INSERT_PULL_REQUEST = "insert into pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final String SQL_INSERT_REVIEW = "insert into review (reviewer_id , display_name, email_address, approved, status) values (?, ?, ?, ?, ?)";
@@ -37,22 +37,35 @@ public class BaseService implements BaseServiceIF {
     private final String SQL_GET_REVIEW_ID_BY_USERNAME = "select id from review where display_name=? order by id desc limit 1;";
 
     public void getData() {
-        try {
-            if (isPullRequestTableEmpty()) {
-                Instant start = Instant.now();
-                System.out.println(
-                        "This is first time to retrieve data. Wait for retrieving data and insert into local database have been completed.");
-                getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
-                getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
-                getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
-                Instant finish = Instant.now();
-                Duration timeElapsed = Duration.between(start, finish);
-                System.out.println(
-                        "Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds()
-                                + " seconds.");
+
+        if(IS_BASE_LOGGING) {
+            try {
+                Log.logger(Log.LogConstant.TAG_INFO, "entered in getData");
+                if (isPullRequestTableEmpty()) {
+                    Log.logger(Log.LogConstant.TAG_INFO, "isPullRequestTable is empty  : " + isPullRequestTableEmpty());
+                    Instant start = Instant.now();
+                    Log.logger(Log.LogConstant.TAG_INFO, "Instant started");
+                    System.out.println(
+                            "This is first time to retrieve data. Wait for retrieving data and insert into local database have been completed.");
+                    getPullRequestData(BitbucketConstants.EndPoints.OPEN_PRS);
+                    Log.logger(Log.LogConstant.TAG_INFO, "Success EndPoints.Open_PRS");
+                    getPullRequestData(BitbucketConstants.EndPoints.DECLINED_PRS);
+                    Log.logger(Log.LogConstant.TAG_INFO, "Success EndPoints.Declined_PRS");
+                    getPullRequestData(BitbucketConstants.EndPoints.MERGED_PRS);
+                    Log.logger(Log.LogConstant.TAG_INFO, "Success EndPoints.Merged_PRS");
+                    Instant finish = Instant.now();
+                    Log.logger(Log.LogConstant.TAG_INFO, "Instant finished");
+                    Duration timeElapsed = Duration.between(start, finish);
+                    Log.logger(Log.LogConstant.TAG_INFO, "timeElapsed  : " + timeElapsed.toSeconds());
+                    System.out.println(
+                            "Response time to retrieve all merge, open and declined PRs: " + timeElapsed.toSeconds()
+                                    + " seconds.");
+                }
+            } catch (Exception e) {
+                Log.logger(Log.LogConstant.TAG_INFO, "isPullRequestTable not empty");
+                System.out.println(e);
             }
-        } catch (Exception e) {
-            System.out.println(e);
+            Log.logger(Log.LogConstant.TAG_INFO,"no entrance getData");
         }
     }
 
