@@ -57,7 +57,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SQL_IS_REVIEWER_TABLE_EMPTY);
             while (resultSet.next()) {
-                count = resultSet.getInt("count");
+                count = resultSet.getInt(DBConstants.Reviewer.REVIEWER_COUNT);
             }
             resultSet.close();
             statement.close();
@@ -94,7 +94,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL_GET_REVIEWER_COUNT);
         while (resultSet.next()) {
-            count = resultSet.getInt("count");
+            count = resultSet.getInt(DBConstants.Reviewer.REVIEWER_COUNT);
         }
         resultSet.close();
         statement.close();
@@ -112,7 +112,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
         ResultSet resultSet = preparedStmt.executeQuery();
         connection.commit(); 
         while (resultSet.next()) {
-            count = resultSet.getInt("count");
+            count = resultSet.getInt(DBConstants.Reviewer.REVIEWER_COUNT);
         }
         resultSet.close();
         preparedStmt.close();

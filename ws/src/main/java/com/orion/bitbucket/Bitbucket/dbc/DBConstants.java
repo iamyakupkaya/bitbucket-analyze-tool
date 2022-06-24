@@ -99,6 +99,7 @@ public class DBConstants {
         public static final String REVIEWER_TOTAL_REVIEW = "total_review";
         public static final String REVIEWER_TOTAL_APPROVE = "total_approve";
         public static final String REVIEWER_TOTAL_UNAPPROVE = "total_unapprove";
+        public static final String REVIEWER_COUNT = "count";
     }
 
     public static final class User {
