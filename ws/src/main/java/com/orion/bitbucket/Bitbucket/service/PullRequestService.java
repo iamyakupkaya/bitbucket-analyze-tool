@@ -70,7 +70,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
             boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
             String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
-            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE); // long olsun. db ona gore duzeltilsin
+            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
             Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
             Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
             String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
@@ -109,7 +109,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
             boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
             String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
-            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE); // long olsun. db ona gore duzeltilsin
+            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
             Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
             Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
             String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
@@ -157,7 +157,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
             boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
             String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
-            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE); // long olsun. db ona gore duzeltilsin
+            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
             Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
             Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
             String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
@@ -207,7 +207,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
                     String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
                     boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
                     String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
-                    String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE); // long olsun. db ona gore duzeltilsin
+                    String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
                     Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
                     Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
                     String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
