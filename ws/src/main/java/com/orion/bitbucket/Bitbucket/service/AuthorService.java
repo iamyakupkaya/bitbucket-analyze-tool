@@ -15,6 +15,7 @@ import com.orion.bitbucket.Bitbucket.log.Log;
 public class AuthorService extends BaseService implements AuthorServiceIF {
 
     private static int COUNTER = 1000;
+    private boolean IS_AUTHOR_LOGGING = false;
 
     private final String SQL_GET_AUTHOR_COUNT = "select count(name) from author";
     private final String SQL_GET_ALL_AUTHOR = "select distinct display_name from pullrequest";
