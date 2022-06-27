@@ -17,7 +17,7 @@ import com.orion.bitbucket.Bitbucket.log.Log;
 @Service
 public class PullRequestService extends BaseService implements PullRequestServiceIF {
 
-    private boolean IS_PULL_REQUEST_LOGGING = false;
+    private final boolean IS_PULL_REQUEST_LOGGING = false;
     private final String SQL_GET_ALL_PR_COUNT = "select count(*) from pullrequest;";
     private final String SQL_GET_PR_COUNT_BY_STATE = "select count(*) from pullrequest where state=?;";
     private final String SQL_GET_PR_LIST_BY_STATE = "select * from pullrequest where state=?;";

@@ -18,7 +18,7 @@ import com.orion.bitbucket.Bitbucket.log.Log;
 public class ReviewerService extends BaseService implements ReviewerServiceIF {
 
     private static int COUNTER = 1000;
-    private boolean IS_REVIEWER_LOGGING = false;
+    private final boolean IS_REVIEWER_LOGGING = false;
 
     @Autowired
     private ReviewServiceIF reviewServiceIF;

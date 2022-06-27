@@ -15,7 +15,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
     @Autowired
     private PullRequestServiceIF pullRequestServiceIF;
 
-    private boolean IS_REVIEW_LOGGING = false;
+    private final boolean IS_REVIEW_LOGGING = false;
     private final String SQL_GET_ALL_REVIEW_COUNT = "select count(*) from review;";
     private final String SQL_GET_REVIEWS_BY_USERNAME_AND_STATUS = "select * from review where display_name=? and status=?;";
     private final String SQL_GET_REVIEWS_BY_USERNAME = "select * from review where display_name=?;";

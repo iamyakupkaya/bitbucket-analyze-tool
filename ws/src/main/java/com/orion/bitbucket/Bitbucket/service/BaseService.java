@@ -27,7 +27,7 @@ public class BaseService implements BaseServiceIF {
     static ArrayList<PullRequestDO> declinedPRList;
     static ArrayList<PullRequestDO> allPRList;
 
-    private boolean IS_BASE_LOGGING = false;
+    private final boolean IS_BASE_LOGGING = false;
 
     private final String SQL_INSERT_PULL_REQUEST = "insert into pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final String SQL_INSERT_REVIEW = "insert into review (reviewer_id , display_name, email_address, approved, status) values (?, ?, ?, ?, ?)";
