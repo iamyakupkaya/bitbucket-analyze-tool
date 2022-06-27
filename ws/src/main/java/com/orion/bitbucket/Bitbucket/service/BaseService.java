@@ -91,16 +91,20 @@ public class BaseService implements BaseServiceIF {
     public void getPullRequestData(String url) throws UnirestException, JSONException, SQLException {
         int start = 0;
         boolean isLastPage = false;
-        while (!isLastPage) {
-            HttpResponse<JsonNode> httpResponse = response.getResponse(url + start, BitbucketConstants.Bearer.TOKEN);
-            JSONObject body = httpResponse.getBody().getObject();
-            Object values = body.get("values");
-            JSONArray array = (JSONArray) values;
-            for (int i = 0; i < array.length(); i++) {
-                commonPullRequestDataParser(array.getJSONObject(i));
+        try{
+            while (!isLastPage) {
+                HttpResponse<JsonNode> httpResponse = response.getResponse(url + start, BitbucketConstants.Bearer.TOKEN);
+                JSONObject body = httpResponse.getBody().getObject();
+                Object values = body.get("values");
+                JSONArray array = (JSONArray) values;
+                for (int i = 0; i < array.length(); i++) {
+                    commonPullRequestDataParser(array.getJSONObject(i));
+                }
+                isLastPage = (boolean) body.get("isLastPage");
+                start += 100;
             }
-            isLastPage = (boolean) body.get("isLastPage");
-            start += 100;
+        }catch (Exception e){
+            Log.logger(Log.LogConstant.TAG_INFO,"Exception handling on getPullRequestData : " + e);
         }
     }
 
