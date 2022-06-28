@@ -3,6 +3,7 @@ package com.orion.bitbucket.Bitbucket.controller;
 import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +16,15 @@ import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO.PullRequestReviewRelation;
+import com.orion.bitbucket.Bitbucket.model.UserDO;
 import com.orion.bitbucket.Bitbucket.service.AuthorServiceIF;
 import com.orion.bitbucket.Bitbucket.service.BaseServiceIF;
 import com.orion.bitbucket.Bitbucket.service.PullRequestServiceIF;
 import com.orion.bitbucket.Bitbucket.service.ReviewServiceIF;
 import com.orion.bitbucket.Bitbucket.service.ReviewerServiceIF;
+import com.orion.bitbucket.Bitbucket.service.UserServiceIF;
 import com.orion.bitbucket.Bitbucket.log.Log;
+import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -40,6 +44,9 @@ public class PageController {
 
     @Autowired
     private ReviewerServiceIF reviewerServiceIF;
+
+    @Autowired
+    private UserServiceIF userServiceIF;
     
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -253,7 +260,45 @@ public class PageController {
         
         return "pull-request-details.html";
     }
-  
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    public String getUser(Model model) throws UnirestException, SQLException {
+        //userServiceIF.getCollectUserInformation();
+        ArrayList<UserDO> users = userServiceIF.getAllUsers();
+        List<String> options = new ArrayList<String>();
 
+        options.add(DBConstants.User.USER_ROLE_ALL);
+        options.add(DBConstants.User.USER_ROLE_ADMIN);
+        options.add(DBConstants.User.USER_ROLE_LEADER);
+        options.add(DBConstants.User.USER_ROLE_NORMAL);
 
+        model.addAttribute("options", options);
+
+        model.addAttribute("user", new UserDO());
+        model.addAttribute("users", users);
+        return "team-users.html";
+    }
+    @RequestMapping(value = "/users/", method = RequestMethod.GET)
+    public String getUserAll(Model model,@RequestParam String role) throws UnirestException, SQLException {
+
+        List<String> options = new ArrayList<String>();
+
+        options.add(DBConstants.User.USER_ROLE_ALL);
+        options.add(DBConstants.User.USER_ROLE_ADMIN);
+        options.add(DBConstants.User.USER_ROLE_LEADER);
+        options.add(DBConstants.User.USER_ROLE_NORMAL);
+
+        model.addAttribute("options", options);
+
+        if (role.equals(DBConstants.User.USER_ROLE_ALL)){
+            ArrayList<UserDO> users = userServiceIF.getAllUsers();
+            model.addAttribute("user", new UserDO());
+            model.addAttribute("users", users);
+
+        }else{
+            ArrayList<UserDO> users = userServiceIF.getAllUserWıthRole(role);
+            model.addAttribute("user", new UserDO());
+            model.addAttribute("users", users);
+        }
+        return "team-users.html";
+    }
 }

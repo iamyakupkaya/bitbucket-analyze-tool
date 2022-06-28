@@ -2,54 +2,68 @@ package com.orion.bitbucket.Bitbucket.model;
 
 public class UserDO {
     private int id;
-    private String name;
-    private String manager;
-    private String teamCode;
-    private String emailAddress;
-    private String slug;
+    private String username;
+    private String first_name;
+    private String last_name;
+    private String password;
+    private String email;
+    private String team_Code;
+    private String role;
 
-    public UserDO(int id, String name, String manager, String teamCode, String emailAddress, String slug) {
+    public UserDO(int id, String username, String first_name, String last_name,
+                  String password, String email, String team_Code, String role) {
         this.id = id;
-        this.name = name;
-        this.manager = manager;
-        this.teamCode = teamCode;
-        this.emailAddress = emailAddress;
-        this.slug = slug;
+        this.username = username;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.password = password;
+        this.email = email;
+        this.team_Code = team_Code;
+        this.role = role;
     }
-    public UserDO(){
-
-    }
-    public int getId() {return id;
-    }
-    public String getName() {
-        return name;
+    public UserDO(){}
+    public int getId() {
+        return id;
     }
 
-    public String getManagerName() {
-        return manager;
+    public String getUsername() {
+        return username;
     }
 
-    public String getTeamCode() {
-        return teamCode;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public String getSlug() {
-        return slug;
+    public String getPassword() {
+        return password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getTeam_Code() {
+        return team_Code;
+    }
+
+    public String getRole() {
+        return role;
+    }
     @Override
     public String toString() {
         return "UserDO{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", manager='" + manager + '\'' +
-                ", teamCode='" + teamCode + '\'' +
-                ", emailAddress='" + emailAddress + '\'' +
-                ", slug='" + slug + '\'' +
+                ", username='" + username + '\'' +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", team_Code='" + team_Code + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }
