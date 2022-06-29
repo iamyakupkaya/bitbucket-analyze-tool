@@ -301,4 +301,53 @@ public class PageController {
         }
         return "team-users.html";
     }
+
+    @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
+    public String showUserDetails(Model model, @PathVariable(name = "username", required = false) String username) throws UnirestException, SQLException {
+        ArrayList<String> list = userServiceIF.getUserFirstAndLastName(username);
+        String headerName = list.get(1) +"  "+list.get(0);
+        model.addAttribute("headerName",headerName);
+
+        UserDO user  = userServiceIF.getUserInformation(username);
+        model.addAttribute("username",user.getUsername());
+        model.addAttribute("firstname",user.getFirst_name());
+        model.addAttribute("lastname",user.getLast_name());
+        model.addAttribute("password",user.getPassword());
+        model.addAttribute("email",user.getEmail());
+        model.addAttribute("teamCode",user.getTeam_Code());
+        model.addAttribute("role",user.getRole());
+
+           int totalPR = userServiceIF.getUserCountTotalPR(user.getUsername());
+           model.addAttribute("totalPullRequest",totalPR);
+
+           String reviewerName = user.getLast_name()+", "+user.getFirst_name();
+           int totalReview = userServiceIF.getUserCountReview(reviewerName);
+           model.addAttribute("totalReview",totalReview);
+
+        return "user-details.html";
+    }
+    @RequestMapping(value = "/users/delete/", method = RequestMethod.GET)
+    public String deleteUser(Model model,  @RequestParam String oldUsername) throws UnirestException, SQLException {
+
+        userServiceIF.getDeleteUserWithUserName(oldUsername);
+
+        return "redirect-page.html";
+    }
+    @RequestMapping(value = "/users/edit/", method = RequestMethod.GET)
+    public String editUser(Model model, @RequestParam String username,@RequestParam String firstname,
+                                        @RequestParam String lastname, @RequestParam String password,
+                                        @RequestParam String email,   @RequestParam String teamCode,
+                                        @RequestParam String role, @RequestParam String oldUsername) throws UnirestException, SQLException{
+        userServiceIF.getUpdateUserWithUserName(username,firstname,lastname,password,email,teamCode,role,oldUsername);
+        return "redirect-page.html";
+    }
+    @RequestMapping(value = "/users/add/", method = RequestMethod.GET)
+    public String addUser(Model model, @RequestParam String username,@RequestParam String firstname,
+                                       @RequestParam String lastname, @RequestParam String password,
+                                       @RequestParam String email,   @RequestParam String teamCode,
+                                       @RequestParam String role) throws UnirestException, SQLException{
+        userServiceIF.insertUser(username,firstname,lastname,password,email,teamCode,role);
+        return "redirect-page.html";
+    }
+
 }
