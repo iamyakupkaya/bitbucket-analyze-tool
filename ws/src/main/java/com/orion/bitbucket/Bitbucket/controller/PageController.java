@@ -262,7 +262,7 @@ public class PageController {
     }
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public String getUser(Model model) throws UnirestException, SQLException {
-        //userServiceIF.getCollectUserInformation();
+
         ArrayList<UserDO> users = userServiceIF.getAllUsers();
         List<String> options = new ArrayList<String>();
 
@@ -338,7 +338,7 @@ public class PageController {
                                         @RequestParam String lastname, @RequestParam String password,
                                         @RequestParam String email,   @RequestParam String teamCode,
                                         @RequestParam String role, @RequestParam String oldUsername) throws UnirestException, SQLException{
-        userServiceIF.getUpdateUserWithUserName(username,firstname,lastname,password,email,teamCode,role,oldUsername);
+        userServiceIF.getPreconditionForUpdate(username,firstname,lastname,password,email,teamCode,role,oldUsername);
         return "redirect-page.html";
     }
     @RequestMapping(value = "/users/add/", method = RequestMethod.GET)
@@ -346,7 +346,7 @@ public class PageController {
                                        @RequestParam String lastname, @RequestParam String password,
                                        @RequestParam String email,   @RequestParam String teamCode,
                                        @RequestParam String role) throws UnirestException, SQLException{
-        userServiceIF.insertUser(username,firstname,lastname,password,email,teamCode,role);
+        userServiceIF.getCollectUserInformation(username,firstname,lastname,password,email,teamCode,role);
         return "redirect-page.html";
     }
 

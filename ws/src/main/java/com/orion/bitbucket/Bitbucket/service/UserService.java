@@ -2,6 +2,7 @@ package com.orion.bitbucket.Bitbucket.service;
 
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
+import com.orion.bitbucket.Bitbucket.log.Log;
 import com.orion.bitbucket.Bitbucket.model.UserDO;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +13,17 @@ import java.util.ArrayList;
 public class UserService extends BaseService implements UserServiceIF{
     private final boolean IS_USER_LOGGING = false;
     private static int COUNTER = 1000;
+    private final String SQL_GET_USER_MAX_COUNTER_ID = "select max(id) from users ";
     private final String SQL_INSERT_USER = "insert into users(id,user_name,first_name,last_name,password,email_address,team_code,role) values (?,?,?,?,?,?,?,?)";
     private final String SQL_DELETE_USER_WITH_USER_NAME =  "delete from users where user_name = ?";
-    private final String SQL_UPDATE_USER_WITH_USER_NAME = "update users set user_name = ?, first_name = ?,\n" +
-            "\t\t\t\tlast_name = ?, password =?,\n" +
-            "\t\t\t\temail_address = ?,team_code =?,\n" +
-            "\t\t\t\trole = ? where user_name =?";
+    private final String SQL_UPDATE_USER_WITH_USER_NAME = "update users set user_name = ?, first_name = ?, last_name = ?, password =?, email_address = ?,team_code =?,  role = ? where user_name =?";
     private final String SQL_ALL_USERS = "select * from users";
     private final String SQL_GET_ALL_USERS_WITH_ROLE = "select * from users where role = ? ";
     private final String SQL_GET_FIRSTNAME_AND_LASTNAME_WITH_USERNAME = "select first_name, last_name from users where user_name = ?";
     private final String SQL_GET_USER_INFORMATION_WITH_USERNAME = "select * from users where user_name= ?";
     private final String SQL_GET_USER_COUNT_TOTAL_PULL_REQUEST = "select count(*) from pullrequest where slug = ?";
     private final String SQL_GET_USER_COUNT_TOTAL_REVIEW = "select count(*) from review where display_name = ?";
+    private final String SQL_GET_CHECK_SAME_USERNAME = "select user_name from users where user_name = ?";
 
     public ArrayList<UserDO> getAllUsers() throws SQLException{
         ArrayList<UserDO> users = new ArrayList<UserDO>();
@@ -71,24 +71,63 @@ public class UserService extends BaseService implements UserServiceIF{
         return users;
     }
 
-    public void getCollectUserInformation()throws SQLException{
-        // Test Data
-        insertUser("syagsagan","Sinan","YAGSAGAN","123456",
-                "sinan.yagsagan@orioninc.com","NRD1222",DBConstants.User.USER_ROLE_ADMIN);
-        insertUser("ogulusoy","Oguzhan","ULUSOY","123456",
-                "oguzhan.ulusoy@orioninc.com","NRD1222",DBConstants.User.USER_ROLE_NORMAL);
-        insertUser("rsaglam","Ridvan","SAGLAM","123456",
-                "ridvan.saglam@orioninc.com","NRD1222",DBConstants.User.USER_ROLE_LEADER);
+    public void getCollectUserInformation(String userName,String firstName,String lastName,
+                                          String password,String email, String teamCode, String role)throws SQLException{
+//        // Test Data
+//        insertUser(COUNTER,"syagsagan","Sinan","YAGSAGAN","123456",
+//                "sinan.yagsagan@orioninc.com","NRD1222",DBConstants.User.USER_ROLE_ADMIN);
+//        insertUser(COUNTER,"ogulusoy","Oguzhan","ULUSOY","123456",
+//                "oguzhan.ulusoy@orioninc.com","NRD1222",DBConstants.User.USER_ROLE_NORMAL);
+//        insertUser(COUNTER,"rsaglam","Ridvan","SAGLAM","123456",
+//                "ridvan.saglam@orioninc.com","NRD1222",DBConstants.User.USER_ROLE_LEADER);
+        try{
+            String checkUserName = null;
+            Connection connection = TransactionManager.getConnection();
+            PreparedStatement preparedStmt = null;
+            preparedStmt = connection.prepareStatement(SQL_GET_CHECK_SAME_USERNAME);
+            preparedStmt.setString(1,userName);
+            ResultSet resultSet = preparedStmt.executeQuery();
+            connection.commit();
+            while (resultSet.next()){
+                String username = resultSet.getString(DBConstants.User.USER_NAME);
+                checkUserName = username;
+            }
+            resultSet.close();
+            preparedStmt.close();
+            connection.close();
+
+            COUNTER = maxUserID();
+            if(userName.equals(checkUserName)){
+                Log.logger(Log.LogConstant.TAG_WARN,"has same username");
+            }else{
+                insertUser(COUNTER,userName,firstName,lastName,password,email,teamCode,role);
+            }
+        }catch (Exception e){}
+
+    }
+    public int maxUserID() throws SQLException {
+        int maxUserId = 0;
+        Connection connection = TransactionManager.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(SQL_GET_USER_MAX_COUNTER_ID);
+        while (resultSet.next()){
+            int maxId = resultSet.getInt(DBConstants.User.USER_COUNTER_MAX_ID);
+            maxUserId = (maxId + 1);
+        }
+        resultSet.close();
+        statement.close();
+        connection.close();
+        return maxUserId;
     }
 
-    public void insertUser(String userName,String firstName,String lastName,
+    public void insertUser(int id,String userName,String firstName,String lastName,
                                String password,String email, String teamCode, String role) throws SQLException{
 
         Connection connection = TransactionManager.getConnection();
         try {
             PreparedStatement preparedStmt = null;
             preparedStmt = connection.prepareStatement(SQL_INSERT_USER);
-            preparedStmt.setInt(1,COUNTER);
+            preparedStmt.setInt(1,id);
             preparedStmt.setString(2,userName);
             preparedStmt.setString(3,firstName);
             preparedStmt.setString(4,lastName);
@@ -161,6 +200,31 @@ public class UserService extends BaseService implements UserServiceIF{
         connection.commit();
         preparedStmt.close();
         connection.close();
+    }
+
+    public void getPreconditionForUpdate(String username,String firstname,String lastname,
+                                         String password,String email, String teamCode, String role, String oldUsername)throws SQLException{
+        try{
+            String checkUserName = null;
+            Connection connection = TransactionManager.getConnection();
+            PreparedStatement preparedStmt = null;
+            preparedStmt = connection.prepareStatement(SQL_GET_CHECK_SAME_USERNAME);
+            preparedStmt.setString(1,username);
+            ResultSet resultSet = preparedStmt.executeQuery();
+            connection.commit();
+            while (resultSet.next()){
+                String userName = resultSet.getString(DBConstants.User.USER_NAME);
+                checkUserName = userName;
+            }
+            resultSet.close();
+            preparedStmt.close();
+            connection.close();
+            if(username.equals(checkUserName)){
+                Log.logger(Log.LogConstant.TAG_WARN,"has same username");
+            }else{
+                getUpdateUserWithUserName(username,firstname,lastname,password,email,teamCode,role,oldUsername);
+            }
+        }catch (Exception e){}
     }
     public void getUpdateUserWithUserName(String username,String firstname,String lastname,
                               String password,String email, String teamCode, String role, String oldUsername) throws SQLException{

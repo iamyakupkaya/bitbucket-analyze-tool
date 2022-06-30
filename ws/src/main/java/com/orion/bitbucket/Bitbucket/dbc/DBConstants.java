@@ -115,6 +115,7 @@ public class DBConstants {
         public static final String USER_ROLE_ADMIN = "admin";
         public static final String USER_ROLE_LEADER = "leader";
         public static final String USER_ROLE_ALL = "All";
+        public static final String USER_COUNTER_MAX_ID = "max";
     }
 
 }
