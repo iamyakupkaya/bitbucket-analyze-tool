@@ -63,9 +63,8 @@ public class BaseService implements BaseServiceIF {
                 }
             } catch (Exception e) {
                 if(IS_BASE_LOGGING){
-                    Log.logger(Log.LogConstant.TAG_INFO, "isPullRequestTable not empty");
+                    Log.logger(Log.LogConstant.TAG_ERROR, "isPullRequestTable not empty");
                 }
-                System.out.println(e);
             }
             Log.logger(Log.LogConstant.TAG_INFO,"no entrance getData");
         }

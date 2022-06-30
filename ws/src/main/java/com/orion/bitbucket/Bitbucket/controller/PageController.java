@@ -295,7 +295,7 @@ public class PageController {
             model.addAttribute("users", users);
 
         }else{
-            ArrayList<UserDO> users = userServiceIF.getAllUserWıthRole(role);
+            ArrayList<UserDO> users = userServiceIF.getAllUserWithRole(role);
             model.addAttribute("user", new UserDO());
             model.addAttribute("users", users);
         }
@@ -310,17 +310,17 @@ public class PageController {
 
         UserDO user  = userServiceIF.getUserInformation(username);
         model.addAttribute("username",user.getUsername());
-        model.addAttribute("firstname",user.getFirst_name());
-        model.addAttribute("lastname",user.getLast_name());
+        model.addAttribute("firstname",user.getFirstname());
+        model.addAttribute("lastname",user.getLastname());
         model.addAttribute("password",user.getPassword());
         model.addAttribute("email",user.getEmail());
-        model.addAttribute("teamCode",user.getTeam_Code());
+        model.addAttribute("teamCode",user.getTeamCode());
         model.addAttribute("role",user.getRole());
 
            int totalPR = userServiceIF.getUserCountTotalPR(user.getUsername());
            model.addAttribute("totalPullRequest",totalPR);
 
-           String reviewerName = user.getLast_name()+", "+user.getFirst_name();
+           String reviewerName = user.getLastname()+", "+user.getFirstname();
            int totalReview = userServiceIF.getUserCountReview(reviewerName);
            model.addAttribute("totalReview",totalReview);
 

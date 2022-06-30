@@ -3,22 +3,22 @@ package com.orion.bitbucket.Bitbucket.model;
 public class UserDO {
     private int id;
     private String username;
-    private String first_name;
-    private String last_name;
+    private String firstname;
+    private String lastname;
     private String password;
     private String email;
-    private String team_Code;
+    private String teamCode;
     private String role;
 
-    public UserDO(int id, String username, String first_name, String last_name,
-                  String password, String email, String team_Code, String role) {
+    public UserDO(int id, String username, String firstname, String lastname,
+                  String password, String email, String teamCode, String role) {
         this.id = id;
         this.username = username;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.password = password;
         this.email = email;
-        this.team_Code = team_Code;
+        this.teamCode = teamCode;
         this.role = role;
     }
     public UserDO(){}
@@ -30,12 +30,12 @@ public class UserDO {
         return username;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastname() {
+        return lastname;
     }
 
     public String getPassword() {
@@ -46,8 +46,8 @@ public class UserDO {
         return email;
     }
 
-    public String getTeam_Code() {
-        return team_Code;
+    public String getTeamCode() {
+        return teamCode;
     }
 
     public String getRole() {
@@ -58,11 +58,11 @@ public class UserDO {
         return "UserDO{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", team_Code='" + team_Code + '\'' +
+                ", team_Code='" + teamCode + '\'' +
                 ", role='" + role + '\'' +
                 '}';
     }
