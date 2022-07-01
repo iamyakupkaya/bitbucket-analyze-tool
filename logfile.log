@@ -1,4 +1,8 @@
-2022-06-23 18:15:39,360 WARN  [Log] PageController.allTime():47 : warn message created 
-2022-06-23 18:15:39,721 ERROR [Log] ReviewerService.getAllReviewerCount():102 : working 
-2022-06-23 18:15:46,878 WARN  [Log] PageController.allTime():47 : warn message created 
-2022-06-23 18:15:47,352 ERROR [Log] ReviewerService.getAllReviewerCount():102 : working 
+2022-07-01 11:28:45,226 INFO  [Log] BaseService.getData():43 : entered in getData 
+2022-07-01 11:28:45,433 INFO  [Log] BaseService.getData():45 : isPullRequestTable is empty  : true 
+2022-07-01 11:28:45,434 INFO  [Log] BaseService.getData():47 : Instant started 
+2022-07-01 11:30:33,519 INFO  [Log] BaseService.getData():51 : Success EndPoints.Open_PRS 
+2022-07-01 11:33:05,823 INFO  [Log] BaseService.getData():53 : Success EndPoints.Declined_PRS 
+2022-07-01 12:40:32,602 INFO  [Log] BaseService.getData():55 : Success EndPoints.Merged_PRS 
+2022-07-01 12:40:32,603 INFO  [Log] BaseService.getData():57 : Instant finished 
+2022-07-01 12:40:32,609 INFO  [Log] BaseService.getData():59 : timeElapsed  : 4307

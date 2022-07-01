@@ -19,6 +19,19 @@ public class TransactionManager {
         }
         return connection;
     }
+    public static Connection getConnectionCreateDatabase() {
+        Connection connection = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(DBConstants.getCreateDatabaseName(), DBConstants.getDBUsername(), DBConstants.getDBPassword());
+           // connection.setAutoCommit(false);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return connection;
+    }
 }
 
 
