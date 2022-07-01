@@ -24,6 +24,8 @@ public class UserService extends BaseService implements UserServiceIF{
     private final String SQL_GET_USER_COUNT_TOTAL_PULL_REQUEST = "select count(*) from pullrequest where slug = ?";
     private final String SQL_GET_USER_COUNT_TOTAL_REVIEW = "select count(*) from review where display_name = ?";
     private final String SQL_GET_CHECK_SAME_USERNAME = "select user_name from users where user_name = ?";
+    private final String SQL_GET_USERS_WITH_TEAM_AND_ROLE = "select * from users where role = ? and team_Code = ?";
+    private final String SQL_GET_USERS_WITH_TEAM_CODE= "select * from users where team_Code = ? ";
 
     public ArrayList<UserDO> getAllUsers() throws SQLException{
         ArrayList<UserDO> users = new ArrayList<UserDO>();
@@ -277,5 +279,54 @@ public class UserService extends BaseService implements UserServiceIF{
         preparedStmt.close();
         connection.close();
         return count;
+    }
+    public ArrayList<UserDO> getAllUserWithRoleAndTeam(String Role,String TeamCode) throws SQLException{
+        ArrayList<UserDO> users = new ArrayList<UserDO>();
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_USERS_WITH_TEAM_AND_ROLE);
+        preparedStmt.setString(1,Role);
+        preparedStmt.setString(2,TeamCode);
+        ResultSet resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()){
+            int id = resultSet.getInt(DBConstants.User.USER_ID);
+            String username = resultSet.getString(DBConstants.User.USER_NAME);
+            String firstname = resultSet.getString(DBConstants.User.USER_FIRST_NAME);
+            String lastname = resultSet.getString(DBConstants.User.USER_LAST_NAME);
+            String password = resultSet.getString(DBConstants.User.USER_PASSWORD);
+            String email = resultSet.getString(DBConstants.User.USER_EMAIL_ADDRESS);
+            String teamCode = resultSet.getString(DBConstants.User.USER_TEAM_CODE);
+            String role = resultSet.getString(DBConstants.User.USER_ROLE);
+            users.add(new UserDO(id,username,firstname,lastname,password,email,teamCode,role));
+        }
+        resultSet.close();
+        preparedStmt.close();
+        connection.close();
+        return users;
+    }
+    public ArrayList<UserDO> getAllUserWithTeam(String TeamCode) throws SQLException{
+        ArrayList<UserDO> users = new ArrayList<UserDO>();
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStmt = null;
+        preparedStmt = connection.prepareStatement(SQL_GET_USERS_WITH_TEAM_CODE);
+        preparedStmt.setString(1,TeamCode);
+        ResultSet resultSet = preparedStmt.executeQuery();
+        connection.commit();
+        while (resultSet.next()){
+            int id = resultSet.getInt(DBConstants.User.USER_ID);
+            String username = resultSet.getString(DBConstants.User.USER_NAME);
+            String firstname = resultSet.getString(DBConstants.User.USER_FIRST_NAME);
+            String lastname = resultSet.getString(DBConstants.User.USER_LAST_NAME);
+            String password = resultSet.getString(DBConstants.User.USER_PASSWORD);
+            String email = resultSet.getString(DBConstants.User.USER_EMAIL_ADDRESS);
+            String teamCode = resultSet.getString(DBConstants.User.USER_TEAM_CODE);
+            String role = resultSet.getString(DBConstants.User.USER_ROLE);
+            users.add(new UserDO(id,username,firstname,lastname,password,email,teamCode,role));
+        }
+        resultSet.close();
+        preparedStmt.close();
+        connection.close();
+        return users;
     }
 }

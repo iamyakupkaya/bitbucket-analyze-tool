@@ -273,12 +273,19 @@ public class PageController {
 
         model.addAttribute("options", options);
 
+        List<String> teams = new ArrayList<String>();
+        teams.add(DBConstants.User.USERS_TEAM_ALL);
+        teams.add("NRD1222");
+        teams.add("NRD1212");
+        teams.add("NRD1214");
+        model.addAttribute("teams", teams);
+
         model.addAttribute("user", new UserDO());
         model.addAttribute("users", users);
         return "team-users.html";
     }
     @RequestMapping(value = "/users/", method = RequestMethod.GET)
-    public String getUserAll(Model model,@RequestParam String role) throws UnirestException, SQLException {
+    public String getUserAll(Model model,@RequestParam String role, @RequestParam String team) throws UnirestException, SQLException {
 
         List<String> options = new ArrayList<String>();
 
@@ -286,16 +293,29 @@ public class PageController {
         options.add(DBConstants.User.USER_ROLE_ADMIN);
         options.add(DBConstants.User.USER_ROLE_LEADER);
         options.add(DBConstants.User.USER_ROLE_NORMAL);
-
         model.addAttribute("options", options);
 
-        if (role.equals(DBConstants.User.USER_ROLE_ALL)){
+        List<String> teams = new ArrayList<String>();
+        teams.add(DBConstants.User.USERS_TEAM_ALL);
+        teams.add("NRD1222");
+        teams.add("NRD1212");
+        teams.add("NRD1214");
+        model.addAttribute("teams", teams);
+
+        if (role.equals(DBConstants.User.USER_ROLE_ALL) && team.equals(DBConstants.User.USERS_TEAM_ALL) ) {
             ArrayList<UserDO> users = userServiceIF.getAllUsers();
             model.addAttribute("user", new UserDO());
             model.addAttribute("users", users);
-
-        }else{
+        }else if(team.equals(DBConstants.User.USERS_TEAM_ALL)){
             ArrayList<UserDO> users = userServiceIF.getAllUserWithRole(role);
+            model.addAttribute("user", new UserDO());
+            model.addAttribute("users", users);
+        }else if(role.equals(DBConstants.User.USER_ROLE_ALL)) {
+            ArrayList<UserDO> users = userServiceIF.getAllUserWithTeam(team);
+            model.addAttribute("user", new UserDO());
+            model.addAttribute("users", users);
+        }else{
+            ArrayList<UserDO> users = userServiceIF.getAllUserWithRoleAndTeam(role,team);
             model.addAttribute("user", new UserDO());
             model.addAttribute("users", users);
         }
@@ -317,11 +337,14 @@ public class PageController {
         model.addAttribute("teamCode",user.getTeamCode());
         model.addAttribute("role",user.getRole());
 
+           String combineName = user.getLastname()+", "+user.getFirstname();
+
            int totalPR = userServiceIF.getUserCountTotalPR(user.getUsername());
+           model.addAttribute("authorName",combineName);
            model.addAttribute("totalPullRequest",totalPR);
 
-           String reviewerName = user.getLastname()+", "+user.getFirstname();
-           int totalReview = userServiceIF.getUserCountReview(reviewerName);
+           int totalReview = userServiceIF.getUserCountReview(combineName);
+           model.addAttribute("reviewerName",combineName);
            model.addAttribute("totalReview",totalReview);
 
         return "user-details.html";

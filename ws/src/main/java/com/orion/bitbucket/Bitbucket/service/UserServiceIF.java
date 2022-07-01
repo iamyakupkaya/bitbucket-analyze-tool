@@ -21,4 +21,6 @@ public interface UserServiceIF {
                     String password,String email, String teamCode, String role) throws SQLException;
     void getPreconditionForUpdate(String username,String firstname,String lastname,
                                   String password,String email, String teamCode, String role, String oldUsername)throws SQLException;
+    ArrayList<UserDO> getAllUserWithRoleAndTeam(String Role,String TeamCode) throws SQLException;
+    ArrayList<UserDO> getAllUserWithTeam(String TeamCode) throws SQLException;
 }
