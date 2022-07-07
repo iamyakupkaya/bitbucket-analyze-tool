@@ -81,8 +81,9 @@ public class PageController {
 
         ArrayList<ReviewDO.PullRequestReviewRelation> mostOfPrReview = reviewServiceIF.mostReviewedPullRequest();
         model.addAttribute("size",mostOfPrReview.size());
-            model.addAttribute("id", mostOfPrReview.get(0).getPullRequest().getPrId());
-        
+        model.addAttribute("id", mostOfPrReview.get(0).getPullRequest().getPrId());
+
+        baseService.updatePullRequest();
         return "index.html";
     }
 

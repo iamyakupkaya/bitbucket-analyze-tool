@@ -3,6 +3,7 @@ package com.orion.bitbucket.Bitbucket.service;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.BranchDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
@@ -35,7 +36,12 @@ public class BaseService implements BaseServiceIF {
     private final String SQL_SELECT_COUNT_PULL_REQUEST = "select count(*) from pullrequest;";
     private final String SQL_SELECT_COUNT_REVIEW = "select count(*) from review";
     private final String SQL_GET_REVIEW_ID_BY_USERNAME = "select id from review where display_name=? order by id desc limit 1;";
-
+    private final String SQL_GET_REVIEW_PULL_REQUEST_DELETE_OLD_PR = "delete from pullrequest where id = ?";
+    private final String SQL_GET_PULL_REQUEST_REVIEW_RELATION_DELETE = "delete from pullrequestreviewrelation where pull_request_id = ?";
+    private final String SQL_GET_PULL_REQUEST_LAST_DATE_BY_STATE = "select closed_date from pullrequest where state = ? order by closed_date desc limit 1";
+    private final String SQL_GET_PULL_REQUEST_LAST_DATE_WITH_CREATED_DATE = "select created_date from pullrequest where state = ? order by created_date desc limit 1";
+    private final String SQL_GET_PULL_REQUEST_FIND_REVIEW_ID = "select review.id from review inner join pullrequestreviewrelation on review.id = review_id where pull_request_id = ?";
+    private final String SQL_GET_PULL_REQUEST_REVIEW_ID_DELETE = "delete from review where id = ?;";
     public void getData() {
 
         if(IS_BASE_LOGGING) {
@@ -253,6 +259,193 @@ public class BaseService implements BaseServiceIF {
 
     // TODO Below method will be modified for branch data
     public void commonBranchDataParser(JSONObject object) {
+    }
+    public void updatePullRequest(){
+        getUpdateMergedPullRequestData();
+        getUpdateOpenPullRequestDate();
+        getUpdateDeclinedPullRequestDate();
+    }
+    public void getUpdateMergedPullRequestData() throws  JSONException{
+
+        int start = 0;
+        boolean isLastPage = false;
+        try{
+            while (!isLastPage) {
+                HttpResponse<JsonNode> httpResponse = response.getResponse(BitbucketConstants.EndPoints.ALL_PRS_DAILY_MERGED_UPDATE + start, BitbucketConstants.Bearer.TOKEN);
+                JSONObject body = httpResponse.getBody().getObject();
+                Object values = body.get("values");
+                JSONArray array = (JSONArray) values;
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.getJSONObject(i);
+                    int pullRequestId = (int) object.get("id");
+
+                    Long pullRequestClosedDate = (long) object.get("closedDate");
+                    java.sql.Date sqlPackageDateClosed = new java.sql.Date(pullRequestClosedDate);
+                    Date lastDayInDatabase =  pullRequestLastDAY(DBConstants.PullRequestState.MERGED);
+                    deleteOldPullRequest(pullRequestId);
+                    deleteOldPullRequestReviewId(pullRequestId);
+                    deleteOldPullRequestReviewRelation(pullRequestId);
+                    if(IS_BASE_LOGGING){Log.logger(Log.LogConstant.TAG_INFO,
+                            "Pull Request merged update date " + sqlPackageDateClosed +" ID : "+ pullRequestId);}
+                    commonPullRequestDataParser(array.getJSONObject(i));
+
+                    if(lastDayInDatabase.after(sqlPackageDateClosed)){
+                        return;}
+                }
+                isLastPage = (boolean) body.get("isLastPage");
+                start += 1;
+            }
+        }catch (Exception e){
+            Log.logger(Log.LogConstant.TAG_INFO,"Exception handling on getPullRequestData : " + e);
+        }
+    }
+    public void getUpdateOpenPullRequestDate() throws  JSONException{
+        int start = 0;
+        boolean isLastPage = false;
+        try{
+            while (!isLastPage) {
+                HttpResponse<JsonNode> httpResponse = response.getResponse(BitbucketConstants.EndPoints.ALL_PRS_DAILY_OPEN_UPDATE + start, BitbucketConstants.Bearer.TOKEN);
+                JSONObject body = httpResponse.getBody().getObject();
+                Object values = body.get("values");
+                JSONArray array = (JSONArray) values;
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.getJSONObject(i);
+                    int pullRequestId = (int) object.get("id");
+
+                    Long pullRequestCreatedDate = (long) object.get("createdDate");
+                    java.sql.Date sqlPackageDateCreated = new java.sql.Date(pullRequestCreatedDate);
+                    Date lastDayInDatabase =  pullRequestLastDayWithCreatedDate(DBConstants.PullRequestState.OPEN);
+                    deleteOldPullRequest(pullRequestId);
+                    deleteOldPullRequestReviewId(pullRequestId);
+                    deleteOldPullRequestReviewRelation(pullRequestId);
+                    if(IS_BASE_LOGGING){Log.logger(Log.LogConstant.TAG_INFO,
+                            "Pull Request open update date " + sqlPackageDateCreated +" ID : "+ pullRequestId);}
+                    commonPullRequestDataParser(array.getJSONObject(i));
+
+                    if(lastDayInDatabase.after(sqlPackageDateCreated)){
+                        return;}
+                }
+                isLastPage = (boolean) body.get("isLastPage");
+                start += 1;
+            }
+        }catch (Exception e){
+            Log.logger(Log.LogConstant.TAG_INFO,"Exception handling on getPullRequestData : " + e);
+        }
+    }
+    public void getUpdateDeclinedPullRequestDate() throws  JSONException{
+        int start = 0;
+        boolean isLastPage = false;
+        try{
+            while (!isLastPage) {
+                HttpResponse<JsonNode> httpResponse = response.getResponse(BitbucketConstants.EndPoints.ALL_PRS_DAILY_DECLINED_UPDATE + start, BitbucketConstants.Bearer.TOKEN);
+                JSONObject body = httpResponse.getBody().getObject();
+                Object values = body.get("values");
+                JSONArray array = (JSONArray) values;
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.getJSONObject(i);
+                    int pullRequestId = (int) object.get("id");
+
+                    Long pullRequestClosedDate = (long) object.get("closedDate");
+                    java.sql.Date sqlPackageDateClosed = new java.sql.Date(pullRequestClosedDate);
+                    Date lastDayInDatabase =  pullRequestLastDAY(DBConstants.PullRequestState.DECLINED);
+                    deleteOldPullRequest(pullRequestId);
+                    deleteOldPullRequestReviewId(pullRequestId);
+                    deleteOldPullRequestReviewRelation(pullRequestId);
+                    if(IS_BASE_LOGGING){Log.logger(Log.LogConstant.TAG_INFO,
+                            "Pull Request declined update date " + sqlPackageDateClosed +" ID : "+ pullRequestId);}
+                    commonPullRequestDataParser(array.getJSONObject(i));
+
+                    if(lastDayInDatabase.after(sqlPackageDateClosed)){
+                        return;}
+                }
+                isLastPage = (boolean) body.get("isLastPage");
+                start += 1;
+            }
+        }catch (Exception e){
+            Log.logger(Log.LogConstant.TAG_INFO,"Exception handling on getPullRequestData : " + e);
+        }
+    }
+    public void deleteOldPullRequest(int pullRequestId) throws SQLException {
+
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStatementForDelete = null;
+        preparedStatementForDelete = connection.prepareStatement(SQL_GET_REVIEW_PULL_REQUEST_DELETE_OLD_PR);
+        preparedStatementForDelete.setInt(1,pullRequestId);
+        preparedStatementForDelete.executeUpdate();
+        connection.commit();
+        preparedStatementForDelete.close();
+        connection.close();
+    }
+    public void deleteOldPullRequestReviewRelation(int pullRequestId) throws SQLException{
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStatement = null;
+        preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_REVIEW_RELATION_DELETE);
+        preparedStatement.setInt(1,pullRequestId);
+        preparedStatement.executeUpdate();
+        connection.commit();
+        preparedStatement.close();
+        connection.close();
+    }
+    public void deleteOldPullRequestReviewId(int pullRequestId)throws SQLException{
+        ArrayList<Integer> reviewId =  getPullRequestFindReviewId(pullRequestId);
+
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStatement = null;
+        preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_REVIEW_ID_DELETE);
+
+        for (int i = 0; i<reviewId.size();i++){
+            preparedStatement.setInt(1,reviewId.get(i));
+            preparedStatement.executeUpdate();
+            connection.commit();
+        }
+        preparedStatement.close();
+        connection.close();
+    }
+    public ArrayList<Integer> getPullRequestFindReviewId (int pullRequestId) throws SQLException{
+
+        ArrayList<Integer> reviewIdList = new ArrayList<Integer>();
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStatement = null;
+        preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_FIND_REVIEW_ID);
+        preparedStatement.setInt(1,pullRequestId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            reviewIdList.add(resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID));
+        }
+        resultSet.close();
+        preparedStatement.close();
+        connection.close();
+        return reviewIdList;
+    }
+    public Date pullRequestLastDAY(String state) throws SQLException {
+
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStatement = null;
+        preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_LAST_DATE_BY_STATE);
+        preparedStatement.setString(1,state);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        Date date = null;
+        while (resultSet.next()){
+            date = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE);}
+        resultSet.close();
+        preparedStatement.close();
+        connection.close();
+        return date;
+    }
+    public Date pullRequestLastDayWithCreatedDate(String state) throws SQLException {
+
+        Connection connection = TransactionManager.getConnection();
+        PreparedStatement preparedStatement = null;
+        preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_LAST_DATE_WITH_CREATED_DATE);
+        preparedStatement.setString(1,state);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        Date date = null;
+        while (resultSet.next()){
+            date = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE);}
+        resultSet.close();
+        preparedStatement.close();
+        connection.close();
+        return date;
     }
 
 }

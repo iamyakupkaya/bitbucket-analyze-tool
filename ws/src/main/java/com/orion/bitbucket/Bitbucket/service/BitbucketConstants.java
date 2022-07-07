@@ -26,7 +26,9 @@ public final class BitbucketConstants {
         public static final String OPEN_PRS_WITG_TIME_INTERVAL = BASE_URL + "<...>";
         public static final String COMMITS_IN_PR = BASE_URL + "<...>";
         public static final String INSPECTORS_OF_PR = BASE_URL + PROJECT + "pull-requests/";
-
+        public static final String ALL_PRS_DAILY_DECLINED_UPDATE = BASE_URL + PROJECT + "pull-requests?state=DECLINED&limit=1&start=";
+        public static final String ALL_PRS_DAILY_MERGED_UPDATE = BASE_URL + PROJECT + "pull-requests?state=MERGED&limit=1&start=";
+        public static final String ALL_PRS_DAILY_OPEN_UPDATE = BASE_URL + PROJECT + "pull-requests?state=OPEN&limit=1&start=";
     }
 
     public static final class Bearer {

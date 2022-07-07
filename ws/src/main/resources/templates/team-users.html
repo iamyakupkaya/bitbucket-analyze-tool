@@ -268,7 +268,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                   </div>
                   <div class="modal-body">
-                    <form th:action="@{'/users/add/'}">
+                    <form th:action="@{'/users/add/'}" autocomplete="off">
                       <div class="mb-2">
                         <label class="form-label required">Username</label>
                         <input type="text" class="form-control" th:value="${username}" name="username">
@@ -291,11 +291,17 @@
                       </div>
                       <div class="mb-2">
                         <label class="form-label required">Team Code</label>
-                        <input type="text" class="form-control" th:value="${teamCode}" name="teamCode">
+                        <select class="form-control d-inline-flex" id="dropDownList" name="teamCode">
+                          <option th:each="team : ${teams}" th:value="${team}" th:text="${team}"></option>
+                        </select>
+<!--                        <input type="text" class="form-control" th:value="${teamCode}" name="teamCode">-->
                       </div>
                       <div class="mb-2">
                         <label class="form-label required">Role</label>
-                        <input type="text" class="form-control" th:value="${role}" name="role">
+                        <select class="form-control d-inline-flex" id="dropDownList" name="role">
+                          <option th:each="option : ${options}" th:value="${option}" th:text="${option}"></option>
+                        </select>
+<!--                        <input type="text" class="form-control" th:value="${role}" name="role">-->
                       </div>
                       <div class="modal-footer">
                         <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
