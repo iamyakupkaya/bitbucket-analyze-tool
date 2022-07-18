@@ -278,7 +278,9 @@ public class BaseService implements BaseServiceIF {
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject object = array.getJSONObject(i);
                     int pullRequestId = (int) object.get("id");
-
+                    JSONObject author = object.getJSONObject("author");
+                    JSONObject user = author.getJSONObject("user");
+                    String authorName = (String) user.get("displayName");
                     Long pullRequestClosedDate = (long) object.get("closedDate");
                     java.sql.Date sqlPackageDateClosed = new java.sql.Date(pullRequestClosedDate);
                     Date lastDayInDatabase =  pullRequestLastDAY(DBConstants.PullRequestState.MERGED);
@@ -291,6 +293,7 @@ public class BaseService implements BaseServiceIF {
 
                     if(lastDayInDatabase.after(sqlPackageDateClosed)){
                         return;}
+                    authorUpdate(authorName);
                 }
                 isLastPage = (boolean) body.get("isLastPage");
                 start += 1;
@@ -311,7 +314,9 @@ public class BaseService implements BaseServiceIF {
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject object = array.getJSONObject(i);
                     int pullRequestId = (int) object.get("id");
-
+                    JSONObject author = object.getJSONObject("author");
+                    JSONObject user = author.getJSONObject("user");
+                    String authorName = (String) user.get("displayName");
                     Long pullRequestCreatedDate = (long) object.get("createdDate");
                     java.sql.Date sqlPackageDateCreated = new java.sql.Date(pullRequestCreatedDate);
                     Date lastDayInDatabase =  pullRequestLastDayWithCreatedDate(DBConstants.PullRequestState.OPEN);
@@ -324,6 +329,7 @@ public class BaseService implements BaseServiceIF {
 
                     if(lastDayInDatabase.after(sqlPackageDateCreated)){
                         return;}
+                    authorUpdate(authorName);
                 }
                 isLastPage = (boolean) body.get("isLastPage");
                 start += 1;
@@ -344,7 +350,9 @@ public class BaseService implements BaseServiceIF {
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject object = array.getJSONObject(i);
                     int pullRequestId = (int) object.get("id");
-
+                    JSONObject author = object.getJSONObject("author");
+                    JSONObject user = author.getJSONObject("user");
+                    String authorName = (String) user.get("displayName");
                     Long pullRequestClosedDate = (long) object.get("closedDate");
                     java.sql.Date sqlPackageDateClosed = new java.sql.Date(pullRequestClosedDate);
                     Date lastDayInDatabase =  pullRequestLastDAY(DBConstants.PullRequestState.DECLINED);
@@ -357,6 +365,7 @@ public class BaseService implements BaseServiceIF {
 
                     if(lastDayInDatabase.after(sqlPackageDateClosed)){
                         return;}
+                    authorUpdate(authorName);
                 }
                 isLastPage = (boolean) body.get("isLastPage");
                 start += 1;
@@ -446,6 +455,10 @@ public class BaseService implements BaseServiceIF {
         preparedStatement.close();
         connection.close();
         return date;
+    }
+    public void authorUpdate(String authorName) throws SQLException{
+        AuthorService authorService = new AuthorService();
+        authorService.getAuthorUpdateList(authorName);
     }
 
 }

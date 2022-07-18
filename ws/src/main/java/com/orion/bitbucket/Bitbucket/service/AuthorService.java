@@ -32,7 +32,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
     private final String SQL_GET_TOP_AUTHOR_PR_LIST_BY_DATE_INTERVAL_AND_PR_STATE = "SELECT display_name, COUNT(*) AS totalPRCount FROM pullrequest WHERE state=? AND DATE(created_date) >= DATE(NOW()) - ?::INTERVAL  GROUP BY display_name ORDER BY totalPRCount DESC LIMIT 1;";
     private final String SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_CLOSED_DATE = "select count(state) as count from (select * from pullrequest where display_name= ? and DATE(closed_date) between ? and  ? )as count where state= ?" ;
     private final String SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_CREATED_DATE = "select count(state) as count from (select * from pullrequest where display_name= ? and DATE(created_date) between ? and  ? )as count where state= ?" ;
-
+    private final String SQL_GET_AUTHORS_UPDATE = "update author set total_merged_prs = ?, total_open_prs = ?, total_declined_prs = ? where name = ?";
     public int getAuthorCount() throws SQLException {
         Connection connection = TransactionManager.getConnection();
         int count = 0;
@@ -345,4 +345,26 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         connection.close();
         return count;
     }
+    public void getAuthorUpdateList(String name) throws SQLException{
+        try{
+            int totalMergedPRs = getCountPRByStateAndUsername(DBConstants.PullRequestState.MERGED, name);
+            int totalOpenPRs = getCountPRByStateAndUsername(DBConstants.PullRequestState.OPEN, name);
+            int totalDeclinedPRs = getCountPRByStateAndUsername(DBConstants.PullRequestState.DECLINED, name);
+
+            Connection connection = TransactionManager.getConnection();
+            PreparedStatement preparedStmt = null;
+            preparedStmt = connection.prepareStatement(SQL_GET_AUTHORS_UPDATE);
+            preparedStmt.setInt(1,totalMergedPRs);
+            preparedStmt.setInt(2,totalOpenPRs);
+            preparedStmt.setInt(3,totalDeclinedPRs);
+            preparedStmt.setString(4,name);
+
+            preparedStmt.executeUpdate();
+            connection.commit();
+            preparedStmt.close();
+            connection.close();
+
+        }catch (Exception e){}
+    }
+
 }
