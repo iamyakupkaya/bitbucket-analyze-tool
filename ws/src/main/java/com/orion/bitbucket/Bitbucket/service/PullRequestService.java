@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
@@ -25,212 +24,248 @@ public class PullRequestService extends BaseService implements PullRequestServic
     private final String SQL_GET_PULL_REQUEST_BY_ID = "select * from pullrequest where id=?;";
     private final String SQL_GET_PULL_REQUEST_BY_DATE_INTERVAL = "select * from pullrequest where state=? and display_name=? and  DATE(created_date) between ? and  ? ";
 
-
     public int getAllPRCount() throws SQLException {
-        Connection connection = TransactionManager.getConnection();
         int count = 0;
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(SQL_GET_ALL_PR_COUNT);
-        while (resultSet.next()) {
-            count = resultSet.getInt("count");
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = TransactionManager.getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(SQL_GET_ALL_PR_COUNT);
+            while (resultSet.next()) {
+                count = resultSet.getInt("count");
+            }
+        } catch (Exception exception) {
+            if (IS_PULL_REQUEST_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+            }
+        } finally {
+            resultSet.close();
+            statement.close();
+            connection.close();
         }
-        resultSet.close();
-        statement.close();
-        connection.close();
         return count;
     }
-
     public int getPRCountByState(String status) throws SQLException {
-        Connection connection = TransactionManager.getConnection();
         int count = 0;
+        Connection connection = null;
         PreparedStatement preparedStmt = null;
-        preparedStmt = connection.prepareStatement(SQL_GET_PR_COUNT_BY_STATE);
-        preparedStmt.setString(1, status);
-        ResultSet resultSet = preparedStmt.executeQuery();
-        connection.commit();
-        while (resultSet.next()) {
-            count = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_COUNT_BY_STATE);
+        ResultSet resultSet = null;
+        try {
+            connection = TransactionManager.getConnection();
+            preparedStmt = connection.prepareStatement(SQL_GET_PR_COUNT_BY_STATE);
+            preparedStmt.setString(1, status);
+            resultSet = preparedStmt.executeQuery();
+            connection.commit();
+            while (resultSet.next()) {
+                count = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_COUNT_BY_STATE);
+            }
+        } catch (Exception exception) {
+            if (IS_PULL_REQUEST_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+            }
+        } finally {
+            resultSet.close();
+            preparedStmt.close();
+            connection.close();
         }
-        resultSet.close();
-        preparedStmt.close();
-        connection.close();
         return count;
     }
-
     public ArrayList<PullRequestDO> getPRListByState(String status) throws SQLException {
         ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-        Connection connection = TransactionManager.getConnection();
+        Connection connection = null;
         PreparedStatement preparedStmt = null;
-        preparedStmt = connection.prepareStatement(SQL_GET_PR_LIST_BY_STATE);
-        preparedStmt.setString(1, status);
-        ResultSet resultSet = preparedStmt.executeQuery();
-        connection.commit();
-        while (resultSet.next()) {
-            int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
-            String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
-            String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
-            boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
-            String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
-            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
-            Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
-            Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
-            String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
-            String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
-            String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
-            
-            int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
-            String jiraId = null;
-            if(indexOf > -1) {
-                int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
-                jiraId = title.substring(starting, starting+9);
+        ResultSet resultSet = null;
+        try {
+            connection = TransactionManager.getConnection();
+            preparedStmt = connection.prepareStatement(SQL_GET_PR_LIST_BY_STATE);
+            preparedStmt.setString(1, status);
+            resultSet = preparedStmt.executeQuery();
+            connection.commit();
+            while (resultSet.next()) {
+                int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+                String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
+                String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
+                boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
+                String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
+                String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
+                Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE);
+                Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE);
+                String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
+                String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
+                String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
+
+                int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
+                String jiraId = null;
+                if (indexOf > -1) {
+                    int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
+                    jiraId = title.substring(starting, starting + 9);
+                } else {
+                    jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
+                }
+                list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, null));
             }
-            else {
-                jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
+        } catch (Exception exception) {
+            if (IS_PULL_REQUEST_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
             }
-            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,null));
+        } finally {
+            resultSet.close();
+            preparedStmt.close();
+            connection.close();
         }
-        resultSet.close();
-        preparedStmt.close();
-        connection.close();
         return list;
     }
-
     public ArrayList<PullRequestDO> getPRListByStateAndUsername(String status, String username) throws SQLException {
         ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-        Connection connection = TransactionManager.getConnection();
+        Connection connection = null;
         PreparedStatement preparedStmt = null;
-        preparedStmt = connection.prepareStatement(SQL_GET_PR_LIST_BY_STATE_AND_USERNAME);
-        preparedStmt.setString(1, status);
-        preparedStmt.setString(2, username);
-        ResultSet resultSet = preparedStmt.executeQuery();
-        connection.commit();
-        while (resultSet.next()) {
-            int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
-            String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
-            String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
-            boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
-            String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
-            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
-            Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
-            Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
-            String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
-            String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
-            String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
+        ResultSet resultSet = null;
+        try {
+            connection = TransactionManager.getConnection();
+            preparedStmt = connection.prepareStatement(SQL_GET_PR_LIST_BY_STATE_AND_USERNAME);
+            preparedStmt.setString(1, status);
+            preparedStmt.setString(2, username);
+            resultSet = preparedStmt.executeQuery();
+            connection.commit();
+            while (resultSet.next()) {
+                int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+                String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
+                String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
+                boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
+                String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
+                String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
+                Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE);
+                Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE);
+                String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
+                String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
+                String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
 
-            Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-            LocalDate localDateCreated = LocalDate.parse(formatter.format(createdDate));
-            LocalDate localDateClosed = LocalDate.parse(formatter.format(closedDate));
-            Long timeSpent = (ChronoUnit.DAYS.between(localDateCreated, localDateClosed)+1);
+                Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+                LocalDate localDateCreated = LocalDate.parse(formatter.format(createdDate));
+                LocalDate localDateClosed = LocalDate.parse(formatter.format(closedDate));
+                Long timeSpent = (ChronoUnit.DAYS.between(localDateCreated, localDateClosed) + 1);
 
-            int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
-            String jiraId = null;
-            if(indexOf > -1) {
-                int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
-                jiraId = title.substring(starting, starting+9);
+                int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
+                String jiraId = null;
+                if (indexOf > -1) {
+                    int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
+                    jiraId = title.substring(starting, starting + 9);
+                } else {
+                    jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
+                }
+                list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, timeSpent));
             }
-            else {
-                jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
+        } catch (Exception exception) {
+            if (IS_PULL_REQUEST_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
             }
-
-            list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,timeSpent));
+        } finally {
+            resultSet.close();
+            preparedStmt.close();
+            connection.close();
         }
-        resultSet.close();
-        preparedStmt.close();
-        connection.close();
         return list;
     }
-
     public int getPRCountByStateAndUsername(String state, String username) throws SQLException {
         return getPRListByStateAndUsername(state, username).size();
     }
 
     public PullRequestDO getPullRequestById(int pullRequestId) throws SQLException {
         PullRequestDO pullRequest = null;
-        Connection connection = TransactionManager.getConnection();
+        Connection connection = null;
         PreparedStatement preparedStmt = null;
-        preparedStmt = connection.prepareStatement(SQL_GET_PULL_REQUEST_BY_ID);
-        preparedStmt.setInt(1, pullRequestId);
-        ResultSet resultSet = preparedStmt.executeQuery();
-        connection.commit();
-        while (resultSet.next()) {
-            int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
-            String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
-            String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
-            boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
-            String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
-            String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
-            Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
-            Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
-            String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
-            String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
-            String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
-            
-            int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
-            String jiraId = null;
-            if(indexOf > -1) {
-                int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
-                jiraId = title.substring(starting, starting+9);
+        ResultSet resultSet = null;
+        try {
+            connection = TransactionManager.getConnection();
+            preparedStmt = connection.prepareStatement(SQL_GET_PULL_REQUEST_BY_ID);
+            preparedStmt.setInt(1, pullRequestId);
+            resultSet = preparedStmt.executeQuery();
+            connection.commit();
+            while (resultSet.next()) {
+                int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+                String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
+                String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
+                boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
+                String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
+                String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
+                Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE);
+                Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE);
+                String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
+                String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
+                String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
+
+                int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
+                String jiraId = null;
+                if (indexOf > -1) {
+                    int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
+                    jiraId = title.substring(starting, starting + 9);
+                } else {
+                    jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
+                }
+                pullRequest = new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, null);
             }
-            else {
-               jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
+        } catch (Exception exception) {
+            if (IS_PULL_REQUEST_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
             }
-            pullRequest = new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,null);
+        } finally {
+            resultSet.close();
+            preparedStmt.close();
+            connection.close();
         }
-        resultSet.close();
-        preparedStmt.close();
-        connection.close();
         return pullRequest;
     }
-
-
     // TODO : It gives an error
     public ArrayList<PullRequestDO> getPRListByStateAndUsernameAndDateInterval(String status, String username,
             String startDate, String endDate) throws SQLException, ParseException {
-                
-
-                Date date1=(Date) new SimpleDateFormat("yyyy-dd-mm").parse(startDate);  
-                Date date2=(Date) new SimpleDateFormat("yyyy-dd-mm").parse(endDate);  
-
-
-                ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-                Connection connection = TransactionManager.getConnection();
-                PreparedStatement preparedStmt = null;
-                preparedStmt = connection.prepareStatement(SQL_GET_PULL_REQUEST_BY_DATE_INTERVAL);
-                preparedStmt.setString(1, status);
-                preparedStmt.setString(2, username);
-                preparedStmt.setDate(3,date1);
-                preparedStmt.setDate(4, date2);
-                ResultSet resultSet = preparedStmt.executeQuery();
-                connection.commit();
-                while (resultSet.next()) {
-                    int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
-                    String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
-                    String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
-                    boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
-                    String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
-                    String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
-                    Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE); 
-                    Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE); 
-                    String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
-                    String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
-                    String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
-                    int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
-                    String jiraId = null;
-                    if(indexOf > -1) {
-                        int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
-                        jiraId = title.substring(starting, starting+9);
-                    }
-                    else {
-                        jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
-                    }
-                   
-                    list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null,null));
+        Date date1 = (Date) new SimpleDateFormat("yyyy-dd-mm").parse(startDate);
+        Date date2 = (Date) new SimpleDateFormat("yyyy-dd-mm").parse(endDate);
+        ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
+        Connection connection = null;
+        PreparedStatement preparedStmt = null;
+        ResultSet resultSet = null;
+        try {
+            connection = TransactionManager.getConnection();
+            preparedStmt = connection.prepareStatement(SQL_GET_PULL_REQUEST_BY_DATE_INTERVAL);
+            preparedStmt.setString(1, status);
+            preparedStmt.setString(2, username);
+            preparedStmt.setDate(3, date1);
+            preparedStmt.setDate(4, date2);
+            resultSet = preparedStmt.executeQuery();
+            connection.commit();
+            while (resultSet.next()) {
+                int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+                String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
+                String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
+                boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
+                String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
+                String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
+                Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE);
+                Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE);
+                String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
+                String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
+                String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
+                int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
+                String jiraId = null;
+                if (indexOf > -1) {
+                    int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
+                    jiraId = title.substring(starting, starting + 9);
+                } else {
+                    jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
                 }
-                resultSet.close();
-                preparedStmt.close();
-                connection.close();
-                return list;
-      
+                list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, null));
+            }
+        } catch (Exception exception) {
+            if (IS_PULL_REQUEST_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+            }
+        } finally {
+            resultSet.close();
+            preparedStmt.close();
+            connection.close();
+        }
+        return list;
     }
-
 }
