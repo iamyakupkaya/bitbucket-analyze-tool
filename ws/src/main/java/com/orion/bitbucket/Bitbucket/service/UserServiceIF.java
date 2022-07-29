@@ -3,7 +3,7 @@ package com.orion.bitbucket.Bitbucket.service;
 import com.orion.bitbucket.Bitbucket.model.UserDO;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.*;
 
 public interface UserServiceIF {
     void getCollectUserInformation(String userName,String firstName,String lastName,
@@ -23,4 +23,6 @@ public interface UserServiceIF {
                                   String password,String email, String teamCode, String role, String oldUsername)throws SQLException;
     ArrayList<UserDO> getAllUserWithRoleAndTeam(String Role,String TeamCode) throws SQLException;
     ArrayList<UserDO> getAllUserWithTeam(String TeamCode) throws SQLException;
+    public void insertUserTable() throws SQLException;
+    public List<String> getRoles() throws SQLException;
 }

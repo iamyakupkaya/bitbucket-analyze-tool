@@ -10,6 +10,5 @@ public class BitbucketApplication {
     public static void main(String[] args) {
         DatabaseManager.run();
         SpringApplication.run(BitbucketApplication.class, args);
-
     }
 }

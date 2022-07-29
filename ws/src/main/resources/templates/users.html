@@ -155,12 +155,9 @@
       </ul>
 
       <!-- / Menu -->
-
     </aside>
     <!-- Layout container -->
     <div class="layout-page">
-
-
       <!-- Navbar -->
       <nav
               class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
@@ -194,8 +191,8 @@
               <div class="d-flex flex-row">
                 <form th:action="@{'/users/'}" class="d-inline-flex">
                   <div class="d-inline-flex" >
-                    <select class="form-control d-inline-flex" id="dropDownList" name="role">
-                      <option th:each="option : ${options}" th:value="${option}" th:text="${option}"></option>
+                    <select class="form-control d-inline-flex" id="dropDownListtwo" name="role">
+                      <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
                     </select>
                   </div>
                   <div class="d-inline-flex" >
@@ -206,11 +203,7 @@
                   <input class="btn btn-primary" type="submit" style="margin:5px" value="search">
                 </form>
               </div>
-              <div>
-                <button data-bs-toggle="modal" data-bs-target="#insertModal"  type="submit" class="btn btn-outline-primary" onclick="insertFunction()"> Add User </button>
-              </div>
           </div>
-
           <h4 class="fw-bold py-3 mb-4">
             <span class="text-muted fw-light">USERS  / </span> Team Code
           </h4>
@@ -259,60 +252,6 @@
             </div>
           </div>
           <!--/ Hoverable Table rows -->
-          <div class="container mt-5">
-            <div class="modal" id="insertModal">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title">Add New User</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form th:action="@{'/users/add/'}" autocomplete="off">
-                      <div class="mb-2">
-                        <label class="form-label required">Username</label>
-                        <input type="text" class="form-control" th:value="${username}" name="username">
-                      </div>
-                      <div class="mb-2">
-                        <label class="form-label required">First name</label>
-                        <input type="text" class="form-control" th:value="${firstname}" name="firstname">
-                      </div>
-                      <div class="mb-2">
-                        <label class="form-label required">Last name</label>
-                        <input type="text" class="form-control" th:value="${lastname}" name="lastname">
-                      </div>
-                      <div class="mb-2">
-                        <label class="form-label required">Password</label>
-                        <input type="text" class="form-control" th:value="${password}" name="password">
-                      </div>
-                      <div class="mb-2">
-                        <label class="form-label required">Email</label>
-                        <input type="text" class="form-control" th:value="${email}" name="email">
-                      </div>
-                      <div class="mb-2">
-                        <label class="form-label required">Team Code</label>
-                        <select class="form-control d-inline-flex" id="dropDownList" name="teamCode">
-                          <option th:each="team : ${teams}" th:value="${team}" th:text="${team}"></option>
-                        </select>
-<!--                        <input type="text" class="form-control" th:value="${teamCode}" name="teamCode">-->
-                      </div>
-                      <div class="mb-2">
-                        <label class="form-label required">Role</label>
-                        <select class="form-control d-inline-flex" id="dropDownList" name="role">
-                          <option th:each="option : ${options}" th:value="${option}" th:text="${option}"></option>
-                        </select>
-<!--                        <input type="text" class="form-control" th:value="${role}" name="role">-->
-                      </div>
-                      <div class="modal-footer">
-                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <!-- / Content -->
 
 

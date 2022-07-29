@@ -6,7 +6,7 @@ import com.orion.bitbucket.Bitbucket.log.Log;
 import com.orion.bitbucket.Bitbucket.model.UserDO;
 import org.springframework.stereotype.Service;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 
 @Service
 public class UserService extends BaseService implements UserServiceIF{
@@ -25,6 +25,7 @@ public class UserService extends BaseService implements UserServiceIF{
     private final String SQL_GET_CHECK_SAME_USERNAME = "select user_name from users where user_name = ?";
     private final String SQL_GET_USERS_WITH_TEAM_AND_ROLE = "select * from users where role = ? and team_Code = ?";
     private final String SQL_GET_USERS_WITH_TEAM_CODE= "select * from users where team_Code = ? ";
+    private final String SQL_GET_ALL_PULLREQUEST_AUTHORS = "select display_name,email_address,slug from pullrequest group by display_name,email_address,slug order by slug ";
 
     public ArrayList<UserDO> getAllUsers() throws SQLException {
         ArrayList<UserDO> users = null;
@@ -432,5 +433,46 @@ public class UserService extends BaseService implements UserServiceIF{
             connection.close();
         }
         return users;
+    }
+    public void insertUserTable() throws SQLException{
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        String firstname = null;
+        String lastname = null;
+        try {
+            connection = TransactionManager.getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(SQL_GET_ALL_PULLREQUEST_AUTHORS);
+            while (resultSet.next()) {
+                String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
+                String email = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
+                String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
+
+                if(displayName.contains(",")){
+                    String[] parts = displayName.split(",");
+                     lastname = parts[0];
+                     firstname = parts[1].substring(1,(parts[1].length()));
+                }else{
+                    firstname = displayName;
+                    lastname = "";
+                }
+                getCollectUserInformation(slug,firstname,lastname,DBConstants.User.USER_DEFAULT,email,
+                        DBConstants.User.USER_DEFAULT,DBConstants.User.USER_ROLE_NORMAL);
+            }
+        }catch (Exception exception){
+            if (IS_USER_LOGGING){Log.logger(Log.LogConstant.TAG_WARN,String.valueOf(exception));}
+        }finally {
+            resultSet.close();
+            statement.close();
+            connection.close();
+        }
+    }
+    public List<String> getRoles() throws SQLException{
+        List<String> roles = new ArrayList<String>();
+        roles.add(DBConstants.User.USER_ROLE_ADMIN);
+        roles.add(DBConstants.User.USER_ROLE_LEADER);
+        roles.add(DBConstants.User.USER_ROLE_NORMAL);
+        return roles;
     }
 }

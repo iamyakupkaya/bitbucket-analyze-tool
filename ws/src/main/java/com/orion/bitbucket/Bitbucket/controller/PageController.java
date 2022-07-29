@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import com.orion.bitbucket.Bitbucket.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,13 +18,6 @@ import com.orion.bitbucket.Bitbucket.model.ReviewDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewDO.PullRequestReviewRelation;
 import com.orion.bitbucket.Bitbucket.model.UserDO;
-import com.orion.bitbucket.Bitbucket.service.AuthorServiceIF;
-import com.orion.bitbucket.Bitbucket.service.BaseServiceIF;
-import com.orion.bitbucket.Bitbucket.service.PullRequestServiceIF;
-import com.orion.bitbucket.Bitbucket.service.ReviewServiceIF;
-import com.orion.bitbucket.Bitbucket.service.ReviewerServiceIF;
-import com.orion.bitbucket.Bitbucket.service.UserServiceIF;
-import com.orion.bitbucket.Bitbucket.log.Log;
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -47,7 +41,9 @@ public class PageController {
 
     @Autowired
     private UserServiceIF userServiceIF;
-    
+
+    @Autowired
+    private TeamServiceIF teamServiceIF;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String allTime(Model model) throws UnirestException, SQLException {
@@ -82,8 +78,6 @@ public class PageController {
         ArrayList<ReviewDO.PullRequestReviewRelation> mostOfPrReview = reviewServiceIF.mostReviewedPullRequest();
         model.addAttribute("size",mostOfPrReview.size());
         model.addAttribute("id", mostOfPrReview.get(0).getPullRequest().getPrId());
-
-        baseService.updatePullRequest();
         return "index.html";
     }
 
@@ -264,43 +258,28 @@ public class PageController {
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public String getUser(Model model) throws UnirestException, SQLException {
 
-        ArrayList<UserDO> users = userServiceIF.getAllUsers();
-        List<String> options = new ArrayList<String>();
+        List<String> roles = userServiceIF.getRoles();
+        roles.add(0,DBConstants.User.USER_ROLE_ALL);
+        model.addAttribute("roles", roles);
 
-        options.add(DBConstants.User.USER_ROLE_ALL);
-        options.add(DBConstants.User.USER_ROLE_ADMIN);
-        options.add(DBConstants.User.USER_ROLE_LEADER);
-        options.add(DBConstants.User.USER_ROLE_NORMAL);
-
-        model.addAttribute("options", options);
-
-        List<String> teams = new ArrayList<String>();
-        teams.add(DBConstants.User.USERS_TEAM_ALL);
-        teams.add("NRD1222");
-        teams.add("NRD1212");
-        teams.add("NRD1214");
+        List<String> teams = teamServiceIF.getAllTeams();
+        teams.add(0,DBConstants.User.USERS_TEAM_ALL);
         model.addAttribute("teams", teams);
 
+        ArrayList<UserDO> users = userServiceIF.getAllUsers();
         model.addAttribute("user", new UserDO());
         model.addAttribute("users", users);
-        return "team-users.html";
+        return "users.html";
     }
     @RequestMapping(value = "/users/", method = RequestMethod.GET)
     public String getUserAll(Model model,@RequestParam String role, @RequestParam String team) throws UnirestException, SQLException {
 
-        List<String> options = new ArrayList<String>();
+        List<String> roles = userServiceIF.getRoles();
+        roles.add(0,DBConstants.User.USER_ROLE_ALL);
+        model.addAttribute("roles", roles);
 
-        options.add(DBConstants.User.USER_ROLE_ALL);
-        options.add(DBConstants.User.USER_ROLE_ADMIN);
-        options.add(DBConstants.User.USER_ROLE_LEADER);
-        options.add(DBConstants.User.USER_ROLE_NORMAL);
-        model.addAttribute("options", options);
-
-        List<String> teams = new ArrayList<String>();
-        teams.add(DBConstants.User.USERS_TEAM_ALL);
-        teams.add("NRD1222");
-        teams.add("NRD1212");
-        teams.add("NRD1214");
+        List<String> teams = teamServiceIF.getAllTeams();
+        teams.add(0,DBConstants.User.USERS_TEAM_ALL);
         model.addAttribute("teams", teams);
 
         if (role.equals(DBConstants.User.USER_ROLE_ALL) && team.equals(DBConstants.User.USERS_TEAM_ALL) ) {
@@ -320,7 +299,7 @@ public class PageController {
             model.addAttribute("user", new UserDO());
             model.addAttribute("users", users);
         }
-        return "team-users.html";
+        return "users.html";
     }
 
     @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
@@ -350,28 +329,60 @@ public class PageController {
 
         return "user-details.html";
     }
-    @RequestMapping(value = "/users/delete/", method = RequestMethod.GET)
-    public String deleteUser(Model model,  @RequestParam String oldUsername) throws UnirestException, SQLException {
 
-        userServiceIF.getDeleteUserWithUserName(oldUsername);
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    public String update(Model model) throws UnirestException, SQLException {
 
-        return "redirect-page.html";
-    }
-    @RequestMapping(value = "/users/edit/", method = RequestMethod.GET)
-    public String editUser(Model model, @RequestParam String username,@RequestParam String firstname,
-                                        @RequestParam String lastname, @RequestParam String password,
-                                        @RequestParam String email,   @RequestParam String teamCode,
-                                        @RequestParam String role, @RequestParam String oldUsername) throws UnirestException, SQLException{
-        userServiceIF.getPreconditionForUpdate(username,firstname,lastname,password,email,teamCode,role,oldUsername);
-        return "redirect-page.html";
-    }
-    @RequestMapping(value = "/users/add/", method = RequestMethod.GET)
-    public String addUser(Model model, @RequestParam String username,@RequestParam String firstname,
-                                       @RequestParam String lastname, @RequestParam String password,
-                                       @RequestParam String email,   @RequestParam String teamCode,
-                                       @RequestParam String role) throws UnirestException, SQLException{
-        userServiceIF.getCollectUserInformation(username,firstname,lastname,password,email,teamCode,role);
-        return "redirect-page.html";
-    }
+          baseService.updatePullRequest();
 
+        model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
+        model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
+        model.addAttribute("reviewerCount", reviewerServiceIF.getAllReviewerCount());
+        model.addAttribute("reviewCount", reviewServiceIF.getTotalReviewCount());
+        AuthorDO.TopAuthor topAuthor = authorServiceIF.getTopAuthor();
+        model.addAttribute("topAuthorDisplayName", topAuthor.getName());
+        model.addAttribute("topAuthorPRsCount", topAuthor.getTotal());
+        ReviewerDO.TopReviewer topReviewer = reviewerServiceIF.getTopReviewer();
+        model.addAttribute("topReviewerDisplayName", topReviewer.getName());
+        model.addAttribute("topReviewerCount",topReviewer.getTotal());
+        AuthorDO.TopAuthor topAuthorMerge = authorServiceIF.getTopAuthorAtMerged();
+        model.addAttribute("topAuthorMerge", topAuthorMerge.getName());
+        model.addAttribute("topAuthorMergePRsCount", topAuthorMerge.getTotal());
+
+
+        ArrayList<PullRequestDO> updateList = baseService.updateInformationDetails(baseService.updatePrList());
+        baseService.updatePrList().clear();
+        model.addAttribute("update", new PullRequestDO());
+        model.addAttribute("updateList", updateList);
+
+        return "index.html";
+    }
+    @RequestMapping(value = "/team/{teamCode}", method = RequestMethod.GET)
+    public String test(Model model, @PathVariable(name = "teamCode", required = false) String teamCode) throws UnirestException, SQLException {
+
+        ArrayList<UserDO> teamMembers = teamServiceIF.getTeamUsers(teamCode);
+        ArrayList<String> namesList = null;
+        ArrayList<AuthorDO> teamUsersStatistics = null;
+        namesList = new ArrayList<String>();
+
+        for (int i = 0; i<teamMembers.size(); i++){
+            String name = teamMembers.get(i).getLastname() +", " +teamMembers.get(i).getFirstname();
+            namesList.add(name);
+        }
+            teamUsersStatistics = teamServiceIF.getTeamUsersStatistics(namesList);
+            model.addAttribute("teamUsersStatistic",new AuthorDO());
+            model.addAttribute("teamUsersStatistics",teamUsersStatistics);
+
+            int totalTeamPR = teamServiceIF.getTeamsTotalPR();
+            model.addAttribute("totalTeamPR", totalTeamPR);
+
+            model.addAttribute("headerTeamCode",teamCode);
+            model.addAttribute("manager", teamServiceIF.getTeamManager(teamCode));
+
+            ArrayList<UserDO> users = userServiceIF.getAllUserWithTeam(teamCode);
+            model.addAttribute("user", new UserDO());
+            model.addAttribute("users", users);
+
+        return "team.html";
+    }
 }

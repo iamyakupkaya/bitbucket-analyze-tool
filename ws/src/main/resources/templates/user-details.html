@@ -159,10 +159,6 @@
                 <div class="container-xxl flex-grow-1 container-p-y">
                     <div class="d-flex justify-content-between">
                         <h4 class="fw-bold py-3 mb-4" th:text="${headerName}"></h4>
-                        <div>
-                            <button data-bs-toggle="modal" data-bs-target="#editModal"  type="submit" class="btn btn-outline-primary" onclick="editFunction()"> Edit </button>
-                            <button data-bs-toggle="modal" data-bs-target="#deleteModal"  type="submit" class="btn btn-outline-danger" onclick="deleteFunction()">Delete</button>
-                            </div>
                     </div>
                     <!-- Hoverable Table rows -->
                     <div class="card">
@@ -291,83 +287,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="container mt-5">
-                        <div class="modal" id="editModal">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" th:text="${headerName}"></h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form th:action="@{'/users/edit/'}">
-                                            <div class="mb-2">
-                                                <label class="form-label required">Username</label>
-                                                <input type="text" class="form-control" th:value="${username}" name="username">
-                                            </div>
-                                            <div class="mb-2">
-                                                <label class="form-label required">First name</label>
-                                                <input type="text" class="form-control" th:value="${firstname}" name="firstname">
-                                            </div>
-                                            <div class="mb-2">
-                                                <label class="form-label required">Last name</label>
-                                                <input type="text" class="form-control" th:value="${lastname}" name="lastname">
-                                            </div>
-                                            <div class="mb-2">
-                                                <label class="form-label required">Password</label>
-                                                <input type="text" class="form-control" th:value="${password}" name="password">
-                                            </div>
-                                            <div class="mb-2">
-                                                <label class="form-label required">Email</label>
-                                                <input type="text" class="form-control" th:value="${email}" name="email">
-                                            </div>
-                                            <div class="mb-2">
-                                                <label class="form-label required">Team Code</label>
-                                                <input type="text" class="form-control" th:value="${teamCode}" name="teamCode">
-                                            </div>
-                                            <div class="mb-2">
-                                                <label class="form-label required">Role</label>
-                                                <input type="text" class="form-control" th:value="${role}" name="role">
-                                            </div>
-                                                <input type="hidden" th:value="${username}" name="oldUsername">
-                                            <div class="modal-footer">
-                                                <button type="reset" class="btn btn-secondary">Cancel</button>
-                                                <button type="submit" class="btn btn-primary">Edit</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container mt-5">
-                        <div class="modal" id="deleteModal">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title"></h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form th:action="@{'/users/delete/'}">
-                                                <p>Are you sure you want to delete the user named <b th:text="${headerName}"></b> ? </p>
-                                                <input type="hidden" th:value="${username}" name="oldUsername">
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-danger">YES</button>
-                                                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">NO</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!--/ Hoverable Table rows -->
-
                     <!-- / Content -->
-
-
                     <!-- Footer -->
                     <footer class="content-footer footer bg-footer-theme">
                         <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">

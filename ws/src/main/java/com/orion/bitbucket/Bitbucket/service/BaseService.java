@@ -14,8 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.orion.bitbucket.Bitbucket.log.Log;
 import java.sql.*;
-import java.time.Duration;
-import java.time.Instant;
+import java.text.*;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 @Service
@@ -26,7 +27,7 @@ public class BaseService implements BaseServiceIF {
     static ArrayList<PullRequestDO> mergedPRList;
     static ArrayList<PullRequestDO> declinedPRList;
     static ArrayList<PullRequestDO> allPRList;
-
+    public ArrayList<Integer> updateInformation = new ArrayList<Integer>();
     private final boolean IS_BASE_LOGGING = false;
     private final String SQL_INSERT_PULL_REQUEST = "insert into pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final String SQL_INSERT_REVIEW = "insert into review (reviewer_id , display_name, email_address, approved, status) values (?, ?, ?, ?, ?)";
@@ -40,6 +41,7 @@ public class BaseService implements BaseServiceIF {
     private final String SQL_GET_PULL_REQUEST_LAST_DATE_WITH_CREATED_DATE = "select created_date from pullrequest where state = ? order by created_date desc limit 1";
     private final String SQL_GET_PULL_REQUEST_FIND_REVIEW_ID = "select review.id from review inner join pullrequestreviewrelation on review.id = review_id where pull_request_id = ?";
     private final String SQL_GET_PULL_REQUEST_REVIEW_ID_DELETE = "delete from review where id = ?;";
+    private final String SQL_GET_UPDATED_PR_ID = "select * from pullrequest where id = ?";
     public void getData() {
         try{
             if (isPullRequestTableEmpty()) {
@@ -291,7 +293,7 @@ public class BaseService implements BaseServiceIF {
                     if(IS_BASE_LOGGING){Log.logger(Log.LogConstant.TAG_INFO,
                             "Pull Request merged update date " + sqlPackageDateClosed +" ID : "+ pullRequestId);}
                     commonPullRequestDataParser(array.getJSONObject(i));
-
+                    updateInformation.add(pullRequestId);
                     if(lastDayInDatabase.after(sqlPackageDateClosed)){
                         return;}
                     authorUpdate(authorName);
@@ -327,7 +329,7 @@ public class BaseService implements BaseServiceIF {
                     if(IS_BASE_LOGGING){Log.logger(Log.LogConstant.TAG_INFO,
                             "Pull Request open update date " + sqlPackageDateCreated +" ID : "+ pullRequestId);}
                     commonPullRequestDataParser(array.getJSONObject(i));
-
+                    updateInformation.add(pullRequestId);
                     if(lastDayInDatabase.after(sqlPackageDateCreated)){
                         return;}
                     authorUpdate(authorName);
@@ -363,7 +365,7 @@ public class BaseService implements BaseServiceIF {
                     if(IS_BASE_LOGGING){Log.logger(Log.LogConstant.TAG_INFO,
                             "Pull Request declined update date " + sqlPackageDateClosed +" ID : "+ pullRequestId);}
                     commonPullRequestDataParser(array.getJSONObject(i));
-
+                    updateInformation.add(pullRequestId);
                     if(lastDayInDatabase.after(sqlPackageDateClosed)){
                         return;}
                     authorUpdate(authorName);
@@ -502,5 +504,60 @@ public class BaseService implements BaseServiceIF {
     public void authorUpdate(String authorName) throws SQLException{
         AuthorService authorService = new AuthorService();
         authorService.getAuthorUpdateList(authorName);
+    }
+    public ArrayList<Integer> updatePrList(){
+        return updateInformation;
+    }
+    public ArrayList<PullRequestDO> updateInformationDetails(ArrayList<Integer> updatePrList) throws SQLException{
+        ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
+        Connection connection = null;
+        PreparedStatement preparedStmt = null;
+        ResultSet resultSet = null;
+        for(Integer updatePrId:updatePrList){
+        try {
+            connection = TransactionManager.getConnection();
+            preparedStmt = connection.prepareStatement(SQL_GET_UPDATED_PR_ID);
+            preparedStmt.setInt(1, updatePrId);
+            resultSet = preparedStmt.executeQuery();
+            connection.commit();
+            while (resultSet.next()) {
+                int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+                String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
+                String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
+                boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
+                String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
+                String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
+                Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE);
+                Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE);
+                String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
+                String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
+                String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
+
+                Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+                LocalDate localDateCreated = LocalDate.parse(formatter.format(createdDate));
+                LocalDate localDateClosed = LocalDate.parse(formatter.format(closedDate));
+                Long timeSpent = (ChronoUnit.DAYS.between(localDateCreated, localDateClosed) + 1);
+
+                int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
+                String jiraId = null;
+                if (indexOf > -1) {
+                    int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
+                    jiraId = title.substring(starting, starting + 9);
+                } else {
+                    jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
+                }
+                list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, timeSpent));
+            }
+        } catch (Exception exception) {
+            if (IS_BASE_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+            }
+        } finally {
+            resultSet.close();
+            preparedStmt.close();
+            connection.close();
+        }
+        }
+        return list;
     }
 }
