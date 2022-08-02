@@ -182,22 +182,31 @@
                             <div class="card " style="margin:5px 0px;">
                                 <h5 class="card-header">Team Management <a onclick="refreshClick();"><i class='bx bx-refresh'></i></a></h5>
                                 <div class="card-body">
-                                    <ul class="d-flex flex-column p-0 m-0">
-                                        <li class="d-inline-flex mb-4 pb-1">
-                                            <table>
-                                                <tr>
-                                                    <td>
-                                                        <button data-bs-toggle="modal" data-bs-target="#managerModalInsert" class="btn btn-outline-primary">Team Create</button>
-                                                    </td>
-                                                    <td>
-                                                        <button data-bs-toggle="modal" data-bs-target="#managerModalUpdate" class="btn btn-outline-warning">Team - Manager Update</button>
-                                                    </td>
-                                                    <td>
-                                                        <button data-bs-toggle="modal" data-bs-target="#managerModalDelete" class="btn btn-outline-danger">Team Delete</button>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </li>
+                                    <ul class="d-flex justify-content-between p-0 m-0">
+                                        <div class="d-inline-flex">
+                                            <li class="d-inline-flex mb-4 pb-1">
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <button data-bs-toggle="modal" data-bs-target="#managerModalInsert" class="btn btn-outline-primary">Team Create</button>
+                                                        </td>
+                                                        <td>
+                                                            <button data-bs-toggle="modal" data-bs-target="#managerModalUpdate" class="btn btn-outline-warning">Team - Manager Update</button>
+                                                        </td>
+                                                        <td>
+                                                            <button data-bs-toggle="modal" data-bs-target="#managerModalDelete" class="btn btn-outline-danger">Team Delete</button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </li>
+                                        </div>
+                                        <div class="d-inline-flex">
+                                            <h3 class="fw-bold py-3 mb-4">
+                                                Welcome    <span class="text-muted fw-light" th:text="${username}"></span>
+                                                <span> <a onclick="logout()"><i
+                                                        class='bx bx-log-out bx-md'></i></a></span>
+                                            </h3>
+                                        </div>
                                     </ul>
                                 </div>
                             </div>
@@ -540,6 +549,12 @@
 <script>
     function refreshClick() {
       var url = "/administrator";
+      window.location = url;
+    }
+  </script>
+<script>
+    function logout() {
+      var url = "/logout";
       window.location = url;
     }
   </script>

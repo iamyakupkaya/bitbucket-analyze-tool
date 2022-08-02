@@ -5,6 +5,8 @@ import com.orion.bitbucket.Bitbucket.model.UserDO;
 import com.orion.bitbucket.Bitbucket.service.TeamServiceIF;
 import com.orion.bitbucket.Bitbucket.service.UserServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,17 +18,24 @@ import java.util.List;
 
 @Controller
 public class AdminController {
-
     @Autowired
     private UserServiceIF userServiceIF;
-
     @Autowired
     private TeamServiceIF teamServiceIF;
 
     @RequestMapping(value = "/administrator", method = RequestMethod.GET)
-    public String test(Model model) throws UnirestException, SQLException {
+    public String administrator(Model model) throws UnirestException, SQLException {
 
         // userServiceIF.insertUserTable();  // Automatically pulls data from table PullRequest
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = null;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        model.addAttribute("username",username);
 
         List<String> teams = teamServiceIF.getAllTeams();
         model.addAttribute("teams", teams);
@@ -44,7 +53,6 @@ public class AdminController {
 
         return "admin-panel.html";
     }
-
     @RequestMapping(value = "administrator/team/insert", method = RequestMethod.GET)
     public String getTeamInsert(Model model, @RequestParam String teamCode ,@RequestParam String manager) throws UnirestException, SQLException {
         List<String> teams = teamServiceIF.getAllTeams();

@@ -5,6 +5,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import com.orion.bitbucket.Bitbucket.service.*;
+import com.orion.bitbucket.Bitbucket.security.AdministratorServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,9 +46,13 @@ public class PageController {
     @Autowired
     private TeamServiceIF teamServiceIF;
 
+    @Autowired
+    private AdministratorServiceIF administratorServiceIF;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String allTime(Model model) throws UnirestException, SQLException {
-        
+
+        if(administratorServiceIF.checkAdmin()){administratorServiceIF.setAdmin();}
 
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
