@@ -123,21 +123,28 @@ public class DBConstants {
         public static final String USER_EMAIL_ADDRESS = "email_address";
         public static final String USER_TEAM_CODE = "team_code";
         public static final String USER_ROLE = "role";
-        public static final String USER_ROLE_NORMAL = "NORMAL";
+        public static final String USER_ROLE_USER = "USER";
         public static final String USER_ROLE_ADMIN = "ADMIN";
         public static final String USER_ROLE_LEADER = "LEADER";
         public static final String USER_ROLE_ALL = "ALL";
         public static final String USER_COUNTER_MAX_ID = "max";
-        public static final String USERS_TEAM_ALL = "Teams";
+        public static final String USERS_TEAM_ALL = "TEAMS";
         public static final String USER_DEFAULT ="default";
+        public static final String DEFAULT_USERS_TEAM_EMPTY = "";
+        public static final String DEFAULT_USER_PASSWORD = "null";
+
     }
     public static final class Teams {
         public  static final String TEAM_CODE = "team_code";
         public static final String MANAGER = "manager";
+        public static final String DEFAULT_MANAGER = "null";
         public static final String TEAMS_COUNTER_MAX_ID = "max";
     }
     public static final class Administrator {
         public  static final String CHECK_ADMINISTRATOR_USERNAME = "count";
+        public  static final String ADMINISTRATOR_USERNAME = "username";
+        public  static final String ADMINISTRATOR_PASSWORD = "password";
+        public  static final String ADMINISTRATOR_ROLE = "role";
     }
 
 }

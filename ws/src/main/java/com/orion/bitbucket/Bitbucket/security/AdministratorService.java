@@ -15,7 +15,7 @@ public class AdministratorService implements AdministratorServiceIF{
     private final String SQL_SET_ADMIN = "insert into administrator(id,username,password,role) values(?,?,?,?)";
     private final String SQL_GET_ADMINISTRATOR_MAX_COUNTER_ID = "select max(id) from administrator";
     private final String SQL_GET_CHECK_ADMINISTRATOR_USERNAME = "select count(*) from administrator where username = ?";
-
+    private final String SQL_DELETE_AUTHORITY = "delete from administrator where username = ?";
     public boolean checkAdmin() throws SQLException{
         int existUsername = 0;
         Connection connection = null;
@@ -42,6 +42,32 @@ public class AdministratorService implements AdministratorServiceIF{
         }
       return existUsername > 0 ? false : true;
     }
+    public boolean checkAdmin(String username) throws SQLException{
+        int existUsername = 0;
+        Connection connection = null;
+        PreparedStatement preparedStmt = null;
+        ResultSet resultSet = null;
+        try {
+            String checkUsername = null;
+            connection = TransactionManager.getConnection();
+            preparedStmt = connection.prepareStatement(SQL_GET_CHECK_ADMINISTRATOR_USERNAME);
+            preparedStmt.setString(1, username);
+            resultSet = preparedStmt.executeQuery();
+            connection.commit();
+            while (resultSet.next()) {
+                existUsername = resultSet.getInt(DBConstants.Administrator.CHECK_ADMINISTRATOR_USERNAME);
+            }
+        }catch (Exception exception){
+            if (IS_ADMINISTRATOR_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+            }
+        }finally {
+            resultSet.close();
+            preparedStmt.close();
+            connection.close();
+        }
+        return existUsername > 0 ? false : true;
+    }
     public void setAdmin() throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStmt = null;
@@ -52,6 +78,45 @@ public class AdministratorService implements AdministratorServiceIF{
             preparedStmt.setString(2, DEFAULT_ADMIN_USERNAME);
             preparedStmt.setString(3, DEFAULT_ADMIN_PASSWORD);
             preparedStmt.setString(4, DEFAULT_ADMIN_ROLE);
+            int row = preparedStmt.executeUpdate();
+            connection.commit();
+        } catch (Exception exception) {
+            if (IS_ADMINISTRATOR_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+            }
+        } finally {
+            preparedStmt.close();
+            connection.close();
+        }
+    }
+    public void setAdmin(String username, String password, String role) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStmt = null;
+        try {
+            connection = TransactionManager.getConnection();
+            preparedStmt = connection.prepareStatement(SQL_SET_ADMIN);
+            preparedStmt.setLong(1, maxAdminID());
+            preparedStmt.setString(2, username);
+            preparedStmt.setString(3, password);
+            preparedStmt.setString(4, role);
+            int row = preparedStmt.executeUpdate();
+            connection.commit();
+        } catch (Exception exception) {
+            if (IS_ADMINISTRATOR_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+            }
+        } finally {
+            preparedStmt.close();
+            connection.close();
+        }
+    }
+    public void deleteAuthority(String username) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStmt = null;
+        try {
+            connection = TransactionManager.getConnection();
+            preparedStmt = connection.prepareStatement(SQL_DELETE_AUTHORITY);
+            preparedStmt.setString(1, username);
             int row = preparedStmt.executeUpdate();
             connection.commit();
         } catch (Exception exception) {

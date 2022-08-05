@@ -53,6 +53,7 @@ public class PageController {
     public String allTime(Model model) throws UnirestException, SQLException {
 
         if(administratorServiceIF.checkAdmin()){administratorServiceIF.setAdmin();}
+//        userServiceIF.insertUserTable();  // Automatically pulls data from table PullRequest
 
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
@@ -317,7 +318,6 @@ public class PageController {
         model.addAttribute("username",user.getUsername());
         model.addAttribute("firstname",user.getFirstname());
         model.addAttribute("lastname",user.getLastname());
-        model.addAttribute("password",user.getPassword());
         model.addAttribute("email",user.getEmail());
         model.addAttribute("teamCode",user.getTeamCode());
         model.addAttribute("role",user.getRole());
@@ -382,7 +382,7 @@ public class PageController {
             model.addAttribute("totalTeamPR", totalTeamPR);
 
             model.addAttribute("headerTeamCode",teamCode);
-            model.addAttribute("manager", teamServiceIF.getTeamManager(teamCode));
+            model.addAttribute("manager", teamServiceIF.getTeamManagerTitle(teamCode));
 
             ArrayList<UserDO> users = userServiceIF.getAllUserWithTeam(teamCode);
             model.addAttribute("user", new UserDO());

@@ -15,7 +15,7 @@ public class UserService extends BaseService implements UserServiceIF{
     private final String SQL_GET_USER_MAX_COUNTER_ID = "select max(id) from users ";
     private final String SQL_INSERT_USER = "insert into users(id,user_name,first_name,last_name,password,email_address,team_code,role) values (?,?,?,?,?,?,?,?)";
     private final String SQL_DELETE_USER_WITH_USER_NAME =  "delete from users where user_name = ?";
-    private final String SQL_UPDATE_USER_WITH_USER_NAME = "update users set user_name = ?, first_name = ?, last_name = ?, password =?, email_address = ?,team_code =?,  role = ? where user_name =?";
+    private final String SQL_UPDATE_USER_INFORMATION = "update users set first_name = ?, last_name = ?, email_address = ? where user_name =?";
     private final String SQL_ALL_USERS = "select * from users";
     private final String SQL_GET_ALL_USERS_WITH_ROLE = "select * from users where role = ? ";
     private final String SQL_GET_FIRSTNAME_AND_LASTNAME_WITH_USERNAME = "select first_name, last_name from users where user_name = ?";
@@ -257,53 +257,16 @@ public class UserService extends BaseService implements UserServiceIF{
             connection.close();
         }
     }
-
-    public void getPreconditionForUpdate(String username,String firstname,String lastname,
-                                         String password,String email, String teamCode, String role, String oldUsername)throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStmt = null;
-        ResultSet resultSet = null;
-        try {
-            String checkUserName = null;
-            connection = TransactionManager.getConnection();
-            preparedStmt = connection.prepareStatement(SQL_GET_CHECK_SAME_USERNAME);
-            preparedStmt.setString(1, username);
-            resultSet = preparedStmt.executeQuery();
-            connection.commit();
-            while (resultSet.next()) {
-                String userName = resultSet.getString(DBConstants.User.USER_NAME);
-                checkUserName = userName;
-            }
-            if (username.equals(checkUserName)) {
-                Log.logger(Log.LogConstant.TAG_WARN, "has same username");
-            } else {
-                getUpdateUserWithUserName(username, firstname, lastname, password, email, teamCode, role, oldUsername);
-            }
-        } catch (Exception exception) {
-            if (IS_USER_LOGGING) {
-                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
-            }
-        } finally {
-            resultSet.close();
-            preparedStmt.close();
-            connection.close();
-        }
-    }
-    public void getUpdateUserWithUserName(String username,String firstname,String lastname,
-                              String password,String email, String teamCode, String role, String oldUsername) throws SQLException {
+    public void getUpdateUserInformation(String firstname,String lastname, String email, String username) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStmt = null;
         try {
             connection = TransactionManager.getConnection();
-            preparedStmt = connection.prepareStatement(SQL_UPDATE_USER_WITH_USER_NAME);
-            preparedStmt.setString(1, username);
-            preparedStmt.setString(2, firstname);
-            preparedStmt.setString(3, lastname);
-            preparedStmt.setString(4, password);
-            preparedStmt.setString(5, email);
-            preparedStmt.setString(6, teamCode);
-            preparedStmt.setString(7, role);
-            preparedStmt.setString(8, oldUsername);
+            preparedStmt = connection.prepareStatement(SQL_UPDATE_USER_INFORMATION);
+            preparedStmt.setString(1, firstname);
+            preparedStmt.setString(2, lastname);
+            preparedStmt.setString(3, email);
+            preparedStmt.setString(4, username);
             preparedStmt.executeUpdate();
             connection.commit();
         } catch (Exception exception) {
@@ -457,8 +420,8 @@ public class UserService extends BaseService implements UserServiceIF{
                     firstname = displayName;
                     lastname = "";
                 }
-                getCollectUserInformation(slug,firstname,lastname,DBConstants.User.USER_DEFAULT,email,
-                        DBConstants.User.USER_DEFAULT,DBConstants.User.USER_ROLE_NORMAL);
+                getCollectUserInformation(slug,firstname,lastname,DBConstants.User.DEFAULT_USER_PASSWORD,email,
+                        DBConstants.User.DEFAULT_USERS_TEAM_EMPTY,DBConstants.User.USER_ROLE_USER);
             }
         }catch (Exception exception){
             if (IS_USER_LOGGING){Log.logger(Log.LogConstant.TAG_WARN,String.valueOf(exception));}
@@ -470,9 +433,8 @@ public class UserService extends BaseService implements UserServiceIF{
     }
     public List<String> getRoles() throws SQLException{
         List<String> roles = new ArrayList<String>();
-        roles.add(DBConstants.User.USER_ROLE_ADMIN);
         roles.add(DBConstants.User.USER_ROLE_LEADER);
-        roles.add(DBConstants.User.USER_ROLE_NORMAL);
+        roles.add(DBConstants.User.USER_ROLE_USER);
         return roles;
     }
 }

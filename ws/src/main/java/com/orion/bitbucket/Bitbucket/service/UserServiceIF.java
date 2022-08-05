@@ -13,14 +13,11 @@ public interface UserServiceIF {
     ArrayList<String> getUserFirstAndLastName(String username)throws SQLException;
     UserDO getUserInformation(String username)throws SQLException;
     void getDeleteUserWithUserName(String username)throws SQLException;
-    void getUpdateUserWithUserName(String userName,String firstName,String lastName,
-                       String password,String email, String teamCode, String role, String oldUsername) throws SQLException;
     int getUserCountTotalPR(String username)throws SQLException;
     int getUserCountReview(String name)throws SQLException;
     void insertUser(int id,String userName,String firstName,String lastName,
                     String password,String email, String teamCode, String role) throws SQLException;
-    void getPreconditionForUpdate(String username,String firstname,String lastname,
-                                  String password,String email, String teamCode, String role, String oldUsername)throws SQLException;
+    public void getUpdateUserInformation(String firstname,String lastname, String email, String username) throws SQLException;
     ArrayList<UserDO> getAllUserWithRoleAndTeam(String Role,String TeamCode) throws SQLException;
     ArrayList<UserDO> getAllUserWithTeam(String TeamCode) throws SQLException;
     public void insertUserTable() throws SQLException;
