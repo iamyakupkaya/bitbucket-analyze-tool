@@ -55,8 +55,8 @@ public class AdminController {
         ArrayList<String> leaders = teamServiceIF.getAllUserWithRole(true);
         model.addAttribute("leaders",leaders);
 
-        ArrayList<String> users = teamServiceIF.getAllUserWithRole(false);
-        model.addAttribute("users",users);
+        ArrayList<String> usersAssign = teamServiceIF.getAllUserWithRole(false);
+        model.addAttribute("usersAssign",usersAssign);
 
 
         List<String> rolesFilter = userServiceIF.getRoles();
@@ -92,7 +92,7 @@ public class AdminController {
         model.addAttribute("leaders",leaders);
 
         ArrayList<String> usersAssign = teamServiceIF.getAllUserWithRole(false);
-        model.addAttribute("users",usersAssign);
+        model.addAttribute("usersAssign",usersAssign);
 
         List<String> rolesFilter = userServiceIF.getRoles();
         rolesFilter.add(0,DBConstants.User.USER_ROLE_ALL);
@@ -130,17 +130,38 @@ public class AdminController {
         }else{
             for(String team:teams){
                 if(teamCode.contains(team)){
-                    return "admin-panel.html";
+                    return "redirect:/administrator";
                 }
             }
             teamServiceIF.insertTeams(teamCode);
         }
-        return "admin-panel.html";
+        return "redirect:/administrator";
+    }
+    @RequestMapping(value = "administrator/administrator/team/insert", method = RequestMethod.GET)
+    public String getTeamInsertFilter(Model model, @RequestParam String teamCode) throws SQLException {
+        List<String> teams = teamServiceIF.getAllTeams();
+        model.addAttribute("teams", teams);
+        if(teams.size() == 0){
+            teamServiceIF.insertTeams(teamCode);
+        }else{
+            for(String team:teams){
+                if(teamCode.contains(team)){
+                    return "redirect:/administrator";
+                }
+            }
+            teamServiceIF.insertTeams(teamCode);
+        }
+        return "redirect:/administrator";
     }
     @RequestMapping(value = "administrator/team/delete", method = RequestMethod.GET)
     public String getTeamDelete(Model model, @RequestParam String teamCode) throws SQLException {
         teamServiceIF.deleteTeam(teamCode);
-        return "admin-panel.html";
+        return "redirect:/administrator";
+    }
+    @RequestMapping(value = "administrator/administrator/team/delete", method = RequestMethod.GET)
+    public String getTeamDeleteFilter(Model model, @RequestParam String teamCode) throws SQLException {
+        teamServiceIF.deleteTeam(teamCode);
+        return "redirect:/administrator";
     }
     @RequestMapping(value = "administrator/user/add/", method = RequestMethod.GET)
     public String addUser(Model model, @RequestParam String username,@RequestParam String firstname,
@@ -149,19 +170,28 @@ public class AdminController {
         String teamCode = DBConstants.User.DEFAULT_USERS_TEAM_EMPTY;
         String password = DBConstants.User.DEFAULT_USER_PASSWORD;
         userServiceIF.getCollectUserInformation(username,firstname,lastname,password,email,teamCode,role);
-        return "admin-panel.html";
+        return "redirect:/administrator";
+    }
+    @RequestMapping(value = "administrator/administrator/user/add/", method = RequestMethod.GET)
+    public String addUserFilter(Model model, @RequestParam String username,@RequestParam String firstname,
+                          @RequestParam String lastname, @RequestParam String email) throws  SQLException{
+        String role = DBConstants.User.USER_ROLE_USER;
+        String teamCode = DBConstants.User.DEFAULT_USERS_TEAM_EMPTY;
+        String password = DBConstants.User.DEFAULT_USER_PASSWORD;
+        userServiceIF.getCollectUserInformation(username,firstname,lastname,password,email,teamCode,role);
+        return "redirect:/administrator";
     }
     @RequestMapping(value = "/administrator/user/setTeam/", method = RequestMethod.GET)
     public String setTeamUser(Model model,@RequestParam String username,@RequestParam String teamCode) throws  SQLException{
         teamServiceIF.setDefaultAuthority(username);
         teamServiceIF.updateTeamMembersWithUsername(username,teamCode);
-        return "admin-panel.html";
+        return "redirect:/administrator";
     }
     @RequestMapping(value = "administrator/administrator/user/setTeam/", method = RequestMethod.GET)
     public String setTeamUserFilter(Model model,@RequestParam String username,@RequestParam String teamCode) throws  SQLException{
         teamServiceIF.setDefaultAuthority(username);
         teamServiceIF.updateTeamMembersWithUsername(username,teamCode);
-        return "admin-panel.html";
+        return "redirect:/administrator";
     }
     public void teamCodePage(Model model, String teamCode) throws SQLException{
         ArrayList<UserDO> teamMembers = teamServiceIF.getTeamUsers(teamCode);
@@ -199,19 +229,31 @@ public class AdminController {
     public String setTeamUserRole(Model model, @PathVariable(name = "teamCode", required = false) String teamCode,@RequestParam String role,@RequestParam String username) throws  SQLException{
         teamCodePage(model,teamCode);
         teamServiceIF.getTeamRoleAssign(teamCode,username,role);
-        return "admin-team.html";
+        return "redirect:/administrator/team/{teamCode}/";
     }
     @RequestMapping(value = "administrator/setAssign", method = RequestMethod.GET)
     public String setAssign(Model model, @RequestParam String username) throws  SQLException{
         teamServiceIF.getUserRoleLeader(username,true);
         if(administratorServiceIF.checkAdmin(username)){teamServiceIF.setAuthorityLeader(username);}
-        return "admin-panel.html";
+        return "redirect:/administrator";
+    }
+    @RequestMapping(value = "administrator/administrator/setAssign", method = RequestMethod.GET)
+    public String setAssignFilter(Model model, @RequestParam String username) throws  SQLException{
+        teamServiceIF.getUserRoleLeader(username,true);
+        if(administratorServiceIF.checkAdmin(username)){teamServiceIF.setAuthorityLeader(username);}
+        return "redirect:/administrator";
     }
     @RequestMapping(value = "administrator/undoAssign", method = RequestMethod.GET)
     public String undoAssign(Model model, @RequestParam String username) throws  SQLException{
         teamServiceIF.getUserRoleLeader(username,false);
         teamServiceIF.setDefaultAuthority(username);
-        return "admin-panel.html";
+        return "redirect:/administrator";
+    }
+    @RequestMapping(value = "administrator/administrator/undoAssign", method = RequestMethod.GET)
+    public String undoAssignFilter(Model model, @RequestParam String username) throws  SQLException{
+        teamServiceIF.getUserRoleLeader(username,false);
+        teamServiceIF.setDefaultAuthority(username);
+        return "redirect:/administrator";
     }
     @RequestMapping(value = "administrator/user/{username}", method = RequestMethod.GET)
     public String showUserDetailsAdmin(Model model, @PathVariable(name = "username", required = false) String username) throws UnirestException, SQLException {
@@ -239,16 +281,42 @@ public class AdminController {
 
         return "admin-user-details.html";
     }
+    @RequestMapping(value = "administrator/administrator/user/{username}", method = RequestMethod.GET)
+    public String showUserDetailsAdminFilter(Model model, @PathVariable(name = "username", required = false) String username) throws UnirestException, SQLException {
+        ArrayList<String> list = userServiceIF.getUserFirstAndLastName(username);
+        String headerName = list.get(1) +"  "+list.get(0);
+        model.addAttribute("headerName",headerName);
+
+        UserDO user  = userServiceIF.getUserInformation(username);
+        model.addAttribute("username",user.getUsername());
+        model.addAttribute("firstname",user.getFirstname());
+        model.addAttribute("lastname",user.getLastname());
+        model.addAttribute("email",user.getEmail());
+        model.addAttribute("teamCode",user.getTeamCode());
+        model.addAttribute("role",user.getRole());
+
+        String combineName = user.getLastname()+", "+user.getFirstname();
+
+        int totalPR = userServiceIF.getUserCountTotalPR(user.getUsername());
+        model.addAttribute("authorName",combineName);
+        model.addAttribute("totalPullRequest",totalPR);
+
+        int totalReview = userServiceIF.getUserCountReview(combineName);
+        model.addAttribute("reviewerName",combineName);
+        model.addAttribute("totalReview",totalReview);
+
+        return "redirect:/administrator/user/{username}";
+    }
     @RequestMapping(value = "administrator/user/edit", method = RequestMethod.GET)
-    public String editUser(Model model, @RequestParam String username,@RequestParam String firstname,
+    public String editUser(@RequestParam String username,@RequestParam String firstname,
                            @RequestParam String lastname, @RequestParam String email) throws UnirestException, SQLException{
         userServiceIF.getUpdateUserInformation(firstname,lastname,email,username);
-        return "admin-user-details.html";
+        return "redirect:/administrator/user/" + username;
     }
     @RequestMapping(value = "administrator/user/delete", method = RequestMethod.GET)
     public String deleteUser(Model model, @RequestParam String username) throws UnirestException, SQLException {
         administratorServiceIF.deleteAuthority(username);
         userServiceIF.getDeleteUserWithUserName(username);
-        return "admin-panel.html";
+        return "redirect:/administrator";
     }
 }
