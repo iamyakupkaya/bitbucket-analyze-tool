@@ -330,14 +330,19 @@ public class PageController {
         model.addAttribute("teamCode",user.getTeamCode());
         model.addAttribute("role",user.getRole());
 
-           String combineName = user.getLastname()+", "+user.getFirstname();
+        String mergeName = null;
+        if (user.getLastname().length() > 0) {
+            mergeName = user.getLastname() + ", " + user.getFirstname();
+        }else{
+            mergeName = user.getFirstname();
+        }
 
            int totalPR = userServiceIF.getUserCountTotalPR(user.getUsername());
-           model.addAttribute("authorName",combineName);
+           model.addAttribute("authorName",mergeName);
            model.addAttribute("totalPullRequest",totalPR);
 
-           int totalReview = userServiceIF.getUserCountReview(combineName);
-           model.addAttribute("reviewerName",combineName);
+           int totalReview = userServiceIF.getUserCountReview(mergeName);
+           model.addAttribute("reviewerName",mergeName);
            model.addAttribute("totalReview",totalReview);
 
         return "user-details.html";
