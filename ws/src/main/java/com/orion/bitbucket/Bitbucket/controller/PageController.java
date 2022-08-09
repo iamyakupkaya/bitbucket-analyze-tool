@@ -49,12 +49,16 @@ public class PageController {
     @Autowired
     private AdministratorServiceIF administratorServiceIF;
 
+    public void htmlTeamList(Model model) throws SQLException{
+        List<String> htmlTeamList = teamServiceIF.getAllTeams();
+        model.addAttribute("htmlTeamList", htmlTeamList);
+    }
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String allTime(Model model) throws UnirestException, SQLException {
 
         if(administratorServiceIF.checkAdmin()){administratorServiceIF.setAdmin();}
 //        userServiceIF.insertUserTable();  // Automatically pulls data from table PullRequest
-
+        htmlTeamList(model);
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
 
@@ -89,7 +93,7 @@ public class PageController {
 
     @RequestMapping(value = "/filter/{date}", method = RequestMethod.GET)
     public String filteringWithDateIndexPage(Model model, @PathVariable(name = "date", required = false) int date) throws UnirestException, SQLException {
-
+        htmlTeamList(model);
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
 
@@ -137,15 +141,15 @@ public class PageController {
 
     @RequestMapping(value = "/pull-requests", method = RequestMethod.GET)
     public String getPullRequestsPage(Model model) throws UnirestException, SQLException {
+        htmlTeamList(model);
         ArrayList<AuthorDO> authors = authorServiceIF.getAllAuthors();
-
         model.addAttribute("author", new AuthorDO());
         model.addAttribute("authors", authors);
         return "pull-requests.html";
     }
     @RequestMapping(value = "/pull-requests/filter/")
     public String showPullRequestsPage(Model model,@RequestParam String startDate,@RequestParam String endDate )throws UnirestException, SQLException{
-
+        htmlTeamList(model);
         try {
             ArrayList<AuthorDO> authors = authorServiceIF.getAllAuthorsUpdateWithFilter(startDate,endDate);
 
@@ -163,14 +167,15 @@ public class PageController {
     }
     @RequestMapping(value = "/reviewer", method = RequestMethod.GET)
     public String getReviewPage(Model model) throws UnirestException, SQLException {
+        htmlTeamList(model);
         ArrayList<ReviewerDO> reviewers = reviewerServiceIF.getAllReviewers();
-        
         model.addAttribute("reviewer", new ReviewerDO());
         model.addAttribute("reviewers", reviewers);
         return "reviewer.html";
     }
     @RequestMapping(value = "/pull-requests/author/{name}")
     public String showAuthorDetails(Model model, @PathVariable(name = "name", required = false) String name) throws UnirestException, SQLException {
+        htmlTeamList(model);
         ArrayList<AuthorDO> authorDO = authorServiceIF.getCountPRStatesByUsername(name);
         model.addAttribute("author", new AuthorDO());
         model.addAttribute("getCountOfPrStates", authorDO);
@@ -211,6 +216,7 @@ public class PageController {
 
     @RequestMapping(value = "/reviewer/{name}")
     public String showReviewerDetails(Model model, @PathVariable(name = "name", required = false) String name) throws UnirestException, SQLException {
+        htmlTeamList(model);
         ArrayList<ReviewerDO> reviewerDO = reviewerServiceIF.getCountReviewStatesByUsername(name);
         model.addAttribute("reviewer", new ReviewerDO());
         model.addAttribute("getCount", reviewerDO);
@@ -241,6 +247,7 @@ public class PageController {
 
     @RequestMapping(value = "/pull-requests/{id}")
     public String showPullRequestDetails(Model model, @PathVariable(name = "id", required = false) int id) throws UnirestException, SQLException {
+        htmlTeamList(model);
         PullRequestDO getPullRequest = pullRequestServiceIF.getPullRequestById(id);
         model.addAttribute("prId", getPullRequest.getPrId());
         model.addAttribute("title", getPullRequest.getTitle());
@@ -263,7 +270,7 @@ public class PageController {
     }
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public String getUser(Model model) throws UnirestException, SQLException {
-
+        htmlTeamList(model);
         List<String> roles = userServiceIF.getRoles();
         roles.add(0,DBConstants.User.USER_ROLE_ALL);
         model.addAttribute("roles", roles);
@@ -279,7 +286,7 @@ public class PageController {
     }
     @RequestMapping(value = "/users/", method = RequestMethod.GET)
     public String getUserAll(Model model,@RequestParam String role, @RequestParam String team) throws UnirestException, SQLException {
-
+        htmlTeamList(model);
         List<String> roles = userServiceIF.getRoles();
         roles.add(0,DBConstants.User.USER_ROLE_ALL);
         model.addAttribute("roles", roles);
@@ -310,6 +317,7 @@ public class PageController {
 
     @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
     public String showUserDetails(Model model, @PathVariable(name = "username", required = false) String username) throws UnirestException, SQLException {
+        htmlTeamList(model);
         ArrayList<String> list = userServiceIF.getUserFirstAndLastName(username);
         String headerName = list.get(1) +"  "+list.get(0);
         model.addAttribute("headerName",headerName);
@@ -335,9 +343,9 @@ public class PageController {
         return "user-details.html";
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    @RequestMapping(value = "/administrator/update", method = RequestMethod.GET)
     public String update(Model model) throws UnirestException, SQLException {
-
+        htmlTeamList(model);
           baseService.updatePullRequest();
 
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
@@ -364,7 +372,7 @@ public class PageController {
     }
     @RequestMapping(value = "/team/{teamCode}", method = RequestMethod.GET)
     public String test(Model model, @PathVariable(name = "teamCode", required = false) String teamCode) throws UnirestException, SQLException {
-
+        htmlTeamList(model);
         ArrayList<UserDO> teamMembers = teamServiceIF.getTeamUsers(teamCode);
         ArrayList<String> namesList = null;
         ArrayList<AuthorDO> teamUsersStatistics = null;

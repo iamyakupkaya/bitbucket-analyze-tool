@@ -29,9 +29,14 @@ public class AdminController {
     @Autowired
     private AdministratorServiceIF administratorServiceIF;
 
+    public void htmlTeamList(Model model) throws SQLException{
+        List<String> htmlTeamList = teamServiceIF.getAllTeams();
+        model.addAttribute("htmlTeamList", htmlTeamList);
+    }
+
     @RequestMapping(value = "/administrator", method = RequestMethod.GET)
     public String administrator(Model model) throws UnirestException, SQLException {
-
+        htmlTeamList(model);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String loginName = null;
         if (principal instanceof UserDetails) {
@@ -71,7 +76,7 @@ public class AdminController {
     }
     @RequestMapping(value = "administrator/", method = RequestMethod.GET)
     public String getAllUser(Model model,@RequestParam String role, @RequestParam String team) throws UnirestException, SQLException {
-
+        htmlTeamList(model);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String loginName = null;
         if (principal instanceof UserDetails) {
@@ -222,7 +227,8 @@ public class AdminController {
     }
     @RequestMapping(value = "administrator/team/{teamCode}")
     public String setTeamUserRole(Model model, @PathVariable(name = "teamCode", required = false) String teamCode) throws UnirestException,SQLException{
-          teamCodePage(model,teamCode);
+        htmlTeamList(model);
+        teamCodePage(model,teamCode);
         return "admin-team.html";
     }
     @RequestMapping(value = "administrator/team/{teamCode}/setRole", method = RequestMethod.GET)
@@ -257,6 +263,7 @@ public class AdminController {
     }
     @RequestMapping(value = "administrator/user/{username}", method = RequestMethod.GET)
     public String showUserDetailsAdmin(Model model, @PathVariable(name = "username", required = false) String username) throws UnirestException, SQLException {
+        htmlTeamList(model);
         ArrayList<String> list = userServiceIF.getUserFirstAndLastName(username);
         String headerName = list.get(1) +"  "+list.get(0);
         model.addAttribute("headerName",headerName);
