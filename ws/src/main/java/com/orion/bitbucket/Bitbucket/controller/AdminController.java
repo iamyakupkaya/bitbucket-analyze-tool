@@ -203,10 +203,15 @@ public class AdminController {
         ArrayList<String> namesList = null;
         ArrayList<AuthorDO> teamUsersStatistics = null;
         namesList = new ArrayList<String>();
-
+        String name = null;
         for (int i = 0; i<teamMembers.size(); i++){
-            String name = teamMembers.get(i).getLastname() +", " +teamMembers.get(i).getFirstname();
-            namesList.add(name);
+            if (teamMembers.get(i).getLastname().length() > 0) {
+                name = teamMembers.get(i).getLastname() +", " +teamMembers.get(i).getFirstname();
+                namesList.add(name);
+            }else{
+                name = teamMembers.get(i).getFirstname();
+                namesList.add(name);
+            }
         }
         teamUsersStatistics = teamServiceIF.getTeamUsersStatistics(namesList);
         model.addAttribute("teamUsersStatistic",new AuthorDO());

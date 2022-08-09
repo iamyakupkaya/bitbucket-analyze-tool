@@ -376,16 +376,23 @@ public class PageController {
         return "index.html";
     }
     @RequestMapping(value = "/team/{teamCode}", method = RequestMethod.GET)
-    public String test(Model model, @PathVariable(name = "teamCode", required = false) String teamCode) throws UnirestException, SQLException {
+    public String teamCodePage(Model model, @PathVariable(name = "teamCode", required = false) String teamCode) throws UnirestException, SQLException {
         htmlTeamList(model);
         ArrayList<UserDO> teamMembers = teamServiceIF.getTeamUsers(teamCode);
         ArrayList<String> namesList = null;
         ArrayList<AuthorDO> teamUsersStatistics = null;
         namesList = new ArrayList<String>();
 
+        String name = null;
         for (int i = 0; i<teamMembers.size(); i++){
-            String name = teamMembers.get(i).getLastname() +", " +teamMembers.get(i).getFirstname();
-            namesList.add(name);
+
+            if (teamMembers.get(i).getLastname().length() > 0) {
+                name = teamMembers.get(i).getLastname() +", " +teamMembers.get(i).getFirstname();
+                namesList.add(name);
+            }else{
+                name = teamMembers.get(i).getFirstname();
+                namesList.add(name);
+            }
         }
             teamUsersStatistics = teamServiceIF.getTeamUsersStatistics(namesList);
             model.addAttribute("teamUsersStatistic",new AuthorDO());
