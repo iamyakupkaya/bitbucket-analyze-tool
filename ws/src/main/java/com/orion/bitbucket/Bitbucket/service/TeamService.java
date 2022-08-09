@@ -275,6 +275,7 @@ public class TeamService extends BaseService implements TeamServiceIF{
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
+        getTeamsTotalPR = 0;
         ArrayList<Integer> totalPR = null;
         totalPR = new ArrayList<>();
         for(String Name:names) {
