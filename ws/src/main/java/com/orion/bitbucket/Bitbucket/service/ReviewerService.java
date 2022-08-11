@@ -162,9 +162,11 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
     }
 
     public void insertReviewerData(String reviewer) throws SQLException {
-        int totalReview = reviewServiceIF.getReviewsByUsername(reviewer).size();
+      //  int totalReview = reviewServiceIF.getReviewsByUsername(reviewer).size(); // FATAL: sorry, too many clients already
         int totalApproved = getCountReviewByStatusAndUsername(DBConstants.Review.REVIEW_STATUS_APPROVED, reviewer);
         int totalUnApproved = getCountReviewByStatusAndUsername(DBConstants.Review.REVIEW_STATUS_UNAPPROVED, reviewer);
+        int totalReview = totalApproved + totalUnApproved;
+
         Connection connection = null;
         PreparedStatement preparedStmt = null;
         try {
@@ -182,6 +184,7 @@ public class ReviewerService extends BaseService implements ReviewerServiceIF {
             if (IS_REVIEWER_LOGGING) {
                 Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
         } finally {
+            preparedStmt.close();
             connection.close();
         }
     }

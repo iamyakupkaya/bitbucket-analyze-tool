@@ -55,9 +55,6 @@ public class PageController {
     }
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String allTime(Model model) throws UnirestException, SQLException {
-
-        if(administratorServiceIF.checkAdmin()){administratorServiceIF.setAdmin();}
-//        userServiceIF.insertUserTable();  // Automatically pulls data from table PullRequest
         htmlTeamList(model);
         model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
         model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
@@ -136,6 +133,8 @@ public class PageController {
         baseService.getData();
         authorServiceIF.getAllAuthor();
         reviewerServiceIF.getAllReviewer();
+        if(administratorServiceIF.checkAdmin()){administratorServiceIF.setAdmin();}
+        userServiceIF.insertUserTable();  // Automatically pulls data from table PullRequest
         return "fill-data.html";
     }
 
@@ -351,29 +350,13 @@ public class PageController {
     @RequestMapping(value = "/administrator/update", method = RequestMethod.GET)
     public String update(Model model) throws UnirestException, SQLException {
         htmlTeamList(model);
-          baseService.updatePullRequest();
-
-        model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
-        model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
-        model.addAttribute("reviewerCount", reviewerServiceIF.getAllReviewerCount());
-        model.addAttribute("reviewCount", reviewServiceIF.getTotalReviewCount());
-        AuthorDO.TopAuthor topAuthor = authorServiceIF.getTopAuthor();
-        model.addAttribute("topAuthorDisplayName", topAuthor.getName());
-        model.addAttribute("topAuthorPRsCount", topAuthor.getTotal());
-        ReviewerDO.TopReviewer topReviewer = reviewerServiceIF.getTopReviewer();
-        model.addAttribute("topReviewerDisplayName", topReviewer.getName());
-        model.addAttribute("topReviewerCount",topReviewer.getTotal());
-        AuthorDO.TopAuthor topAuthorMerge = authorServiceIF.getTopAuthorAtMerged();
-        model.addAttribute("topAuthorMerge", topAuthorMerge.getName());
-        model.addAttribute("topAuthorMergePRsCount", topAuthorMerge.getTotal());
-
-
+        baseService.updatePullRequest();
         ArrayList<PullRequestDO> updateList = baseService.updateInformationDetails(baseService.updatePrList());
         baseService.updatePrList().clear();
         model.addAttribute("update", new PullRequestDO());
         model.addAttribute("updateList", updateList);
 
-        return "index.html";
+        return "redirect:/";
     }
     @RequestMapping(value = "/team/{teamCode}", method = RequestMethod.GET)
     public String teamCodePage(Model model, @PathVariable(name = "teamCode", required = false) String teamCode) throws UnirestException, SQLException {

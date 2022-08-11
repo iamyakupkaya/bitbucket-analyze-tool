@@ -42,6 +42,8 @@ public class BaseService implements BaseServiceIF {
     private final String SQL_GET_PULL_REQUEST_FIND_REVIEW_ID = "select review.id from review inner join pullrequestreviewrelation on review.id = review_id where pull_request_id = ?";
     private final String SQL_GET_PULL_REQUEST_REVIEW_ID_DELETE = "delete from review where id = ?;";
     private final String SQL_GET_UPDATED_PR_ID = "select * from pullrequest where id = ?";
+    private final String SQL_GET_CHECK_AUTHOR = "select count(*) from author where name = ?";
+    private final String SQL_TRUNCATE_REVIEWER_TABLE = "truncate table reviewer";
     public void getData() {
         try{
             if (isPullRequestTableEmpty()) {
@@ -264,12 +266,19 @@ public class BaseService implements BaseServiceIF {
     public void commonBranchDataParser(JSONObject object) {
     }
     public void updatePullRequest(){
+        ReviewerService reviewerService = new ReviewerService();
         getUpdateMergedPullRequestData();
-        getUpdateOpenPullRequestDate();
-        getUpdateDeclinedPullRequestDate();
+        getUpdateOpenPullRequestData();
+        getUpdateDeclinedPullRequestData();
+        try {
+            truncateReviewerTable();
+            reviewerService.getAllReviewer();
+        }catch (Exception exception){
+            if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
+        }
     }
     public void getUpdateMergedPullRequestData() throws  JSONException{
-
+        AuthorService authorService = new AuthorService();
         int start = 0;
         boolean isLastPage = false;
         try{
@@ -296,7 +305,11 @@ public class BaseService implements BaseServiceIF {
                     updateInformation.add(pullRequestId);
                     if(lastDayInDatabase.after(sqlPackageDateClosed)){
                         return;}
-                    authorUpdate(authorName);
+
+                    if(checkAuthorName(authorName)){
+                        authorService.insertAuthorData(authorName);
+                    }else{ authorUpdate(authorName);}
+
                 }
                 isLastPage = (boolean) body.get("isLastPage");
                 start += 1;
@@ -305,7 +318,8 @@ public class BaseService implements BaseServiceIF {
             if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
         }
     }
-    public void getUpdateOpenPullRequestDate() throws  JSONException{
+    public void getUpdateOpenPullRequestData() throws  JSONException{
+        AuthorService authorService = new AuthorService();
         int start = 0;
         boolean isLastPage = false;
         try{
@@ -332,7 +346,11 @@ public class BaseService implements BaseServiceIF {
                     updateInformation.add(pullRequestId);
                     if(lastDayInDatabase.after(sqlPackageDateCreated)){
                         return;}
-                    authorUpdate(authorName);
+
+                    if(checkAuthorName(authorName)){
+                        authorService.insertAuthorData(authorName);
+                    }else{ authorUpdate(authorName);}
+
                 }
                 isLastPage = (boolean) body.get("isLastPage");
                 start += 1;
@@ -341,7 +359,8 @@ public class BaseService implements BaseServiceIF {
             if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
         }
     }
-    public void getUpdateDeclinedPullRequestDate() throws  JSONException{
+    public void getUpdateDeclinedPullRequestData() throws  JSONException{
+        AuthorService authorService = new AuthorService();
         int start = 0;
         boolean isLastPage = false;
         try{
@@ -368,7 +387,11 @@ public class BaseService implements BaseServiceIF {
                     updateInformation.add(pullRequestId);
                     if(lastDayInDatabase.after(sqlPackageDateClosed)){
                         return;}
-                    authorUpdate(authorName);
+
+                    if(checkAuthorName(authorName)){
+                        authorService.insertAuthorData(authorName);
+                    }else{ authorUpdate(authorName);}
+
                 }
                 isLastPage = (boolean) body.get("isLastPage");
                 start += 1;
@@ -560,4 +583,46 @@ public class BaseService implements BaseServiceIF {
         }
         return list;
     }
+    public boolean checkAuthorName(String authorName) throws SQLException{
+        int existAuthorName = 0;
+        Connection connection = null;
+        PreparedStatement preparedStmt = null;
+        ResultSet resultSet = null;
+        try {
+            String checkUsername = null;
+            connection = TransactionManager.getConnection();
+            preparedStmt = connection.prepareStatement(SQL_GET_CHECK_AUTHOR);
+            preparedStmt.setString(1, authorName);
+            resultSet = preparedStmt.executeQuery();
+            connection.commit();
+            while (resultSet.next()) {
+                existAuthorName = resultSet.getInt(DBConstants.Administrator.CHECK_ADMINISTRATOR_USERNAME);
+            }
+        }catch (Exception exception){
+            if (IS_BASE_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+            }
+        }finally {
+            resultSet.close();
+            preparedStmt.close();
+            connection.close();
+        }
+        return existAuthorName > 0 ? false : true;
+    }
+    public void truncateReviewerTable()throws SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            connection = TransactionManager.getConnection();
+            statement = connection.createStatement();
+            statement.executeUpdate(SQL_TRUNCATE_REVIEWER_TABLE);
+            connection.commit();
+        } catch (Exception exception) {
+            if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
+        } finally {
+            statement.close();
+            connection.close();
+        }
+    }
+
 }

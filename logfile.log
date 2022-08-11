@@ -1,1 +1,6 @@
-
+2022-08-09 17:45:15,478 INFO  [Log] BaseService.getData():52 : Instant started
+2022-08-09 17:47:38,493 INFO  [Log] BaseService.getData():54 : Success EndPoints.Open_PRS 
+2022-08-09 17:50:45,458 INFO  [Log] BaseService.getData():56 : Success EndPoints.Declined_PRS 
+2022-08-09 19:03:40,173 INFO  [Log] BaseService.getData():58 : Success EndPoints.Merged_PRS 
+2022-08-09 19:03:40,174 INFO  [Log] BaseService.getData():60 : Instant finished 
+2022-08-09 19:03:40,179 INFO  [Log] BaseService.getData():62 : timeElapsed  : 4704
