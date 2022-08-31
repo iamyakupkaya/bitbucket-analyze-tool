@@ -175,6 +175,16 @@
                       <h6 class="mb-0" th:text="${totalTeamPR}"></h6>
                     </div>
                   </div>
+                  <div class="avatar flex-shrink-0 me-3">
+                                       <span class="avatar-initial rounded bg-label-info"><i
+                                               class='bx bx-stats'></i></span>
+                  </div>
+                  <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                    <div class="me-2">
+                      <small class="text-muted d-block mb-1">Total Reviewer</small>
+                      <h6 class="mb-0" th:text="${totalReviewer}"></h6>
+                    </div>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -220,6 +230,12 @@
                           data-bs-target="#navs-pills-justified-profile"
                           aria-controls="navs-pills-justified-profile" aria-selected="false"><i
                           class="tf-icons bx bx-window-open"></i> Pull Request Analyze</button>
+                </li>
+                <li class="nav-item">
+                  <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                          data-bs-target="#navs-pills-justified-messages"
+                          aria-controls="navs-pills-justified-messages" aria-selected="false"><i
+                          class="tf-icons bx bx-window-open"></i> Reviewer Statistics</button>
                 </li>
               </ul>
               <div class="tab-content">
@@ -302,6 +318,42 @@
                           </td>
                           <td>
                             <strong th:text="${teamUsersStatistic.totalDeclinedPRs}"></strong>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade " id="navs-pills-justified-messages" role="tabpanel">
+                  <div class="card">
+                    <h5 class="card-header">Reviewer Statistics</h5>
+                    <div class="table-responsive text-nowrap">
+                      <table class="table table-hover" id="reviewerTable">
+                        <thead>
+                        <tr>
+                          <th>Members</th>
+                          <th>Total</th>
+                          <th>Approve</th>
+                          <th>No Action</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                        <tr th:each="teamReviewerStatistic : ${teamReviewerStatistics}">
+                          <td>
+                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                              <a th:href="@{'/reviewer/'+${teamReviewerStatistic.name}}" target="_blank"><strong
+                                      th:text="${teamReviewerStatistic.name}"></strong></a>
+                            </ul>
+                          </td>
+                          <td>
+                            <strong th:text="${teamReviewerStatistic.totalReview}"></strong>
+                          </td>
+                          <td>
+                            <strong th:text="${teamReviewerStatistic.totalApprove}"></strong>
+                          </td>
+                          <td>
+                            <strong th:text="${teamReviewerStatistic.totalUnApprove}" ></strong>
                           </td>
                         </tr>
                         </tbody>

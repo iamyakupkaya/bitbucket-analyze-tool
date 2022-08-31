@@ -15,7 +15,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
     private PullRequestServiceIF pullRequestServiceIF;
     private final boolean IS_REVIEW_LOGGING = false;
     private final String SQL_GET_ALL_REVIEW_COUNT = "select count(*) from review;";
-    private final String SQL_GET_REVIEWS_BY_USERNAME_AND_STATUS = "select * from review where display_name=? and status=?;";
+    private final String SQL_GET_REVIEWS_BY_USERNAME_AND_STATUS = "select id,reviewer_id, display_name, email_address, approved,status from review where display_name=? and status=? order by id desc limit 15 offset ?;";
     private final String SQL_GET_REVIEWS_BY_USERNAME = "select * from review where display_name=?;";
     private final String SQL_GET_REVIEWS_BY_ID = "select * from review where id=?;";
     private final String SQL_GET_REVIEWS_BY_ID_AND_STATUS = "select * from review where id=? and status=?;";
@@ -48,7 +48,12 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
         return count;
     }
 
-    public ArrayList<ReviewDO.PullRequestReviewRelation> getReviewsByUsernameAndStatus(String username, String status) throws SQLException {
+private int reviewer_id_global = 0;
+public int reviewer_id(){
+        int reviewer_id = reviewer_id_global ;
+        return reviewer_id;
+}
+    public ArrayList<ReviewDO.PullRequestReviewRelation> getReviewsByUsernameAndStatus(String username, String status, int pagination) throws SQLException {
         ArrayList<ReviewDO> list = new ArrayList<>();
         Connection connection = null;
         ResultSet resultSet = null;
@@ -58,15 +63,18 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
             preparedStmt = connection.prepareStatement(SQL_GET_REVIEWS_BY_USERNAME_AND_STATUS);
             preparedStmt.setString(1, username);
             preparedStmt.setString(2, status);
+            preparedStmt.setInt(3, pagination);
             resultSet = preparedStmt.executeQuery();
             connection.commit();
             while (resultSet.next()) {
                 int id = resultSet.getInt(DBConstants.Review.REVIEW_ID);
+                int reviewer_id = resultSet.getInt("reviewer_id");
                 String displayName = resultSet.getString(DBConstants.Review.REVIEW_DISPLAY_NAME);
                 String emailAddress = resultSet.getString(DBConstants.Review.REVIEW_EMAIL_ADDRESS);
                 boolean approved = resultSet.getBoolean(DBConstants.Review.REVIEW_APPROVED);
                 String ReviewStatus = resultSet.getString(DBConstants.Review.REVIEW_STATUS);
                 list.add(new ReviewDO(id, displayName, emailAddress, ReviewStatus, approved));
+                reviewer_id_global = reviewer_id;
             }
         } catch (Exception exception) {
             if (IS_REVIEW_LOGGING) {

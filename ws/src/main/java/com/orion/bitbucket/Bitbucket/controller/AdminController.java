@@ -3,10 +3,10 @@ package com.orion.bitbucket.Bitbucket.controller;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
+import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 import com.orion.bitbucket.Bitbucket.model.UserDO;
 import com.orion.bitbucket.Bitbucket.security.AdministratorServiceIF;
-import com.orion.bitbucket.Bitbucket.service.TeamServiceIF;
-import com.orion.bitbucket.Bitbucket.service.UserServiceIF;
+import com.orion.bitbucket.Bitbucket.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class AdminController {
@@ -28,7 +27,13 @@ public class AdminController {
     private TeamServiceIF teamServiceIF;
     @Autowired
     private AdministratorServiceIF administratorServiceIF;
-
+    @Autowired
+    private UpdateServiceIF updateServiceIF;
+    public static boolean isAutoUpdateTemp = false;
+    public static boolean isUpdateRun = false;
+    private Timer timer;
+    private String updateMsg= "Automatically update";
+    private String updateMsgTime;
     public void htmlTeamList(Model model) throws SQLException{
         List<String> htmlTeamList = teamServiceIF.getAllTeams();
         model.addAttribute("htmlTeamList", htmlTeamList);
@@ -72,6 +77,9 @@ public class AdminController {
         teamsFilter.add(0,DBConstants.User.USERS_TEAM_ALL);
         model.addAttribute("teamsFilter", teamsFilter);
 
+        model.addAttribute("updateToggle",isAutoUpdateTemp);
+        model.addAttribute("updateMsg",updateMsg);
+        model.addAttribute("updateMsgTime",updateMsgTime);
         return "admin-panel.html";
     }
     @RequestMapping(value = "administrator/", method = RequestMethod.GET)
@@ -106,6 +114,10 @@ public class AdminController {
         List<String> teamsFilter = teamServiceIF.getAllTeams();
         teamsFilter.add(0,DBConstants.User.USERS_TEAM_ALL);
         model.addAttribute("teamsFilter", teamsFilter);
+
+        model.addAttribute("updateToggle",isAutoUpdateTemp);
+        model.addAttribute("updateMsg",updateMsg);
+        model.addAttribute("updateMsgTime",updateMsgTime);
 
         if (role.equals(DBConstants.User.USER_ROLE_ALL) && team.equals(DBConstants.User.USERS_TEAM_ALL) ) {
             ArrayList<UserDO> allUsers = userServiceIF.getAllUsers();
@@ -202,6 +214,7 @@ public class AdminController {
         ArrayList<UserDO> teamMembers = teamServiceIF.getTeamUsers(teamCode);
         ArrayList<String> namesList = null;
         ArrayList<AuthorDO> teamUsersStatistics = null;
+        ArrayList<ReviewerDO> teamReviewerStatistics = null;
         namesList = new ArrayList<String>();
         String name = null;
         for (int i = 0; i<teamMembers.size(); i++){
@@ -217,8 +230,15 @@ public class AdminController {
         model.addAttribute("teamUsersStatistic",new AuthorDO());
         model.addAttribute("teamUsersStatistics",teamUsersStatistics);
 
+        teamReviewerStatistics = teamServiceIF.getTeamReviewerStatistics(namesList);
+        model.addAttribute("teamReviewerStatistics",new ReviewerDO());
+        model.addAttribute("teamReviewerStatistics",teamReviewerStatistics);
+
         int totalTeamPR = teamServiceIF.getTeamsTotalPR();
         model.addAttribute("totalTeamPR", totalTeamPR);
+
+        int totalReviewer = teamServiceIF.getTeamsTotalReview();
+        model.addAttribute("totalReviewer", totalReviewer);
 
         model.addAttribute("headerTeamCode",teamCode);
         model.addAttribute("manager", teamServiceIF.getTeamManagerTitle(teamCode));
@@ -340,5 +360,71 @@ public class AdminController {
         administratorServiceIF.deleteAuthority(username);
         userServiceIF.getDeleteUserWithUserName(username);
         return "redirect:/administrator";
+    }
+    @RequestMapping(value = "/administrator/autoUpdate/", method = RequestMethod.GET)
+    public String autoUpdate(@RequestParam String toggle) throws UnirestException, SQLException {
+
+        boolean isAutoUpdateToggle = Boolean.parseBoolean(toggle);
+        isAutoUpdateTemp = isAutoUpdateToggle;
+
+        if(isAutoUpdateToggle){autoUpdate(true);}
+        else{autoUpdate(false);}
+
+        return "redirect:/administrator";
+    }
+    public void autoUpdate(boolean time){
+        Calendar firstTaskTime = getFirstTime();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                isUpdateRun = true;
+//                System.out.println("Bitbucket analyze tool is updating");
+                updateServiceIF.runUpdate();
+//                System.out.println("Update is done. Next update will start at:" + getFirstTime().getTime());
+                isUpdateRun = false;
+                updateMsg = "Update is done. Next update will start at:";
+                updateMsgTime = String.valueOf(getFirstTime().getTime());
+            }
+        };
+        if(time){
+            timer = new Timer();
+//            System.out.println("Updating will start at: " + firstTaskTime.getTime());
+            timer.schedule(timerTask, firstTaskTime.getTime(), 1000 * 60 * 15);
+            updateMsg = "Updating will start at: ";
+            updateMsgTime = String.valueOf(getFirstTime().getTime());
+        }
+        else{
+//             System.out.println("Automatically update is canceled");
+             updateMsg= "Automatically update";
+             updateMsgTime = "";
+             timer.cancel();
+             timer.purge();
+        }
+    }
+    Calendar getFirstTime() {
+        Calendar cal = Calendar.getInstance();
+
+        int currentMinute = cal.get(Calendar.MINUTE);
+
+        if (currentMinute < 45) {
+            cal.set(Calendar.MINUTE, 45);
+        }
+        if (currentMinute < 30) {
+            cal.set(Calendar.MINUTE, 30);
+        }
+        if (currentMinute < 15) {
+            cal.set(Calendar.MINUTE, 15);
+        }
+        if (currentMinute >= 45) {
+            cal.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY) + 1);
+            cal.set(Calendar.MINUTE, 0);
+        }
+        cal.set(Calendar.SECOND, 0);
+        return cal;
+    }
+    @RequestMapping(value = "/administrator/update", method = RequestMethod.GET)
+    public String update() throws UnirestException, SQLException {
+        updateServiceIF.runUpdate();
+        return "redirect:/";
     }
 }

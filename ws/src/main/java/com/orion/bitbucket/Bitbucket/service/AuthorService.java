@@ -31,6 +31,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
     private final String SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_CLOSED_DATE = "select count(state) as count from (select * from pullrequest where display_name= ? and DATE(closed_date) between ? and  ? )as count where state= ?" ;
     private final String SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_CREATED_DATE = "select count(state) as count from (select * from pullrequest where display_name= ? and DATE(created_date) between ? and  ? )as count where state= ?" ;
     private final String SQL_GET_AUTHORS_UPDATE = "update author set total_prs = ?, total_merged_prs = ?, total_open_prs = ?, total_declined_prs = ? where name = ?";
+    private final String SQL_GET_AUTHOR_MAX_COUNTER_ID = "select max(id) from author;";
     public int getAuthorCount() throws SQLException {
         int count = 0;
         Connection connection = null;
@@ -170,7 +171,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         try {
             connection = TransactionManager.getConnection();
             preparedStmt = connection.prepareStatement(SQL_INSERT_AUTHOR_DATA);
-            preparedStmt.setInt(1, COUNTER);
+            preparedStmt.setInt(1, maxAuthorID());
             preparedStmt.setString(2, author);
             preparedStmt.setInt(3, totalPRs);
             preparedStmt.setInt(4, totalMergedPRs);
@@ -178,7 +179,6 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             preparedStmt.setInt(6, totalDeclinedPRs);
             int row = preparedStmt.executeUpdate();
             connection.commit();
-            COUNTER++;
         } catch (Exception exception) {
             if (IS_AUTHOR_LOGGING) {
                 Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
@@ -186,6 +186,30 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             preparedStmt.close();
             connection.close();
         }
+    }
+    public int maxAuthorID() throws SQLException {
+        int maxUserId = 0;
+        ResultSet resultSet = null;
+        Statement statement = null;
+        Connection connection = null;
+        try {
+            connection = TransactionManager.getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(SQL_GET_AUTHOR_MAX_COUNTER_ID);
+            while (resultSet.next()) {
+                int maxId = resultSet.getInt(DBConstants.User.USER_COUNTER_MAX_ID);
+                maxUserId = (maxId + 1);
+            }
+        } catch (Exception exception) {
+            if (IS_AUTHOR_LOGGING) {
+                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+            }
+        } finally {
+            resultSet.close();
+            statement.close();
+            connection.close();
+        }
+        return maxUserId;
     }
 
     public AuthorDO.TopAuthor getTopAuthor() throws SQLException {
@@ -396,6 +420,9 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+        Date startDateFormat = Date.valueOf(LocalDate.parse(startDate, formatter));
+        Date endDateFormat = Date.valueOf(LocalDate.parse(endDate, formatter));
         try {
             connection = TransactionManager.getConnection();
             statement = connection.createStatement();
@@ -403,10 +430,6 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             while (resultSet.next()) {
                 int id = resultSet.getInt(DBConstants.Author.AUTHOR_ID);
                 String name = resultSet.getString(DBConstants.Author.AUTHOR_NAME);
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
-                Date startDateFormat = Date.valueOf(LocalDate.parse(startDate, formatter));
-                Date endDateFormat = Date.valueOf(LocalDate.parse(endDate, formatter));
 
                 int merge = getAuthorUpdate(startDateFormat, endDateFormat,
                         name, DBConstants.PullRequestState.MERGED, SQL_GET_ALL_AUTHORS_UPDATE_WITH_FILTER_CLOSED_DATE);

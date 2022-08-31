@@ -3,7 +3,6 @@ package com.orion.bitbucket.Bitbucket.service;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.BranchDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
@@ -14,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.orion.bitbucket.Bitbucket.log.Log;
 import java.sql.*;
-import java.text.*;
 import java.time.*;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 @Service
@@ -27,23 +24,13 @@ public class BaseService implements BaseServiceIF {
     static ArrayList<PullRequestDO> mergedPRList;
     static ArrayList<PullRequestDO> declinedPRList;
     static ArrayList<PullRequestDO> allPRList;
-    public ArrayList<Integer> updateInformation = new ArrayList<Integer>();
+
     private final boolean IS_BASE_LOGGING = false;
-    private final String SQL_INSERT_PULL_REQUEST = "insert into pullrequest (id, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String SQL_INSERT_PULL_REQUEST = "insert into pullrequest (id, version, title, state, closed, description, update_date, created_date, closed_date, email_address, display_name, slug) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final String SQL_INSERT_REVIEW = "insert into review (reviewer_id , display_name, email_address, approved, status) values (?, ?, ?, ?, ?)";
     private final String SQL_INSERT_PULL_REQUEST_REVIEW_RELATION = "insert into PullRequestReviewRelation (pull_request_id, review_id) values (?, ?)";
     private final String SQL_SELECT_COUNT_PULL_REQUEST = "select count(*) from pullrequest;";
-    private final String SQL_SELECT_COUNT_REVIEW = "select count(*) from review";
     private final String SQL_GET_REVIEW_ID_BY_USERNAME = "select id from review where display_name=? order by id desc limit 1;";
-    private final String SQL_GET_REVIEW_PULL_REQUEST_DELETE_OLD_PR = "delete from pullrequest where id = ?";
-    private final String SQL_GET_PULL_REQUEST_REVIEW_RELATION_DELETE = "delete from pullrequestreviewrelation where pull_request_id = ?";
-    private final String SQL_GET_PULL_REQUEST_LAST_DATE_BY_STATE = "select closed_date from pullrequest where state = ? order by closed_date desc limit 1";
-    private final String SQL_GET_PULL_REQUEST_LAST_DATE_WITH_CREATED_DATE = "select created_date from pullrequest where state = ? order by created_date desc limit 1";
-    private final String SQL_GET_PULL_REQUEST_FIND_REVIEW_ID = "select review.id from review inner join pullrequestreviewrelation on review.id = review_id where pull_request_id = ?";
-    private final String SQL_GET_PULL_REQUEST_REVIEW_ID_DELETE = "delete from review where id = ?;";
-    private final String SQL_GET_UPDATED_PR_ID = "select * from pullrequest where id = ?";
-    private final String SQL_GET_CHECK_AUTHOR = "select count(*) from author where name = ?";
-    private final String SQL_TRUNCATE_REVIEWER_TABLE = "truncate table reviewer";
     public void getData() {
         try{
             if (isPullRequestTableEmpty()) {
@@ -113,6 +100,7 @@ public class BaseService implements BaseServiceIF {
 
     public void commonPullRequestDataParser(JSONObject object) throws SQLException {
         int pullRequestId = (int) object.get("id");
+        int version = (int) object.get("version");
         String title = (String) object.get("title");
         String state = (String) object.get("state");
         boolean closed = (boolean) object.get("closed");
@@ -140,7 +128,7 @@ public class BaseService implements BaseServiceIF {
             int reviewId = getReviewIdByUsername(reviewerDisplayName);
             insertPullRequestReviewRelation(pullRequestId, reviewId);
         }
-        insertPullRequest(pullRequestId, title, state, closed, description, updatedDate, createdDate, closedDate,
+        insertPullRequest(pullRequestId, version, title, state, closed, description, updatedDate, createdDate, closedDate,
                 emailAddress, displayName, slug);
     }
 
@@ -170,7 +158,7 @@ public class BaseService implements BaseServiceIF {
         return id;
     }
 
-    public void insertPullRequest(int prId, String title, String state, boolean closed, String description,
+    public void insertPullRequest(int prId, int version, String title, String state, boolean closed, String description,
             long updatedDate, Long createdDate, Long closedDate, String emailAddress, String displayName,
             String slug) throws SQLException {
 
@@ -182,16 +170,17 @@ public class BaseService implements BaseServiceIF {
             connection = TransactionManager.getConnection();
             preparedStmt = connection.prepareStatement(SQL_INSERT_PULL_REQUEST);
             preparedStmt.setInt(1, prId);
-            preparedStmt.setString(2, title);
-            preparedStmt.setString(3, state);
-            preparedStmt.setBoolean(4, closed);
-            preparedStmt.setString(5, description);
-            preparedStmt.setLong(6, updatedDate);
-            preparedStmt.setDate(7, sqlPackageDateCreated);
-            preparedStmt.setDate(8, sqlPackageDateClosed);
-            preparedStmt.setString(9, emailAddress);
-            preparedStmt.setString(10, displayName);
-            preparedStmt.setString(11, slug);
+            preparedStmt.setInt(2,version);
+            preparedStmt.setString(3, title);
+            preparedStmt.setString(4, state);
+            preparedStmt.setBoolean(5, closed);
+            preparedStmt.setString(6, description);
+            preparedStmt.setLong(7, updatedDate);
+            preparedStmt.setDate(8, sqlPackageDateCreated);
+            preparedStmt.setDate(9, sqlPackageDateClosed);
+            preparedStmt.setString(10, emailAddress);
+            preparedStmt.setString(11, displayName);
+            preparedStmt.setString(12, slug);
             int row = preparedStmt.executeUpdate();
             connection.commit();
         } catch (Exception exception) {
@@ -265,364 +254,4 @@ public class BaseService implements BaseServiceIF {
     // TODO Below method will be modified for branch data
     public void commonBranchDataParser(JSONObject object) {
     }
-    public void updatePullRequest(){
-        ReviewerService reviewerService = new ReviewerService();
-        getUpdateMergedPullRequestData();
-        getUpdateOpenPullRequestData();
-        getUpdateDeclinedPullRequestData();
-        try {
-            truncateReviewerTable();
-            reviewerService.getAllReviewer();
-        }catch (Exception exception){
-            if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
-        }
-    }
-    public void getUpdateMergedPullRequestData() throws  JSONException{
-        AuthorService authorService = new AuthorService();
-        int start = 0;
-        boolean isLastPage = false;
-        try{
-            while (!isLastPage) {
-                HttpResponse<JsonNode> httpResponse = response.getResponse(BitbucketConstants.EndPoints.ALL_PRS_DAILY_MERGED_UPDATE + start, BitbucketConstants.Bearer.TOKEN);
-                JSONObject body = httpResponse.getBody().getObject();
-                Object values = body.get("values");
-                JSONArray array = (JSONArray) values;
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject object = array.getJSONObject(i);
-                    int pullRequestId = (int) object.get("id");
-                    JSONObject author = object.getJSONObject("author");
-                    JSONObject user = author.getJSONObject("user");
-                    String authorName = (String) user.get("displayName");
-                    Long pullRequestClosedDate = (long) object.get("closedDate");
-                    java.sql.Date sqlPackageDateClosed = new java.sql.Date(pullRequestClosedDate);
-                    Date lastDayInDatabase =  pullRequestLastDAY(DBConstants.PullRequestState.MERGED);
-                    deleteOldPullRequest(pullRequestId);
-                    deleteOldPullRequestReviewId(pullRequestId);
-                    deleteOldPullRequestReviewRelation(pullRequestId);
-                    if(IS_BASE_LOGGING){Log.logger(Log.LogConstant.TAG_INFO,
-                            "Pull Request merged update date " + sqlPackageDateClosed +" ID : "+ pullRequestId);}
-                    commonPullRequestDataParser(array.getJSONObject(i));
-                    updateInformation.add(pullRequestId);
-                    if(lastDayInDatabase.after(sqlPackageDateClosed)){
-                        return;}
-
-                    if(checkAuthorName(authorName)){
-                        authorService.insertAuthorData(authorName);
-                    }else{ authorUpdate(authorName);}
-
-                }
-                isLastPage = (boolean) body.get("isLastPage");
-                start += 1;
-            }
-        }catch (Exception exception){
-            if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
-        }
-    }
-    public void getUpdateOpenPullRequestData() throws  JSONException{
-        AuthorService authorService = new AuthorService();
-        int start = 0;
-        boolean isLastPage = false;
-        try{
-            while (!isLastPage) {
-                HttpResponse<JsonNode> httpResponse = response.getResponse(BitbucketConstants.EndPoints.ALL_PRS_DAILY_OPEN_UPDATE + start, BitbucketConstants.Bearer.TOKEN);
-                JSONObject body = httpResponse.getBody().getObject();
-                Object values = body.get("values");
-                JSONArray array = (JSONArray) values;
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject object = array.getJSONObject(i);
-                    int pullRequestId = (int) object.get("id");
-                    JSONObject author = object.getJSONObject("author");
-                    JSONObject user = author.getJSONObject("user");
-                    String authorName = (String) user.get("displayName");
-                    Long pullRequestCreatedDate = (long) object.get("createdDate");
-                    java.sql.Date sqlPackageDateCreated = new java.sql.Date(pullRequestCreatedDate);
-                    Date lastDayInDatabase =  pullRequestLastDayWithCreatedDate(DBConstants.PullRequestState.OPEN);
-                    deleteOldPullRequest(pullRequestId);
-                    deleteOldPullRequestReviewId(pullRequestId);
-                    deleteOldPullRequestReviewRelation(pullRequestId);
-                    if(IS_BASE_LOGGING){Log.logger(Log.LogConstant.TAG_INFO,
-                            "Pull Request open update date " + sqlPackageDateCreated +" ID : "+ pullRequestId);}
-                    commonPullRequestDataParser(array.getJSONObject(i));
-                    updateInformation.add(pullRequestId);
-                    if(lastDayInDatabase.after(sqlPackageDateCreated)){
-                        return;}
-
-                    if(checkAuthorName(authorName)){
-                        authorService.insertAuthorData(authorName);
-                    }else{ authorUpdate(authorName);}
-
-                }
-                isLastPage = (boolean) body.get("isLastPage");
-                start += 1;
-            }
-        }catch (Exception exception){
-            if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
-        }
-    }
-    public void getUpdateDeclinedPullRequestData() throws  JSONException{
-        AuthorService authorService = new AuthorService();
-        int start = 0;
-        boolean isLastPage = false;
-        try{
-            while (!isLastPage) {
-                HttpResponse<JsonNode> httpResponse = response.getResponse(BitbucketConstants.EndPoints.ALL_PRS_DAILY_DECLINED_UPDATE + start, BitbucketConstants.Bearer.TOKEN);
-                JSONObject body = httpResponse.getBody().getObject();
-                Object values = body.get("values");
-                JSONArray array = (JSONArray) values;
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject object = array.getJSONObject(i);
-                    int pullRequestId = (int) object.get("id");
-                    JSONObject author = object.getJSONObject("author");
-                    JSONObject user = author.getJSONObject("user");
-                    String authorName = (String) user.get("displayName");
-                    Long pullRequestClosedDate = (long) object.get("closedDate");
-                    java.sql.Date sqlPackageDateClosed = new java.sql.Date(pullRequestClosedDate);
-                    Date lastDayInDatabase =  pullRequestLastDAY(DBConstants.PullRequestState.DECLINED);
-                    deleteOldPullRequest(pullRequestId);
-                    deleteOldPullRequestReviewId(pullRequestId);
-                    deleteOldPullRequestReviewRelation(pullRequestId);
-                    if(IS_BASE_LOGGING){Log.logger(Log.LogConstant.TAG_INFO,
-                            "Pull Request declined update date " + sqlPackageDateClosed +" ID : "+ pullRequestId);}
-                    commonPullRequestDataParser(array.getJSONObject(i));
-                    updateInformation.add(pullRequestId);
-                    if(lastDayInDatabase.after(sqlPackageDateClosed)){
-                        return;}
-
-                    if(checkAuthorName(authorName)){
-                        authorService.insertAuthorData(authorName);
-                    }else{ authorUpdate(authorName);}
-
-                }
-                isLastPage = (boolean) body.get("isLastPage");
-                start += 1;
-            }
-        }catch (Exception exception){
-            if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
-        }
-    }
-    public void deleteOldPullRequest(int pullRequestId) throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatementForDelete = null;
-        try {
-            connection = TransactionManager.getConnection();
-            preparedStatementForDelete = connection.prepareStatement(SQL_GET_REVIEW_PULL_REQUEST_DELETE_OLD_PR);
-            preparedStatementForDelete.setInt(1, pullRequestId);
-            preparedStatementForDelete.executeUpdate();
-            connection.commit();
-        } catch (Exception exception) {
-            if (IS_BASE_LOGGING) {
-                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
-            }
-        } finally {
-            preparedStatementForDelete.close();
-            connection.close();
-        }
-    }
-    public void deleteOldPullRequestReviewRelation(int pullRequestId) throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = TransactionManager.getConnection();
-            preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_REVIEW_RELATION_DELETE);
-            preparedStatement.setInt(1, pullRequestId);
-            preparedStatement.executeUpdate();
-            connection.commit();
-        } catch (Exception exception) {
-            if (IS_BASE_LOGGING) {
-                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
-            }
-        } finally {
-            preparedStatement.close();
-            connection.close();
-        }
-    }
-    public void deleteOldPullRequestReviewId(int pullRequestId)throws SQLException {
-        ArrayList<Integer> reviewId = getPullRequestFindReviewId(pullRequestId);
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = TransactionManager.getConnection();
-            preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_REVIEW_ID_DELETE);
-            for (int i = 0; i < reviewId.size(); i++) {
-                preparedStatement.setInt(1, reviewId.get(i));
-                preparedStatement.executeUpdate();
-                connection.commit();
-            }
-        } catch (Exception exception) {
-            if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
-        } finally {
-            preparedStatement.close();
-            connection.close();
-        }
-    }
-    public ArrayList<Integer> getPullRequestFindReviewId (int pullRequestId) throws SQLException {
-        ArrayList<Integer> reviewIdList = new ArrayList<Integer>();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = TransactionManager.getConnection();
-            preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_FIND_REVIEW_ID);
-            preparedStatement.setInt(1, pullRequestId);
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                reviewIdList.add(resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID));
-            }
-        } catch (Exception exception) {
-                if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
-        } finally {
-            resultSet.close();
-            preparedStatement.close();
-            connection.close();
-        }
-        return reviewIdList;
-    }
-    public Date pullRequestLastDAY(String state) throws SQLException {
-        Date date = null;
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = TransactionManager.getConnection();
-            preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_LAST_DATE_BY_STATE);
-            preparedStatement.setString(1, state);
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                date = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE);
-            }
-        } catch (Exception exception) {
-            if (IS_BASE_LOGGING) {
-                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
-        } finally {
-            resultSet.close();
-            preparedStatement.close();
-            connection.close();
-        }
-        return date;
-    }
-    public Date pullRequestLastDayWithCreatedDate(String state) throws SQLException {
-        Date date = null;
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = TransactionManager.getConnection();
-            preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_LAST_DATE_WITH_CREATED_DATE);
-            preparedStatement.setString(1, state);
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                date = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE);
-            }
-        } catch (Exception exception) {
-            if (IS_BASE_LOGGING) {
-                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
-            }
-        } finally {
-            resultSet.close();
-            preparedStatement.close();
-            connection.close();
-        }
-        return date;
-    }
-    public void authorUpdate(String authorName) throws SQLException{
-        AuthorService authorService = new AuthorService();
-        authorService.getAuthorUpdateList(authorName);
-    }
-    public ArrayList<Integer> updatePrList(){
-        return updateInformation;
-    }
-    public ArrayList<PullRequestDO> updateInformationDetails(ArrayList<Integer> updatePrList) throws SQLException{
-        ArrayList<PullRequestDO> list = new ArrayList<PullRequestDO>();
-        Connection connection = null;
-        PreparedStatement preparedStmt = null;
-        ResultSet resultSet = null;
-        for(Integer updatePrId:updatePrList){
-        try {
-            connection = TransactionManager.getConnection();
-            preparedStmt = connection.prepareStatement(SQL_GET_UPDATED_PR_ID);
-            preparedStmt.setInt(1, updatePrId);
-            resultSet = preparedStmt.executeQuery();
-            connection.commit();
-            while (resultSet.next()) {
-                int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
-                String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
-                String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
-                boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
-                String description = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_DESCRIPTION);
-                String updatedDate = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_UPDATE_DATE);
-                Date createdDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE);
-                Date closedDate = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CLOSED_DATE);
-                String emailAddress = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_EMAIL_ADDRESS);
-                String displayName = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
-                String slug = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_SLUG);
-
-                Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-                LocalDate localDateCreated = LocalDate.parse(formatter.format(createdDate));
-                LocalDate localDateClosed = LocalDate.parse(formatter.format(closedDate));
-                Long timeSpent = (ChronoUnit.DAYS.between(localDateCreated, localDateClosed) + 1);
-
-                int indexOf = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
-                String jiraId = null;
-                if (indexOf > -1) {
-                    int starting = title.indexOf(DBConstants.PullRequest.PULL_REQUEST_JIRA_ID);
-                    jiraId = title.substring(starting, starting + 9);
-                } else {
-                    jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
-                }
-                list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, timeSpent));
-            }
-        } catch (Exception exception) {
-            if (IS_BASE_LOGGING) {
-                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
-            }
-        } finally {
-            resultSet.close();
-            preparedStmt.close();
-            connection.close();
-        }
-        }
-        return list;
-    }
-    public boolean checkAuthorName(String authorName) throws SQLException{
-        int existAuthorName = 0;
-        Connection connection = null;
-        PreparedStatement preparedStmt = null;
-        ResultSet resultSet = null;
-        try {
-            String checkUsername = null;
-            connection = TransactionManager.getConnection();
-            preparedStmt = connection.prepareStatement(SQL_GET_CHECK_AUTHOR);
-            preparedStmt.setString(1, authorName);
-            resultSet = preparedStmt.executeQuery();
-            connection.commit();
-            while (resultSet.next()) {
-                existAuthorName = resultSet.getInt(DBConstants.Administrator.CHECK_ADMINISTRATOR_USERNAME);
-            }
-        }catch (Exception exception){
-            if (IS_BASE_LOGGING) {
-                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
-            }
-        }finally {
-            resultSet.close();
-            preparedStmt.close();
-            connection.close();
-        }
-        return existAuthorName > 0 ? false : true;
-    }
-    public void truncateReviewerTable()throws SQLException {
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = TransactionManager.getConnection();
-            statement = connection.createStatement();
-            statement.executeUpdate(SQL_TRUNCATE_REVIEWER_TABLE);
-            connection.commit();
-        } catch (Exception exception) {
-            if (IS_BASE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
-        } finally {
-            statement.close();
-            connection.close();
-        }
-    }
-
 }

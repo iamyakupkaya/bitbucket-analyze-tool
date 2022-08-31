@@ -4,6 +4,7 @@ import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.log.Log;
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
+import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 import com.orion.bitbucket.Bitbucket.model.UserDO;
 import com.orion.bitbucket.Bitbucket.security.AdministratorServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class TeamService extends BaseService implements TeamServiceIF{
 
     private final boolean IS_TEAMS_LOGGING = false;
     private int getTeamsTotalPR = 0;
+    private int getTeamsTotalReviewer = 0;
     private final String SQL_GET_TEAMS_WITH_TEAM_CODE= "select * from users where team_code = ?";
     private final String SQL_INSERT_TEAM = "insert into teams(id,team_code,manager) values (?,?,?)";
     private final String SQL_DELETE_TEAMS = "delete from teams where team_code = ?";
@@ -36,6 +38,7 @@ public class TeamService extends BaseService implements TeamServiceIF{
     private final String SQL_GET_LEADER_WITH_TEAM = "select user_name from users where team_code = ? and role = ?";
     private final String SQL_GET_USER_WITH_ROLE = "select user_name from users where role = ?";
     private final String SQL_SET_LEADER = "update users set role = ? where user_name = ?";
+    private final String SQL_GET_ALL_REVIEWER = "select * from reviewer;";
 
     public int maxUserID() throws SQLException {
         int maxUserId = 0;
@@ -454,5 +457,47 @@ public class TeamService extends BaseService implements TeamServiceIF{
             preparedStatement.close();
             connection.close();
         }
+    }
+    public ArrayList<ReviewerDO> getTeamReviewerStatistics(ArrayList<String> names) throws SQLException {
+        ArrayList<ReviewerDO> reviewer = new ArrayList<ReviewerDO>();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        getTeamsTotalReviewer = 0;
+        ArrayList<Integer> totalReviewer = null;
+        totalReviewer = new ArrayList<>();
+        for(String Name:names) {
+            try {
+                connection = TransactionManager.getConnection();
+                statement = connection.createStatement();
+                resultSet = statement.executeQuery(SQL_GET_ALL_REVIEWER);
+                while (resultSet.next()) {
+                    int id = resultSet.getInt(DBConstants.Reviewer.REVIEWER_ID);
+                    String name = resultSet.getString(DBConstants.Reviewer.REVIEWER_NAME);
+                    int totalReview = resultSet.getInt(DBConstants.Reviewer.REVIEWER_TOTAL_REVIEW);
+                    int totalApprove = resultSet.getInt(DBConstants.Reviewer.REVIEWER_TOTAL_APPROVE);
+                    int totalUnApprove = resultSet.getInt(DBConstants.Reviewer.REVIEWER_TOTAL_UNAPPROVE);
+                    if (Name.equals(name)){
+                        reviewer.add(new ReviewerDO(id,name,totalReview,totalApprove,totalUnApprove));
+                        totalReviewer.add(totalReview);
+                        getTeamsTotalReviewer = totalReviewer.stream().mapToInt(Integer::intValue).sum();
+                    }
+                }
+            } catch (Exception exception) {
+                if (IS_TEAMS_LOGGING) {
+                    Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+                }
+            } finally {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            }
+        }
+        totalReviewer.clear();
+        return reviewer;
+    }
+    public int getTeamsTotalReview(){
+      int totalTeamReview = getTeamsTotalReviewer;
+      return totalTeamReview;
     }
 }

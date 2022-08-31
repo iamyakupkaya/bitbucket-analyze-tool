@@ -324,21 +324,22 @@
                                         <!-- Hoverable Table rows -->
                                         <div class="card">
                                             <h5 class="card-header">Pull Requests</h5>
-                                            <div class="table-responsive text-nowrap">
-                                                <table class="table table-hover">
-                                                    <thead>
+                                            <div class="card-body">
+                                                <div class="table-responsive text-nowrap">
+                                                    <table class="table table-hover">
+                                                        <thead>
                                                         <tr>
                                                             <th>PR ID</th>
                                                             <th>JIRA ID</th>
                                                             <th>PR TITLE</th>
                                                             <th>PR STATE</th>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody class="table-border-bottom-0">
+                                                        </thead>
+                                                        <tbody class="table-border-bottom-0">
                                                         <tr th:each="relationApprove : ${relationApproveList}">
                                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
                                                                 <a th:href="@{'/pull-requests/'+${relationApprove.pullRequest.prId}}"
-                                                                    target="_blank"><strong
+                                                                   target="_blank"><strong
                                                                         th:text="${relationApprove.pullRequest.prId}"></strong></a>
                                                             </td>
                                                             <td th:text="${relationApprove.pullRequest.jiraId}"></td>
@@ -348,8 +349,17 @@
                                                             <td th:text="${relationApprove.pullRequest.state}">
                                                             </td>
                                                         </tr>
-                                                    </tbody>
-                                                </table>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                    <ul class="pagination justify-content-center">
+                                                        <form id="myForm" th:action="@{'/reviewer/'}">
+                                                            <input type="range" id="paginationRange" name="page" min="0" max="100">
+                                                            <button onchange="myFunction()" class="btn btn-outline-primary btn-sm"><label id="rangeText"></label></button>
+                                                        </form>
+                                                    </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -357,32 +367,42 @@
                                         <div class="card">
                                             <!-- Hoverable Table rows -->
                                             <h5 class="card-header">Pull Requests</h5>
-                                            <div class="table-responsive text-nowrap">
-                                                <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>PR ID</th>
-                                                            <th>JIRA ID</th>
-                                                            <th>PR TITLE</th>
-                                                            <th>PR STATE</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="table-border-bottom-0">
-                                                        <tr th:each="relationUnapprove : ${relationUnapproveList}">
-                                                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                                                <a th:href="@{'/pull-requests/'+${relationUnapprove.pullRequest.prId}}"
-                                                                    target="_blank"><strong
-                                                                        th:text="${relationUnapprove.pullRequest.prId}"></strong></a>
-                                                            </td>
-                                                            <td th:text="${relationUnapprove.pullRequest.jiraId}"></td>
-                                                            <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
-                                                                th:text="${relationUnapprove.pullRequest.title}">
-                                                            </td>
-                                                            <td th:text="${relationUnapprove.pullRequest.state}">
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                            <div class="card-body">
+                                                <div class="table-responsive text-nowrap">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>PR ID</th>
+                                                                <th>JIRA ID</th>
+                                                                <th>PR TITLE</th>
+                                                                <th>PR STATE</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-border-bottom-0">
+                                                            <tr th:each="relationUnapprove : ${relationUnapproveList}">
+                                                                <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
+                                                                    <a th:href="@{'/pull-requests/'+${relationUnapprove.pullRequest.prId}}"
+                                                                        target="_blank"><strong
+                                                                            th:text="${relationUnapprove.pullRequest.prId}"></strong></a>
+                                                                </td>
+                                                                <td th:text="${relationUnapprove.pullRequest.jiraId}"></td>
+                                                                <td style="max-width: 200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
+                                                                    th:text="${relationUnapprove.pullRequest.title}">
+                                                                </td>
+                                                                <td th:text="${relationUnapprove.pullRequest.state}">
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <ul class="pagination justify-content-center">
+                                                    <form id="myFormNoAction" th:action="@{'/reviewer/'}">
+                                                        <input type="range" id="paginationRangeNoAction" name="page" min="0" max="100">
+                                                        <button onchange="myFunctionNoAction()" class="btn btn-outline-primary btn-sm"><label id="rangeTextNoAction"></label></button>
+                                                    </form>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -454,6 +474,7 @@
 
     <!-- Page JS -->
     <script th:src="@{/js/dashboards-analytics.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer th:src="@{/../../buttons.github.io/buttons.js}"></script>
@@ -568,6 +589,63 @@ baseLi.appendChild(ul);
 
 /*]]>*/
       </script>
+    <script type="text/javascript" th:inline="javascript">
+     /*<![CDATA[*/
+            var reviewer = /*[[${reviewerName}]]*/;
+            var totalApproveCount = /*[[${totalApproveChart}]]*/ 'default';
+     /*]]>*/
+
+      var totalPage =  totalApproveCount / 15;
+
+        if((totalApproveCount % 15) == 0){
+        totalPage = totalPage - 1;
+      }
+      document.getElementById("paginationRange").max = Math.floor(totalPage);
+
+     function myFunction() {
+        offset = document.getElementById("paginationRange").value;
+        document.getElementById("myForm").action = "/reviewer/"+reviewer+"/";
+     }
+     myFunction();
+		</script>
+<script>
+    $(function () {
+    $('#rangeText').text($('#paginationRange').val());
+
+    $('#paginationRange').on('input change', function () {
+        $('#rangeText').text($(this).val());
+    });
+
+});
+</script>
+    <script type="text/javascript" th:inline="javascript">
+     /*<![CDATA[*/
+            var reviewer = /*[[${reviewerName}]]*/;
+            var totalUnapproveCount = /*[[${totalUnapproveChart}]]*/ 'default';
+     /*]]>*/
+      var totalPage = totalUnapproveCount / 15;
+
+      if((totalUnapproveCount % 15) == 0){
+        totalPage = totalPage - 1;
+      }
+
+      document.getElementById("paginationRangeNoAction").max = Math.floor(totalPage);
+
+     function myFunctionNoAction() {
+        offset = document.getElementById("paginationRangeNoAction").value;
+        document.getElementById("myFormNoAction").action = "/reviewer/"+reviewer+"/";
+     }
+     myFunctionNoAction();
+		</script>
+    <script>
+    $(function () {
+    $('#rangeTextNoAction').text($('#paginationRangeNoAction').val());
+
+    $('#paginationRangeNoAction').on('input change', function () {
+        $('#rangeTextNoAction').text($(this).val());
+    });
+});
+</script>
 </body>
 
 </html>

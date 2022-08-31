@@ -2,8 +2,8 @@ package com.orion.bitbucket.Bitbucket.controller;
 
 import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import com.orion.bitbucket.Bitbucket.log.Log;
 import com.orion.bitbucket.Bitbucket.service.*;
 import com.orion.bitbucket.Bitbucket.security.AdministratorServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +49,7 @@ public class PageController {
     @Autowired
     private AdministratorServiceIF administratorServiceIF;
 
+    private final boolean IS_PAGE_CONTROLLER_LOGGING = false;
     public void htmlTeamList(Model model) throws SQLException{
         List<String> htmlTeamList = teamServiceIF.getAllTeams();
         model.addAttribute("htmlTeamList", htmlTeamList);
@@ -56,12 +57,19 @@ public class PageController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String allTime(Model model) throws UnirestException, SQLException {
         htmlTeamList(model);
-        model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
-        model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
-
-        model.addAttribute("reviewerCount", reviewerServiceIF.getAllReviewerCount());
-        model.addAttribute("reviewCount", reviewServiceIF.getTotalReviewCount());
-
+        String updateMsg = "updating";
+        if(!AdminController.isUpdateRun){
+            model.addAttribute("authorCount", authorServiceIF.getAuthorCount());
+            model.addAttribute("pullRequestCount", pullRequestServiceIF.getAllPRCount());
+            model.addAttribute("reviewerCount", reviewerServiceIF.getAllReviewerCount());
+            model.addAttribute("reviewCount", reviewServiceIF.getTotalReviewCount());
+        }
+        else{
+            model.addAttribute("authorCount", updateMsg);
+            model.addAttribute("pullRequestCount", updateMsg);
+            model.addAttribute("reviewerCount", updateMsg);
+            model.addAttribute("reviewCount", updateMsg);
+        }
         AuthorDO.TopAuthor topAuthor = authorServiceIF.getTopAuthor();
         model.addAttribute("topAuthorDisplayName", topAuthor.getName());
         model.addAttribute("topAuthorPRsCount", topAuthor.getTotal());
@@ -74,17 +82,6 @@ public class PageController {
         model.addAttribute("topAuthorMerge", topAuthorMerge.getName());
         model.addAttribute("topAuthorMergePRsCount", topAuthorMerge.getTotal());
 
-        AuthorDO.TopAuthor topAuthorOpen = authorServiceIF.getTopAuthorAtOpen();
-        model.addAttribute("topAuthorOpen", topAuthorOpen.getName());
-        model.addAttribute("topAuthorOpenPRsCount", topAuthorOpen.getTotal());
-
-        AuthorDO.TopAuthor topAuthorDeclined = authorServiceIF.getTopAuthorAtDeclined();
-        model.addAttribute("topAuthorDeclined", topAuthorDeclined.getName());
-        model.addAttribute("topAuthorDeclinedPRsCount", topAuthorDeclined.getTotal());
-
-        ArrayList<ReviewDO.PullRequestReviewRelation> mostOfPrReview = reviewServiceIF.mostReviewedPullRequest();
-        model.addAttribute("size",mostOfPrReview.size());
-        model.addAttribute("id", mostOfPrReview.get(0).getPullRequest().getPrId());
         return "index.html";
     }
 
@@ -131,8 +128,14 @@ public class PageController {
     @RequestMapping(value = "/fill-data", method = RequestMethod.GET)
     public String getFillDataPage(Model model) throws UnirestException, SQLException {
         baseService.getData();
+        if (IS_PAGE_CONTROLLER_LOGGING){
+            Log.logger(Log.LogConstant.TAG_INFO,"Author table is filling up");}
         authorServiceIF.getAllAuthor();
+        if (IS_PAGE_CONTROLLER_LOGGING){
+            Log.logger(Log.LogConstant.TAG_INFO,"Reviewer table is filling up");}
         reviewerServiceIF.getAllReviewer();
+        if (IS_PAGE_CONTROLLER_LOGGING){
+            Log.logger(Log.LogConstant.TAG_INFO,"User table is filling up");}
         if(administratorServiceIF.checkAdmin()){administratorServiceIF.setAdmin();}
         userServiceIF.insertUserTable();  // Automatically pulls data from table PullRequest
         return "fill-data.html";
@@ -215,6 +218,7 @@ public class PageController {
 
     @RequestMapping(value = "/reviewer/{name}")
     public String showReviewerDetails(Model model, @PathVariable(name = "name", required = false) String name) throws UnirestException, SQLException {
+        int pagination = 0;
         htmlTeamList(model);
         ArrayList<ReviewerDO> reviewerDO = reviewerServiceIF.getCountReviewStatesByUsername(name);
         model.addAttribute("reviewer", new ReviewerDO());
@@ -223,22 +227,57 @@ public class PageController {
         model.addAttribute("totalApproveChart", reviewerDO.get(0).getTotalApprove());
         model.addAttribute("totalUnapproveChart", reviewerDO.get(0).getTotalUnApprove());
 
-        ArrayList<ReviewDO.PullRequestReviewRelation> reviewApproveList = reviewServiceIF.getReviewsByUsernameAndStatus(name, "APPROVED");
+        ArrayList<ReviewDO.PullRequestReviewRelation> reviewApproveList = reviewServiceIF.getReviewsByUsernameAndStatus(name, "APPROVED",pagination);
          model.addAttribute("relationApprove", new PullRequestReviewRelation());
          model.addAttribute("relationApproveList", reviewApproveList);
 
-         ArrayList<ReviewDO.PullRequestReviewRelation> reviewUnapproveList = reviewServiceIF.getReviewsByUsernameAndStatus(name, "UNAPPROVED");
+         ArrayList<ReviewDO.PullRequestReviewRelation> reviewUnapproveList = reviewServiceIF.getReviewsByUsernameAndStatus(name, "UNAPPROVED",pagination);
          model.addAttribute("relationUnapprove", new PullRequestReviewRelation());
          model.addAttribute("relationUnapproveList", reviewUnapproveList);
 
          if(reviewApproveList.isEmpty() != true) {
             model.addAttribute("reviewerName",reviewApproveList.get(0).getReview().getDisplayName());
             model.addAttribute("emailAddres",reviewApproveList.get(0).getReview().getEmailAddress());
-            model.addAttribute("id", reviewApproveList.get(0).getReview().getId());
+            model.addAttribute("id", reviewServiceIF.reviewer_id());
         }else{
             model.addAttribute("reviewerName",reviewUnapproveList.get(0).getReview().getDisplayName());
             model.addAttribute("emailAddres",reviewUnapproveList.get(0).getReview().getEmailAddress());
-            model.addAttribute("id", reviewUnapproveList.get(0).getReview().getId());
+            model.addAttribute("id", reviewServiceIF.reviewer_id());
+        }
+
+        return "reviewer-details.html";
+    }
+    @RequestMapping(value = "/reviewer/{name}/")
+    public String showReviewerDetailsPagination(Model model, @PathVariable(name = "name", required = false) String name,
+                                      @RequestParam(name = "page", required = false) int page)
+            throws UnirestException, SQLException {
+        int modelSize = 15;
+        int offset = 0;
+        offset = page * modelSize;
+        htmlTeamList(model);
+        ArrayList<ReviewerDO> reviewerDO = reviewerServiceIF.getCountReviewStatesByUsername(name);
+        model.addAttribute("reviewer", new ReviewerDO());
+        model.addAttribute("getCount", reviewerDO);
+        model.addAttribute("totalReviewChart", reviewerDO.get(0).getTotalReview());
+        model.addAttribute("totalApproveChart", reviewerDO.get(0).getTotalApprove());
+        model.addAttribute("totalUnapproveChart", reviewerDO.get(0).getTotalUnApprove());
+
+        ArrayList<ReviewDO.PullRequestReviewRelation> reviewApproveList = reviewServiceIF.getReviewsByUsernameAndStatus(name, "APPROVED", offset);
+        model.addAttribute("relationApprove", new PullRequestReviewRelation());
+        model.addAttribute("relationApproveList", reviewApproveList);
+
+        ArrayList<ReviewDO.PullRequestReviewRelation> reviewUnapproveList = reviewServiceIF.getReviewsByUsernameAndStatus(name, "UNAPPROVED", offset);
+        model.addAttribute("relationUnapprove", new PullRequestReviewRelation());
+        model.addAttribute("relationUnapproveList", reviewUnapproveList);
+
+        if(reviewApproveList.isEmpty() != true) {
+            model.addAttribute("reviewerName",reviewApproveList.get(0).getReview().getDisplayName());
+            model.addAttribute("emailAddres",reviewApproveList.get(0).getReview().getEmailAddress());
+            model.addAttribute("id", reviewServiceIF.reviewer_id());
+        }else{
+            model.addAttribute("reviewerName",reviewUnapproveList.get(0).getReview().getDisplayName());
+            model.addAttribute("emailAddres",reviewUnapproveList.get(0).getReview().getEmailAddress());
+            model.addAttribute("id", reviewServiceIF.reviewer_id());
         }
 
         return "reviewer-details.html";
@@ -346,24 +385,13 @@ public class PageController {
 
         return "user-details.html";
     }
-
-    @RequestMapping(value = "/administrator/update", method = RequestMethod.GET)
-    public String update(Model model) throws UnirestException, SQLException {
-        htmlTeamList(model);
-        baseService.updatePullRequest();
-        ArrayList<PullRequestDO> updateList = baseService.updateInformationDetails(baseService.updatePrList());
-        baseService.updatePrList().clear();
-        model.addAttribute("update", new PullRequestDO());
-        model.addAttribute("updateList", updateList);
-
-        return "redirect:/";
-    }
     @RequestMapping(value = "/team/{teamCode}", method = RequestMethod.GET)
     public String teamCodePage(Model model, @PathVariable(name = "teamCode", required = false) String teamCode) throws UnirestException, SQLException {
         htmlTeamList(model);
         ArrayList<UserDO> teamMembers = teamServiceIF.getTeamUsers(teamCode);
         ArrayList<String> namesList = null;
         ArrayList<AuthorDO> teamUsersStatistics = null;
+        ArrayList<ReviewerDO> teamReviewerStatistics = null;
         namesList = new ArrayList<String>();
 
         String name = null;
@@ -381,8 +409,15 @@ public class PageController {
             model.addAttribute("teamUsersStatistic",new AuthorDO());
             model.addAttribute("teamUsersStatistics",teamUsersStatistics);
 
+            teamReviewerStatistics = teamServiceIF.getTeamReviewerStatistics(namesList);
+            model.addAttribute("teamReviewerStatistics",new ReviewerDO());
+            model.addAttribute("teamReviewerStatistics",teamReviewerStatistics);
+
             int totalTeamPR = teamServiceIF.getTeamsTotalPR();
             model.addAttribute("totalTeamPR", totalTeamPR);
+
+            int totalReviewer = teamServiceIF.getTeamsTotalReview();
+            model.addAttribute("totalReviewer", totalReviewer);
 
             model.addAttribute("headerTeamCode",teamCode);
             model.addAttribute("manager", teamServiceIF.getTeamManagerTitle(teamCode));

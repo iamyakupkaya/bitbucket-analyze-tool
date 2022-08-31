@@ -23,6 +23,7 @@
     <link rel="stylesheet" th:href="@{/vendor/css/core.css}" class="template-customizer-core-css" />
     <link rel="stylesheet" th:href="@{/vendor/css/theme-default.css}" class="template-customizer-theme-css" />
     <link rel="stylesheet" th:href="@{/css/demo.css}" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Vendors CSS -->
     <link rel="stylesheet" th:href="@{/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
     <!-- Helpers -->
@@ -214,10 +215,18 @@
                                                 </table>
                                             </li>
                                         </div>
-                                        <div class="d-inline-flex">
-                                            <h3 class="fw-bold py-3 mb-4">
-                                                Welcome    <span class="text-muted fw-light" th:text="${loginName}"></span>
-                                            </h3>
+                                        <div>
+                                            <div class="d-inline-flex">
+                                                <h3 class="fw-bold py-3 mb-4">
+                                                    Welcome    <span class="text-muted fw-light" th:text="${loginName}"></span>
+                                                </h3>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="toggle" onchange="updateToggle()"/>
+                                                <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                                                <span th:text="${updateMsg}"></span><br>
+                                                <span th:text="${updateMsgTime}"></span>
+                                            </div>
                                         </div>
                                     </ul>
                                 </div>
@@ -441,7 +450,7 @@
                                     <div class="modal-body">
                                             <div class="mb-2">
                                                 <td><label style="display:inline-block;" class="form-label required">Team Code</label>
-                                                    <select class="form-control d-inline-flex" id="dropDownListThree" required  onChange="update()">
+                                                    <select class="form-control d-inline-flex" id="dropDownListThree" required  onChange="teamVisit()">
                                                         <option th:each="team : ${teams}" th:value="${team}" th:text="${team}"></option>
                                                     </select></td>
                                             </div>
@@ -501,15 +510,39 @@
 <script async defer src="../../../buttons.github.io/buttons.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 
+<script type="text/javascript" th:inline="javascript">
+
+ /*<![CDATA[*/
+  var updateToggle = /*[[${updateToggle}]]*/;
+/*]]>*/
+
+     $("#flexSwitchCheckDefault").attr("checked", updateToggle);
+
+    var switchStatus = false;
+    $("#flexSwitchCheckDefault").on('change', function() {
+    if ($(this).is(':checked')) {
+        switchStatus = $(this).is(':checked');
+
+         var url = "/administrator/autoUpdate/?toggle="+switchStatus;
+         window.location = url;
+    }
+    else {
+       switchStatus = $(this).is(':checked');
+
+        var url = "/administrator/autoUpdate/?toggle="+switchStatus;
+        window.location = url;
+    }
+});
+    </script>
 <script type="text/javascript">
             var teamCode;
-			function update() {
+			function teamVisit() {
 				var select = document.getElementById('dropDownListThree');
 				var option = select.options[select.selectedIndex];
 				teamCode = option.value;
 				const urlTeamCode = document.getElementById("visit").pathname = "administrator/team/"+teamCode+"/";
 			}
-			update();
+			teamVisit();
 		</script>
 <script type="text/javascript" th:inline="javascript">
   /*<![CDATA[*/

@@ -202,7 +202,7 @@
                     <tr th:each="reviewer :${reviewers}">
                       <td>
                         <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                          <a th:href="@{'/reviewer/'+${reviewer.name}}" target="_blank"><strong
+                          <a th:href="@{'/reviewer/'+${reviewer.name}}"><strong
                               th:text="${reviewer.name}"></strong></a>
                         </ul>
                       </td>

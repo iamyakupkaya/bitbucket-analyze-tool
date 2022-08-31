@@ -85,6 +85,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             connection.commit();
             while (resultSet.next()) {
                 int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+                int version = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_VERSION);
                 String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
                 String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
                 boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
@@ -104,7 +105,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
                 } else {
                     jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
                 }
-                list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, null));
+                list.add(new PullRequestDO(id, version, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, null));
             }
         } catch (Exception exception) {
             if (IS_PULL_REQUEST_LOGGING) {
@@ -131,6 +132,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             connection.commit();
             while (resultSet.next()) {
                 int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+                int version = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_VERSION);
                 String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
                 String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
                 boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
@@ -155,7 +157,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
                 } else {
                     jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
                 }
-                list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, timeSpent));
+                list.add(new PullRequestDO(id, version, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, timeSpent));
             }
         } catch (Exception exception) {
             if (IS_PULL_REQUEST_LOGGING) {
@@ -185,6 +187,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             connection.commit();
             while (resultSet.next()) {
                 int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+                int version = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_VERSION);
                 String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
                 String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
                 boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
@@ -204,7 +207,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
                 } else {
                     jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
                 }
-                pullRequest = new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, null);
+                pullRequest = new PullRequestDO(id, version, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, null);
             }
         } catch (Exception exception) {
             if (IS_PULL_REQUEST_LOGGING) {
@@ -237,6 +240,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             connection.commit();
             while (resultSet.next()) {
                 int id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+                int version = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_VERSION);
                 String title = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_TITLE);
                 String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
                 boolean closed = resultSet.getBoolean(DBConstants.PullRequest.PULL_REQUEST_CLOSED);
@@ -255,7 +259,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
                 } else {
                     jiraId = DBConstants.PullRequest.PULL_REQUEST_NO_JIRA_ID;
                 }
-                list.add(new PullRequestDO(id, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, null));
+                list.add(new PullRequestDO(id, version, title, jiraId, state, closed, description, updatedDate, createdDate, closedDate, emailAddress, displayName, slug, null, null));
             }
         } catch (Exception exception) {
             if (IS_PULL_REQUEST_LOGGING) {
