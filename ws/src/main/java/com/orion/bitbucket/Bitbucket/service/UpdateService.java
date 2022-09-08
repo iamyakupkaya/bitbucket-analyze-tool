@@ -5,6 +5,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.log.Log;
+import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +25,7 @@ public class UpdateService implements UpdateServiceIF{
     private boolean IS_UPDATE = false;
     private Date requestUpdateDate = null;
     private final ReviewerService reviewerService = new ReviewerService();
+    private ArrayList<Integer> updateDetailList = null;
     private final String SQL_GET_REVIEW_PULL_REQUEST_DELETE_OLD_PR = "delete from pullrequest where id = ?";
     private final String SQL_GET_PULL_REQUEST_REVIEW_RELATION_DELETE = "delete from pullrequestreviewrelation where pull_request_id = ?";
     private final String SQL_GET_PULL_REQUEST_REVIEW_ID_DELETE = "delete from review where id = ?;";
@@ -32,7 +34,7 @@ public class UpdateService implements UpdateServiceIF{
     private final String SQL_GET_CHECK_AUTHOR = "select count(*) from author where name = ?";
     private final String SQL_GET_CHECK_PULL_REQUEST_ID = "select count(*) from pullrequest where id=?;";
     private final String SQL_GET_PULL_REQUEST_VERSION = "select version from pullrequest where id =?;";
-
+    private final String SQL_GET_PULL_REQUEST_DETAIL = "select id,version,state,display_name,created_date from pullrequest where id =?;";
     public void runUpdate(){
         getUpdateAllPullRequestData();
         if(IS_UPDATE){
@@ -52,6 +54,7 @@ public class UpdateService implements UpdateServiceIF{
         Date requestOneWeekPrevious = null;
         int start = 0;
         boolean isLastPage = false;
+        updateDetailList = new ArrayList<>();
         try{
             while (!isLastPage) {
                 HttpResponse<JsonNode> httpResponse = response.getResponse(BitbucketConstants.EndPoints.ALL_PRS_DAILY_ALL_UPDATE + start, BitbucketConstants.Bearer.TOKEN);
@@ -85,6 +88,7 @@ public class UpdateService implements UpdateServiceIF{
                            } else {
                                authorUpdate(authorName);
                            }
+                           updateDetailList.add(pullRequestId);
                            IS_UPDATE = true;
                        }
                        if(!(currentVersion == version)){
@@ -98,6 +102,9 @@ public class UpdateService implements UpdateServiceIF{
                                authorService.insertAuthorData(authorName);
                            } else {
                                authorUpdate(authorName);
+                           }
+                           if(!(updateDetailList.contains(pullRequestId))){
+                               updateDetailList.add(pullRequestId);
                            }
                            IS_UPDATE = true;
                        }
@@ -287,5 +294,43 @@ public class UpdateService implements UpdateServiceIF{
             statement.close();
             connection.close();
         }
+    }
+
+    // Not tested. Because
+    public ArrayList<PullRequestDO> updateDetail(ArrayList<Integer> updateDetailList) throws SQLException{
+        ArrayList<PullRequestDO> updateDetailArray = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+            try {
+                for(Integer updatePR:updateDetailList){
+                   connection = TransactionManager.getConnection();
+                   preparedStatement = connection.prepareStatement(SQL_GET_PULL_REQUEST_DETAIL);
+                   preparedStatement.setInt(1,updatePR);
+                   resultSet = preparedStatement.executeQuery();
+                    while(resultSet.next()){
+                        int pullRequest = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
+                        int version = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_VERSION);
+                        String state = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_STATE);
+                        String display_name = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
+                        Date created_date = resultSet.getDate(DBConstants.PullRequest.PULL_REQUEST_CREATED_DATE);
+                        updateDetailArray.add(new PullRequestDO(pullRequest, version, null, null, state, false,
+                                null, null, created_date, null, null, display_name, null, null, null));
+
+                    }
+                }
+            }catch (Exception exception){
+                if (IS_UPDATE_LOGGING) {Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));}
+            }finally {
+                resultSet.close();
+                preparedStatement.close();
+                connection.close();
+            }
+        return updateDetailArray;
+    }
+    public static ArrayList<PullRequestDO> updateDetailArray = null;
+    public ArrayList<PullRequestDO> updateDetail() throws SQLException{
+        if(IS_UPDATE){ updateDetailArray = updateDetail(updateDetailList);}
+        return updateDetailArray;
     }
 }

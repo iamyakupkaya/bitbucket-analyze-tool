@@ -42,7 +42,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(SQL_GET_AUTHOR_COUNT);
             while (resultSet.next()) {
-                count = resultSet.getInt("count");
+                count = resultSet.getInt(DBConstants.Author.AUTHOR_COUNT);
             }
         } catch (Exception exception) {
             if (IS_AUTHOR_LOGGING) {
@@ -93,7 +93,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(SQL_IS_AUTHOR_TABLE_EMPTY);
             while (resultSet.next()) {
-                count = resultSet.getInt("count");
+                count = resultSet.getInt(DBConstants.Author.AUTHOR_COUNT);
             }
         } catch (Exception exception) {
             if (IS_AUTHOR_LOGGING) {
@@ -118,7 +118,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             resultSet = preparedStmt.executeQuery();
             connection.commit(); // ADDED
             while (resultSet.next()) {
-                count = resultSet.getInt("count");
+                count = resultSet.getInt(DBConstants.Author.AUTHOR_COUNT);
             }
         } catch (Exception exception) {
             if (IS_AUTHOR_LOGGING) {
@@ -256,7 +256,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             connection.commit();
             while (resultSet.next()) {
                 String name = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
-                int totalPRCount = resultSet.getInt("totalPRCount");
+                int totalPRCount = resultSet.getInt(DBConstants.Author.PR_COUNT);
                 topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
             }
         } catch (Exception exception) {
@@ -291,7 +291,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             connection.commit();
             while (resultSet.next()) {
                 String name = resultSet.getString(DBConstants.PullRequest.PULL_REQUEST_AUTHOR_DISPLAY_NAME);
-                int totalPRCount = resultSet.getInt("totalPRCount");
+                int totalPRCount = resultSet.getInt(DBConstants.Author.PR_COUNT);
                 topAuthor = new AuthorDO.TopAuthor(name, totalPRCount);
 
             }
@@ -465,7 +465,7 @@ public class AuthorService extends BaseService implements AuthorServiceIF {
             resultSet = preparedStmt.executeQuery();
             connection.commit();
             while (resultSet.next()) {
-                count = resultSet.getInt(DBConstants.Author.AUTHOR_UPDATE_FILTER);
+                count = resultSet.getInt(DBConstants.Author.AUTHOR_COUNT);
             }
         } catch (Exception exception) {
             if (IS_AUTHOR_LOGGING) {

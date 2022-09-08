@@ -3,6 +3,7 @@ package com.orion.bitbucket.Bitbucket.service;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.dbc.TransactionManager;
 import com.orion.bitbucket.Bitbucket.model.BranchDO;
 import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
@@ -64,7 +65,7 @@ public class BaseService implements BaseServiceIF {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(SQL_SELECT_COUNT_PULL_REQUEST);
             while (resultSet.next()) {
-                count = resultSet.getInt("count");
+                count = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_COUNT);
             }
         } catch (Exception exception) {
             if(IS_BASE_LOGGING){
@@ -144,7 +145,7 @@ public class BaseService implements BaseServiceIF {
             resultSet = preparedStmt.executeQuery();
             connection.commit();
             while (resultSet.next()) {
-                id = resultSet.getInt("id");
+                id = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_ID);
             }
         } catch (Exception exception) {
             if (IS_BASE_LOGGING) {

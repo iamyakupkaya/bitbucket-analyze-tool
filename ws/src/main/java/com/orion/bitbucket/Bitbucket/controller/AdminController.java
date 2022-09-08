@@ -3,6 +3,7 @@ package com.orion.bitbucket.Bitbucket.controller;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.orion.bitbucket.Bitbucket.dbc.DBConstants;
 import com.orion.bitbucket.Bitbucket.model.AuthorDO;
+import com.orion.bitbucket.Bitbucket.model.PullRequestDO;
 import com.orion.bitbucket.Bitbucket.model.ReviewerDO;
 import com.orion.bitbucket.Bitbucket.model.UserDO;
 import com.orion.bitbucket.Bitbucket.security.AdministratorServiceIF;
@@ -80,6 +81,12 @@ public class AdminController {
         model.addAttribute("updateToggle",isAutoUpdateTemp);
         model.addAttribute("updateMsg",updateMsg);
         model.addAttribute("updateMsgTime",updateMsgTime);
+
+        if(!(updateServiceIF.updateDetail() == null)){
+            ArrayList<PullRequestDO> updateDetails = updateServiceIF.updateDetail();
+            model.addAttribute("updateDetail", new PullRequestDO());
+            model.addAttribute("updateDetails", updateDetails);
+        }
         return "admin-panel.html";
     }
     @RequestMapping(value = "administrator/", method = RequestMethod.GET)

@@ -34,7 +34,7 @@ public class ReviewService extends BaseService implements ReviewServiceIF {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(SQL_GET_ALL_REVIEW_COUNT);
             while (resultSet.next()) {
-                count = resultSet.getInt("count");
+                count = resultSet.getInt(DBConstants.Reviewer.REVIEWER_COUNT);
             }
         } catch (Exception exception) {
             if (IS_REVIEW_LOGGING) {
@@ -68,7 +68,7 @@ public int reviewer_id(){
             connection.commit();
             while (resultSet.next()) {
                 int id = resultSet.getInt(DBConstants.Review.REVIEW_ID);
-                int reviewer_id = resultSet.getInt("reviewer_id");
+                int reviewer_id = resultSet.getInt(DBConstants.Reviewer.REVIEWER_ID_COLUMN_NAME);
                 String displayName = resultSet.getString(DBConstants.Review.REVIEW_DISPLAY_NAME);
                 String emailAddress = resultSet.getString(DBConstants.Review.REVIEW_EMAIL_ADDRESS);
                 boolean approved = resultSet.getBoolean(DBConstants.Review.REVIEW_APPROVED);

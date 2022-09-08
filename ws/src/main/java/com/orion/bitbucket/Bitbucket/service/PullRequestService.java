@@ -34,7 +34,7 @@ public class PullRequestService extends BaseService implements PullRequestServic
             statement = connection.createStatement();
             resultSet = statement.executeQuery(SQL_GET_ALL_PR_COUNT);
             while (resultSet.next()) {
-                count = resultSet.getInt("count");
+                count = resultSet.getInt(DBConstants.PullRequest.PULL_REQUEST_COUNT);
             }
         } catch (Exception exception) {
             if (IS_PULL_REQUEST_LOGGING) {

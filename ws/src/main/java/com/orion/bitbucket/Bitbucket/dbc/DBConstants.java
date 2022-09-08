@@ -61,7 +61,8 @@ public class DBConstants {
         public static final String AUTHOR_TOTAL_MERGED_PRS = "total_merged_prs";
         public static final String AUTHOR_TOTAL_OPEN_PRS = "total_open_prs";
         public static final String AUTHOR_TOTAL_DECLINED_PRS = "total_declined_prs";
-        public static final String AUTHOR_UPDATE_FILTER = "count";
+        public static final String AUTHOR_COUNT = "count";
+        public static final String PR_COUNT = "totalPRCount";
 
     }
     public static final class PullRequest {
@@ -80,6 +81,7 @@ public class DBConstants {
         public static final String PULL_REQUEST_JIRA_ID = "AAK-"; 
         public static final String PULL_REQUEST_NO_JIRA_ID = "-";
         public static final String PULL_REQUEST_COUNT_BY_STATE = "count";
+        public static final String PULL_REQUEST_COUNT = "count";
     }
 
     public static final class PullRequestState {
@@ -108,6 +110,7 @@ public class DBConstants {
 
     public static final class Reviewer {
         public static final String REVIEWER_ID = "id";
+        public static final String REVIEWER_ID_COLUMN_NAME = "reviewer_id";
         public static final String REVIEWER_NAME = "name";
         public static final String REVIEWER_TOTAL_REVIEW = "total_review";
         public static final String REVIEWER_TOTAL_APPROVE = "total_approve";

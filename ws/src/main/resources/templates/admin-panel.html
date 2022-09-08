@@ -463,6 +463,54 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="container mt-5">
+                        <div class="modal fade bd-example-modal-lg" id="updateModal">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="card">
+                                            <h5 class="card-header">Update Details</h5>
+                                            <div class="table-responsive text-nowrap">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>PR ID</th>
+                                                        <th>VERSION</th>
+                                                        <th>STATE</th>
+                                                        <th>NAME</th>
+                                                        <th>CREATED DATE</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody class="table-border-bottom-0">
+                                                    <tr th:each="updateDetail : ${updateDetails}">
+                                                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
+                                                            <a th:href="@{'/pull-requests/'+${updateDetail.prId}}"
+                                                               target="_blank"><strong
+                                                                    th:text="${updateDetail.prId}"></strong></a>
+                                                        </td>
+                                                        <td th:text="${updateDetail.version}"></td>
+                                                        <td th:text="${updateDetail.state}"></td>
+                                                        <td th:text="${updateDetail.displayName}"></td>
+                                                        <td th:text="${updateDetail.createdDate}"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
                     <!--/ Hoverable Table rows -->
                     <!-- / Content -->
                     <!-- Footer -->
