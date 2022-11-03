@@ -1,9 +1,0 @@
-2022-08-31 10:54:38,738 INFO  [Log] BaseService.getData():39 : Instant started
-2022-08-31 10:56:34,760 INFO  [Log] BaseService.getData():41 : Success EndPoints.Open_PRS 
-2022-08-31 10:59:46,173 INFO  [Log] BaseService.getData():43 : Success EndPoints.Declined_PRS 
-2022-08-31 12:14:19,129 INFO  [Log] BaseService.getData():45 : Success EndPoints.Merged_PRS 
-2022-08-31 12:14:19,130 INFO  [Log] BaseService.getData():47 : Instant finished 
-2022-08-31 12:14:19,134 INFO  [Log] BaseService.getData():49 : timeElapsed  : 4780 
-2022-08-31 12:14:19,135 INFO  [Log] PageController.getFillDataPage():143 : Author table is filling up 
-2022-08-31 12:15:18,246 INFO  [Log] PageController.getFillDataPage():146 : Reviewer table is filling up 
-2022-08-31 12:16:08,834 INFO  [Log] PageController.getFillDataPage():149 : User table is filling up
