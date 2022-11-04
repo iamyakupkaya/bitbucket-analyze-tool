@@ -1,13 +1,13 @@
-package com.orion.bitbucket.entities.PRSEntities;
+package com.orion.bitbucket.entities.PREntities.common;
 
-public class PRSRepositoryLinksCloneEntity {
+public class PRRepositoryLinksCloneEntity {
     private String href;
     private String name;
 
-    public PRSRepositoryLinksCloneEntity() {
+    public PRRepositoryLinksCloneEntity() {
     }
 
-    public PRSRepositoryLinksCloneEntity(String href, String name) {
+    public PRRepositoryLinksCloneEntity(String href, String name) {
         this.href = href;
         this.name = name;
     }

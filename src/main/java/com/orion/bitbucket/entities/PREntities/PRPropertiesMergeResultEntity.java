@@ -1,13 +1,13 @@
-package com.orion.bitbucket.entities.PRSEntities;
+package com.orion.bitbucket.entities.PREntities;
 
-public class PRSPropertiesMergeResultEntity {
+public class PRPropertiesMergeResultEntity {
     private String outcome;
     private boolean current;
 
-    public PRSPropertiesMergeResultEntity() {
+    public PRPropertiesMergeResultEntity() {
     }
 
-    public PRSPropertiesMergeResultEntity(String outcome, boolean current) {
+    public PRPropertiesMergeResultEntity(String outcome, boolean current) {
         this.outcome = outcome;
         this.current = current;
     }

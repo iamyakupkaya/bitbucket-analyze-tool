@@ -1,8 +1,9 @@
-package com.orion.bitbucket.entities.PRSEntities;
+package com.orion.bitbucket.entities.PREntities.common;
 
 import org.springframework.data.annotation.Id;
 
-public class PRSAuthorUserEntity {
+// this common class is used in values/author/user and values/reviewers/user
+public class PRUserEntity {
     @Id
     private String id;
     private String name;
@@ -11,11 +12,11 @@ public class PRSAuthorUserEntity {
     private boolean active;
     private String slug;
     private String type;
-    private PRSLinksEntity links;
+    private PRLinksEntity links;
 
-    public PRSAuthorUserEntity() {}
+    public PRUserEntity() {}
 
-    public PRSAuthorUserEntity(String id, String name, String emailAddress, String displayName, boolean active, String slug, String type, PRSLinksEntity links) {
+    public PRUserEntity(String id, String name, String emailAddress, String displayName, boolean active, String slug, String type, PRLinksEntity links) {
         this.id = id;
         this.name = name;
         this.emailAddress = emailAddress;
@@ -82,11 +83,11 @@ public class PRSAuthorUserEntity {
         this.type = type;
     }
 
-    public PRSLinksEntity getLinks() {
+    public PRLinksEntity getLinks() {
         return links;
     }
 
-    public void setLinks(PRSLinksEntity links) {
+    public void setLinks(PRLinksEntity links) {
         this.links = links;
     }
 }

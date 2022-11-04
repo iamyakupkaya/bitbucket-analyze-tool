@@ -1,5 +1,6 @@
-package com.orion.bitbucket.entities.PRSEntities;
+package com.orion.bitbucket.entities.PREntities;
 
+import com.orion.bitbucket.entities.PREntities.common.PRLinksEntity;
 import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
@@ -19,28 +20,28 @@ public class PRValuesEntity {
     private long updatedDate;
     private boolean locked;
 
-    private ArrayList<PRSParticipantsEntity> participants;
+    private ArrayList<PRParticipantsEntity> participants;
 
-    private PRSFromRefEntity fromRef;
-
-
-    private PRSToRefEntity toRef;
+    private PRFromRefEntity fromRef;
 
 
-    private PRSAuthorEntity author;
-
-    private List<PRSReviewersEntity> reviewers;
+    private PRToRefEntity toRef;
 
 
-    private PRSPropertiesEntity properties;
+    private PRAuthorEntity author;
+
+    private List<PRReviewersEntity> reviewers;
 
 
-    private PRSLinksEntity links;
+    private PRPropertiesEntity properties;
+
+
+    private PRLinksEntity links;
 
     public PRValuesEntity() {
     }
 
-    public PRValuesEntity(String id, int version, String title, String description, String state, String open, String closed, long createdDate, long updatedDate, boolean locked, ArrayList<PRSParticipantsEntity> participants, PRSFromRefEntity fromRef, PRSToRefEntity toRef, PRSAuthorEntity author, List<PRSReviewersEntity> reviewers, PRSPropertiesEntity properties, PRSLinksEntity links) {
+    public PRValuesEntity(String id, int version, String title, String description, String state, String open, String closed, long createdDate, long updatedDate, boolean locked, ArrayList<PRParticipantsEntity> participants, PRFromRefEntity fromRef, PRToRefEntity toRef, PRAuthorEntity author, List<PRReviewersEntity> reviewers, PRPropertiesEntity properties, PRLinksEntity links) {
         this.id = id;
         this.version = version;
         this.title = title;
@@ -140,59 +141,59 @@ public class PRValuesEntity {
         this.locked = locked;
     }
 
-    public ArrayList<PRSParticipantsEntity> getParticipants() {
+    public ArrayList<PRParticipantsEntity> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(ArrayList<PRSParticipantsEntity> participants) {
+    public void setParticipants(ArrayList<PRParticipantsEntity> participants) {
         this.participants = participants;
     }
 
-    public PRSFromRefEntity getFromRef() {
+    public PRFromRefEntity getFromRef() {
         return fromRef;
     }
 
-    public void setFromRef(PRSFromRefEntity fromRef) {
+    public void setFromRef(PRFromRefEntity fromRef) {
         this.fromRef = fromRef;
     }
 
-    public PRSToRefEntity getToRef() {
+    public PRToRefEntity getToRef() {
         return toRef;
     }
 
-    public void setToRef(PRSToRefEntity toRef) {
+    public void setToRef(PRToRefEntity toRef) {
         this.toRef = toRef;
     }
 
-    public PRSAuthorEntity getAuthor() {
+    public PRAuthorEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(PRSAuthorEntity author) {
+    public void setAuthor(PRAuthorEntity author) {
         this.author = author;
     }
 
-    public List<PRSReviewersEntity> getReviewers() {
+    public List<PRReviewersEntity> getReviewers() {
         return reviewers;
     }
 
-    public void setReviewers(List<PRSReviewersEntity> reviewers) {
+    public void setReviewers(List<PRReviewersEntity> reviewers) {
         this.reviewers = reviewers;
     }
 
-    public PRSPropertiesEntity getProperties() {
+    public PRPropertiesEntity getProperties() {
         return properties;
     }
 
-    public void setProperties(PRSPropertiesEntity properties) {
+    public void setProperties(PRPropertiesEntity properties) {
         this.properties = properties;
     }
 
-    public PRSLinksEntity getLinks() {
+    public PRLinksEntity getLinks() {
         return links;
     }
 
-    public void setLinks(PRSLinksEntity links) {
+    public void setLinks(PRLinksEntity links) {
         this.links = links;
     }
 }

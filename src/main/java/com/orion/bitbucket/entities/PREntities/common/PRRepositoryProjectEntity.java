@@ -1,15 +1,16 @@
-package com.orion.bitbucket.entities.PRSEntities;
+package com.orion.bitbucket.entities.PREntities.common;
 
 import com.orion.bitbucket.entities.projectEntities.ProjectLinksEntity;
 import com.orion.bitbucket.entities.common.CommonValuesEntity;
 
 
-public class PRSRepositoryProjectEntity extends CommonValuesEntity {
+//this class is used in values/fromRef/repository/project and values/toRef/repository/project
+public class PRRepositoryProjectEntity extends CommonValuesEntity {
     private ProjectLinksEntity links;
-    public PRSRepositoryProjectEntity() {
+    public PRRepositoryProjectEntity() {
     }
 
-    public PRSRepositoryProjectEntity(String key, String id, String name, boolean aPublic, String type, ProjectLinksEntity links) {
+    public PRRepositoryProjectEntity(String key, String id, String name, boolean aPublic, String type, ProjectLinksEntity links) {
         super(key, id, name, aPublic, type);
         this.links = links;
     }

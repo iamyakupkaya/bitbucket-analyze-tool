@@ -1,9 +1,10 @@
-package com.orion.bitbucket.entities.PRSEntities;
+package com.orion.bitbucket.entities.PREntities.common;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-public class PRSRepositoryEntity {
+//This class is used in values/fromRef/repository and values/toRef/repository
+public class PRRepositoryEntity {
     @Id
     private String id;
     private String slug;
@@ -16,13 +17,13 @@ public class PRSRepositoryEntity {
     private boolean forkable;
     @Field("public")
     private boolean Public;
-    private PRSRepositoryProjectEntity project;
-    private PRSRepositoryLinksEntity links;
+    private PRRepositoryProjectEntity project;
+    private PRRepositoryLinksEntity links;
 
-    public PRSRepositoryEntity() {
+    public PRRepositoryEntity() {
     }
 
-    public PRSRepositoryEntity(String id, String slug, String name, String description, String hierarchyId, String scmId, String state, String statusMessage, boolean forkable, boolean aPublic, PRSRepositoryProjectEntity project, PRSRepositoryLinksEntity links) {
+    public PRRepositoryEntity(String id, String slug, String name, String description, String hierarchyId, String scmId, String state, String statusMessage, boolean forkable, boolean aPublic, PRRepositoryProjectEntity project, PRRepositoryLinksEntity links) {
         this.id = id;
         this.slug = slug;
         this.name = name;
@@ -117,19 +118,19 @@ public class PRSRepositoryEntity {
         Public = aPublic;
     }
 
-    public PRSRepositoryProjectEntity getProject() {
+    public PRRepositoryProjectEntity getProject() {
         return project;
     }
 
-    public void setProject(PRSRepositoryProjectEntity project) {
+    public void setProject(PRRepositoryProjectEntity project) {
         this.project = project;
     }
 
-    public PRSRepositoryLinksEntity getLinks() {
+    public PRRepositoryLinksEntity getLinks() {
         return links;
     }
 
-    public void setLinks(PRSRepositoryLinksEntity links) {
+    public void setLinks(PRRepositoryLinksEntity links) {
         this.links = links;
     }
 }

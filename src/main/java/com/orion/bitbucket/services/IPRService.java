@@ -1,7 +1,7 @@
 package com.orion.bitbucket.services;
 
 
-public interface IAllPRSService {
+public interface IPRService {
 
     boolean getAllPRS();
 

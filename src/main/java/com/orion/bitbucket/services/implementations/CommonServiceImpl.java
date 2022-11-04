@@ -5,13 +5,13 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.orion.bitbucket.configs.UtilConfig;
 import com.orion.bitbucket.entities.ITopEntity;
-import com.orion.bitbucket.entities.PRSEntities.PRSEntity;
-import com.orion.bitbucket.entities.PRSEntities.PRValuesEntity;
+import com.orion.bitbucket.entities.PREntities.PREntity;
+import com.orion.bitbucket.entities.PREntities.PRValuesEntity;
 import com.orion.bitbucket.entities.projectEntities.ProjectEntity;
 import com.orion.bitbucket.entities.projectEntities.ProjectValuesEntity;
 import com.orion.bitbucket.helpers.EndPointsHelper;
 import com.orion.bitbucket.logs.Log;
-import com.orion.bitbucket.repositories.AllPRSRepository;
+import com.orion.bitbucket.repositories.PRSRepository;
 import com.orion.bitbucket.repositories.ProjectRepository;
 import com.orion.bitbucket.services.ICommonService;
 import org.json.JSONException;
@@ -25,7 +25,7 @@ public class CommonServiceImpl implements ICommonService {
     private UtilConfig utilConfig;
 
     @Autowired
-    private AllPRSRepository allPRSRepository;
+    private PRSRepository allPRSRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -38,7 +38,7 @@ public class CommonServiceImpl implements ICommonService {
     //constructor
 
 
-    public CommonServiceImpl(UtilConfig utilConfig, AllPRSRepository allPRSRepository,
+    public CommonServiceImpl(UtilConfig utilConfig, PRSRepository allPRSRepository,
                              ProjectRepository projectRepository, JsonResponseServiceImpl response) {
         this.utilConfig = utilConfig;
         this.allPRSRepository = allPRSRepository;
@@ -71,10 +71,10 @@ public class CommonServiceImpl implements ICommonService {
                         entity.setNextPageStart(forStart+1);
                     }
                     // checking which entity
-                    if(entity instanceof PRSEntity){
+                    if(entity instanceof PREntity){
                         PRValuesEntity jsonToValuesEntity = gson.fromJson(body.getJSONArray("values").get(i).toString(), PRValuesEntity.class);
-                        ((PRSEntity) entity).setValues(jsonToValuesEntity);
-                        allPRSRepository.save((PRSEntity) entity);
+                        ((PREntity) entity).setValues(jsonToValuesEntity);
+                        allPRSRepository.save((PREntity) entity);
                     }
                     else if(entity instanceof ProjectEntity){
                         ProjectValuesEntity jsonToValuesEntity = gson.fromJson(body.getJSONArray("values").get(i).toString(), ProjectValuesEntity.class);
@@ -110,11 +110,11 @@ public class CommonServiceImpl implements ICommonService {
         this.utilConfig = utilConfig;
     }
 
-    public AllPRSRepository getAllPRSRepository() {
+    public PRSRepository getAllPRSRepository() {
         return allPRSRepository;
     }
 
-    public void setAllPRSRepository(AllPRSRepository allPRSRepository) {
+    public void setAllPRSRepository(PRSRepository allPRSRepository) {
         this.allPRSRepository = allPRSRepository;
     }
 

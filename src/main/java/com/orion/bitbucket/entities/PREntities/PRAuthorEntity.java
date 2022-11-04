@@ -1,26 +1,28 @@
-package com.orion.bitbucket.entities.PRSEntities;
+package com.orion.bitbucket.entities.PREntities;
 
-public class PRSAuthorEntity {
-    private PRSAuthorUserEntity user;
+import com.orion.bitbucket.entities.PREntities.common.PRUserEntity;
+
+public class PRAuthorEntity {
+    private PRUserEntity user;
     private String role;
     private boolean approved;
     private String status;
 
-    public PRSAuthorEntity() {
+    public PRAuthorEntity() {
     }
 
-    public PRSAuthorEntity(PRSAuthorUserEntity user, String role, boolean approved, String status) {
+    public PRAuthorEntity(PRUserEntity user, String role, boolean approved, String status) {
         this.user = user;
         this.role = role;
         this.approved = approved;
         this.status = status;
     }
 
-    public PRSAuthorUserEntity getUser() {
+    public PRUserEntity getUser() {
         return user;
     }
 
-    public void setUser(PRSAuthorUserEntity user) {
+    public void setUser(PRUserEntity user) {
         this.user = user;
     }
 

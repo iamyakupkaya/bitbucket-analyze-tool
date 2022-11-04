@@ -1,19 +1,16 @@
 package com.orion.bitbucket.services.implementations;
 import com.orion.bitbucket.configs.EntityConfig;
 import com.orion.bitbucket.helpers.EndPointsHelper;
-import com.orion.bitbucket.repositories.AllPRSRepository;
-import com.orion.bitbucket.services.IAllPRSService;
-import com.orion.bitbucket.utils.ArrayUtil;
+import com.orion.bitbucket.repositories.PRSRepository;
+import com.orion.bitbucket.services.IPRService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AllPRSServiceImpl implements IAllPRSService {
+public class PRServiceImpl implements IPRService {
     @Autowired
-    private AllPRSRepository allPRSRepository;
-    @Autowired
-    private ArrayUtil arrayUtil;
+    private PRSRepository allPRSRepository;
     @Autowired
     private EntityConfig entityConfig;
 
@@ -29,11 +26,10 @@ public class AllPRSServiceImpl implements IAllPRSService {
     // CONSTRUCTOR
 
 
-    public AllPRSServiceImpl(AllPRSRepository allPRSRepository, ArrayUtil arrayUtil,
-                             EntityConfig entityConfig, MongoTemplate mongoTemplate,
-                             DBQueryServiceImpl queryService, CommonServiceImpl commonService) {
+    public PRServiceImpl(PRSRepository allPRSRepository,
+                         EntityConfig entityConfig, MongoTemplate mongoTemplate,
+                         DBQueryServiceImpl queryService, CommonServiceImpl commonService) {
         this.allPRSRepository = allPRSRepository;
-        this.arrayUtil = arrayUtil;
         this.entityConfig = entityConfig;
         this.mongoTemplate = mongoTemplate;
         this.queryService = queryService;
@@ -65,20 +61,12 @@ public class AllPRSServiceImpl implements IAllPRSService {
     // ***************** GETTERs and SETTERs *****************
 
 
-    public AllPRSRepository getAllPRSRepository() {
+    public PRSRepository getAllPRSRepository() {
         return allPRSRepository;
     }
 
-    public void setAllPRSRepository(AllPRSRepository allPRSRepository) {
+    public void setAllPRSRepository(PRSRepository allPRSRepository) {
         this.allPRSRepository = allPRSRepository;
-    }
-
-    public ArrayUtil getArrayUtil() {
-        return arrayUtil;
-    }
-
-    public void setArrayUtil(ArrayUtil arrayUtil) {
-        this.arrayUtil = arrayUtil;
     }
 
     public EntityConfig getEntityConfig() {

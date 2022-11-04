@@ -1,5 +1,5 @@
 package com.orion.bitbucket.controllers;
-import com.orion.bitbucket.services.IAllPRSService;
+import com.orion.bitbucket.services.IPRService;
 import com.orion.bitbucket.services.IProjectsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,12 +13,12 @@ public class PageController {
 
     //FIELDS
     @Autowired
-    private IAllPRSService allPRSService;
+    private IPRService allPRSService;
     @Autowired
     private IProjectsService projectsService;
 
     //Parameterized Constructor
-    public PageController(IAllPRSService allPRSService, IProjectsService projectsService) {
+    public PageController(IPRService allPRSService, IProjectsService projectsService) {
         this.allPRSService = allPRSService;
         this.projectsService = projectsService;
     }
@@ -42,7 +42,7 @@ public class PageController {
     @GetMapping("get-prs")
     public void getSpecificPR(){
         Instant start = Instant.now();
-        allPRSService.findAllPRWithEmail("can.eren@orioninc.com");
+        allPRSService.findAllPRWithEmail("yakup.kaya@orioninc.com");
         Instant finish = Instant.now();
         Duration differenceTime = Duration.between(start,finish);
         System.out.println("Total duration of finding of user prs is: " + differenceTime.toSeconds() + " second.!");
@@ -51,11 +51,11 @@ public class PageController {
 
     // GETTERs and SETTERs
 
-    public IAllPRSService getAllPRSService() {
+    public IPRService getAllPRSService() {
         return allPRSService;
     }
 
-    public void setAllPRSService(IAllPRSService allPRSService) {
+    public void setAllPRSService(IPRService allPRSService) {
         this.allPRSService = allPRSService;
     }
 
