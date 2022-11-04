@@ -47,12 +47,19 @@ public class DBQueryServiceImpl implements IDBQueryService {
                         System.out.println(cursor.next().toJson());
                         counter +=1;
                     }
-                }  finally {
+                }
+                catch (Exception err){
+                    System.out.println("there is an error: " + err);
+                }
+                finally {
                 cursor.close();
 
             }
 
 
+        }
+        catch (Exception err){
+            System.out.println("there is an error: " + err);
         }
         finally {
             System.out.println("The user who has this '" + email + "' e-mail has maximum "+ counter + " PRs");
