@@ -16,9 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Component
 public class DBQueryService {
     @Autowired
@@ -33,16 +30,12 @@ public class DBQueryService {
 
     public void findPRSByEmail(String email) {
         // Replace the uri string with your MongoDB deployment's connection string
-        //CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
-        // CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
         String uri = "mongodb://localhost:27017";
-        int countOfPRS=0;
+        int counter=0;
         try (MongoClient mongoClient = MongoClients.create(uri)) {
                 MongoDatabase database = mongoClient.getDatabase("bitbucket");
                 MongoCollection<Document> collection = database.getCollection("allPRS");
                 BasicDBObject query = new BasicDBObject();
-                //query.put("isLastPage", true);
-                //query.put("start", 100);
                 query.put("values.reviewers.user.emailAddress", email);
                 Bson projectionFields = Projections.fields(
                         Projections.include("values.reviewers.user.name", "values.reviewers.user.emailAddress", "values.reviewers.user.displayName", "values.title", "isLastPage", "start"));
@@ -52,16 +45,18 @@ public class DBQueryService {
                 try {
                     while(cursor.hasNext()) {
                         System.out.println(cursor.next().toJson());
-                        countOfPRS +=1;
+                        counter +=1;
                     }
                 }  finally {
                 cursor.close();
+
             }
 
 
         }
         finally {
-            System.out.println("The user who has this '" + email + "' e-mail has maximum "+ countOfPRS + " PRs");
+            System.out.println("The user who has this '" + email + "' e-mail has maximum "+ counter + " PRs");
+
         }
 
     }
