@@ -1,13 +1,14 @@
-package com.orion.bitbucket.services;
+package com.orion.bitbucket.services.implementations;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.in;
-import static com.mongodb.client.model.Projections.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
-import com.mongodb.client.model.Filters;
+import com.orion.bitbucket.helpers.DatabaseHelper;
+import com.orion.bitbucket.helpers.QueryHelper;
+import com.orion.bitbucket.services.IDBQueryService;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import com.mongodb.client.model.Projections;
@@ -17,28 +18,27 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DBQueryService {
+public class DBQueryServiceImpl implements IDBQueryService {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public DBQueryService() {
+    public DBQueryServiceImpl() {
     }
 
-    public DBQueryService(MongoTemplate mongoTemplate) {
+    public DBQueryServiceImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
     public void findPRSByEmail(String email) {
         // Replace the uri string with your MongoDB deployment's connection string
-        String uri = "mongodb://localhost:27017";
         int counter=0;
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
-                MongoDatabase database = mongoClient.getDatabase("bitbucket");
-                MongoCollection<Document> collection = database.getCollection("allPRS");
+        try (MongoClient mongoClient = MongoClients.create(DatabaseHelper.DATABASE_URL)) {
+                MongoDatabase database = mongoClient.getDatabase(DatabaseHelper.DATABASE_NAME);
+                MongoCollection<Document> collection = database.getCollection(DatabaseHelper.COLLECTION_ALL_PRS);
                 BasicDBObject query = new BasicDBObject();
-                query.put("values.reviewers.user.emailAddress", email);
+                query.put(QueryHelper.VALUES_REVIEWERS_USER_EMAIL_ADDRESS, email);
                 Bson projectionFields = Projections.fields(
-                        Projections.include("values.reviewers.user.name", "values.reviewers.user.emailAddress", "values.reviewers.user.displayName", "values.title", "isLastPage", "start"));
+                        Projections.include(QueryHelper.VALUES_REVIEWERS_USER, QueryHelper.VALUES_TITLE));
                 MongoCursor<Document> cursor = collection.find(query)
                         .projection(projectionFields)
                         .sort(Sorts.descending()).iterator();

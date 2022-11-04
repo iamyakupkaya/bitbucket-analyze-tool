@@ -1,23 +1,11 @@
 package com.orion.bitbucket.services.implementations;
-import com.google.gson.Gson;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.orion.bitbucket.configs.EntityConfig;
 import com.orion.bitbucket.configs.UtilConfig;
-import com.orion.bitbucket.entities.projectEntities.ProjectEntity;
-import com.orion.bitbucket.entities.projectEntities.ValuesEntity;
 import com.orion.bitbucket.helpers.EndPointsHelper;
-import com.orion.bitbucket.logs.Log;
 import com.orion.bitbucket.repositories.ProjectRepository;
 import com.orion.bitbucket.services.IProjectsService;
-import com.orion.bitbucket.services.JsonResponse;
-import com.orion.bitbucket.utils.ArrayUtil;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ProjectsServiceImpl implements IProjectsService {

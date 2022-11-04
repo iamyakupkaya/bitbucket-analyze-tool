@@ -1,8 +1,8 @@
 package com.orion.bitbucket.repositories;
 
-import com.orion.bitbucket.entities.PRSEntities.AllPrsEntity;
+import com.orion.bitbucket.entities.PRSEntities.PRSEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface AllPRSRepository extends MongoRepository<AllPrsEntity, String> {
+public interface AllPRSRepository extends MongoRepository<PRSEntity, String> {
 
 }

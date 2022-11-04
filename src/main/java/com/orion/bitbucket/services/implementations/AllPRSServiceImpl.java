@@ -2,9 +2,7 @@ package com.orion.bitbucket.services.implementations;
 import com.orion.bitbucket.configs.EntityConfig;
 import com.orion.bitbucket.helpers.EndPointsHelper;
 import com.orion.bitbucket.repositories.AllPRSRepository;
-import com.orion.bitbucket.services.DBQueryService;
 import com.orion.bitbucket.services.IAllPRSService;
-import com.orion.bitbucket.services.JsonResponse;
 import com.orion.bitbucket.utils.ArrayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -23,7 +21,7 @@ public class AllPRSServiceImpl implements IAllPRSService {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private DBQueryService queryService;
+    private DBQueryServiceImpl queryService;
 
     @Autowired
     private CommonServiceImpl commonService;
@@ -33,7 +31,7 @@ public class AllPRSServiceImpl implements IAllPRSService {
 
     public AllPRSServiceImpl(AllPRSRepository allPRSRepository, ArrayUtil arrayUtil,
                              EntityConfig entityConfig, MongoTemplate mongoTemplate,
-                             DBQueryService queryService, CommonServiceImpl commonService) {
+                             DBQueryServiceImpl queryService, CommonServiceImpl commonService) {
         this.allPRSRepository = allPRSRepository;
         this.arrayUtil = arrayUtil;
         this.entityConfig = entityConfig;
@@ -99,11 +97,11 @@ public class AllPRSServiceImpl implements IAllPRSService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public DBQueryService getQueryService() {
+    public DBQueryServiceImpl getQueryService() {
         return queryService;
     }
 
-    public void setQueryService(DBQueryService queryService) {
+    public void setQueryService(DBQueryServiceImpl queryService) {
         this.queryService = queryService;
     }
 

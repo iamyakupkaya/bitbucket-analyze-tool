@@ -5,23 +5,19 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.orion.bitbucket.configs.UtilConfig;
 import com.orion.bitbucket.entities.ITopEntity;
-import com.orion.bitbucket.entities.PRSEntities.AllPrsEntity;
+import com.orion.bitbucket.entities.PRSEntities.PRSEntity;
 import com.orion.bitbucket.entities.PRSEntities.PRValuesEntity;
 import com.orion.bitbucket.entities.projectEntities.ProjectEntity;
-import com.orion.bitbucket.entities.projectEntities.ValuesEntity;
+import com.orion.bitbucket.entities.projectEntities.ProjectValuesEntity;
 import com.orion.bitbucket.helpers.EndPointsHelper;
 import com.orion.bitbucket.logs.Log;
 import com.orion.bitbucket.repositories.AllPRSRepository;
 import com.orion.bitbucket.repositories.ProjectRepository;
 import com.orion.bitbucket.services.ICommonService;
-import com.orion.bitbucket.services.JsonResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.Duration;
-import java.time.Instant;
 
 @Service
 public class CommonServiceImpl implements ICommonService {
@@ -34,7 +30,7 @@ public class CommonServiceImpl implements ICommonService {
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
-    private JsonResponse response;
+    private JsonResponseServiceImpl response;
 
 
     private final boolean IS_BASE_LOGGING = false;
@@ -43,7 +39,7 @@ public class CommonServiceImpl implements ICommonService {
 
 
     public CommonServiceImpl(UtilConfig utilConfig, AllPRSRepository allPRSRepository,
-                             ProjectRepository projectRepository, JsonResponse response) {
+                             ProjectRepository projectRepository, JsonResponseServiceImpl response) {
         this.utilConfig = utilConfig;
         this.allPRSRepository = allPRSRepository;
         this.projectRepository = projectRepository;
@@ -75,13 +71,13 @@ public class CommonServiceImpl implements ICommonService {
                         entity.setNextPageStart(forStart+1);
                     }
                     // checking which entity
-                    if(entity instanceof AllPrsEntity){
+                    if(entity instanceof PRSEntity){
                         PRValuesEntity jsonToValuesEntity = gson.fromJson(body.getJSONArray("values").get(i).toString(), PRValuesEntity.class);
-                        ((AllPrsEntity) entity).setValues(jsonToValuesEntity);
-                        allPRSRepository.save((AllPrsEntity) entity);
+                        ((PRSEntity) entity).setValues(jsonToValuesEntity);
+                        allPRSRepository.save((PRSEntity) entity);
                     }
                     else if(entity instanceof ProjectEntity){
-                        ValuesEntity jsonToValuesEntity = gson.fromJson(body.getJSONArray("values").get(i).toString(), ValuesEntity.class);
+                        ProjectValuesEntity jsonToValuesEntity = gson.fromJson(body.getJSONArray("values").get(i).toString(), ProjectValuesEntity.class);
                         ((ProjectEntity) entity).setValues(jsonToValuesEntity);
                         projectRepository.save((ProjectEntity) entity);
 
@@ -130,11 +126,11 @@ public class CommonServiceImpl implements ICommonService {
         this.projectRepository = projectRepository;
     }
 
-    public JsonResponse getResponse() {
+    public JsonResponseServiceImpl getResponse() {
         return response;
     }
 
-    public void setResponse(JsonResponse response) {
+    public void setResponse(JsonResponseServiceImpl response) {
         this.response = response;
     }
 

@@ -1,7 +1,5 @@
 package com.orion.bitbucket.entities;
 
-import com.orion.bitbucket.entities.projectEntities.ValuesEntity;
-
 public interface ITopEntity {
 
     int getSize();

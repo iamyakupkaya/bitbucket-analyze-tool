@@ -2,13 +2,13 @@ package com.orion.bitbucket.entities.projectEntities;
 
 import com.orion.bitbucket.entities.common.CommonValuesEntity;
 
-public class ValuesEntity extends CommonValuesEntity {
+public class ProjectValuesEntity extends CommonValuesEntity {
     private String description;
-    private LinksEntity links;
+    private ProjectLinksEntity links;
 
-  public ValuesEntity(){};
+  public ProjectValuesEntity(){};
 
-    public ValuesEntity(String key, String id, String name, boolean aPublic, String type, String description, LinksEntity links) {
+    public ProjectValuesEntity(String key, String id, String name, boolean aPublic, String type, String description, ProjectLinksEntity links) {
         super(key, id, name, aPublic, type);
         this.description = description;
         this.links=links;
@@ -23,11 +23,11 @@ public class ValuesEntity extends CommonValuesEntity {
         this.description = description;
     }
 
-    public LinksEntity getLinks() {
+    public ProjectLinksEntity getLinks() {
         return links;
     }
 
-    public void setLinks(LinksEntity links) {
+    public void setLinks(ProjectLinksEntity links) {
         this.links = links;
     }
 }

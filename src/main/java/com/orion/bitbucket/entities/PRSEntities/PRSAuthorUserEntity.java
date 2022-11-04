@@ -2,7 +2,7 @@ package com.orion.bitbucket.entities.PRSEntities;
 
 import org.springframework.data.annotation.Id;
 
-public class UserEntity {
+public class PRSAuthorUserEntity {
     @Id
     private String id;
     private String name;
@@ -11,11 +11,11 @@ public class UserEntity {
     private boolean active;
     private String slug;
     private String type;
-    private LinksEntity links;
+    private PRSLinksEntity links;
 
-    public UserEntity() {}
+    public PRSAuthorUserEntity() {}
 
-    public UserEntity(String id, String name, String emailAddress, String displayName, boolean active, String slug, String type, LinksEntity links) {
+    public PRSAuthorUserEntity(String id, String name, String emailAddress, String displayName, boolean active, String slug, String type, PRSLinksEntity links) {
         this.id = id;
         this.name = name;
         this.emailAddress = emailAddress;
@@ -82,11 +82,11 @@ public class UserEntity {
         this.type = type;
     }
 
-    public LinksEntity getLinks() {
+    public PRSLinksEntity getLinks() {
         return links;
     }
 
-    public void setLinks(LinksEntity links) {
+    public void setLinks(PRSLinksEntity links) {
         this.links = links;
     }
 }

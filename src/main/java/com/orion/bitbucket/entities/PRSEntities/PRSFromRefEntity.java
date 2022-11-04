@@ -2,18 +2,18 @@ package com.orion.bitbucket.entities.PRSEntities;
 
 import org.springframework.data.annotation.Id;
 
-public class FromRefEntity {
+public class PRSFromRefEntity {
     @Id
     private String id;
     private String displayId;
     private String latestCommit;
     private String type;
-    private RepositoryEntity repository;
+    private PRSRepositoryEntity repository;
 
-    public FromRefEntity() {
+    public PRSFromRefEntity() {
     }
 
-    public FromRefEntity(String id, String displayId, String latestCommit, String type, RepositoryEntity repository) {
+    public PRSFromRefEntity(String id, String displayId, String latestCommit, String type, PRSRepositoryEntity repository) {
         this.id = id;
         this.displayId = displayId;
         this.latestCommit = latestCommit;
@@ -53,11 +53,11 @@ public class FromRefEntity {
         this.type = type;
     }
 
-    public RepositoryEntity getRepository() {
+    public PRSRepositoryEntity getRepository() {
         return repository;
     }
 
-    public void setRepository(RepositoryEntity repository) {
+    public void setRepository(PRSRepositoryEntity repository) {
         this.repository = repository;
     }
 }

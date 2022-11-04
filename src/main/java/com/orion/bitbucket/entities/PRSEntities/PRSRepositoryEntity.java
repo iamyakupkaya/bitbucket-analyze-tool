@@ -3,7 +3,7 @@ package com.orion.bitbucket.entities.PRSEntities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-public class RepositoryEntity {
+public class PRSRepositoryEntity {
     @Id
     private String id;
     private String slug;
@@ -16,13 +16,13 @@ public class RepositoryEntity {
     private boolean forkable;
     @Field("public")
     private boolean Public;
-    private ProjectEntity project;
-    private RepositoryLinksEntity links;
+    private PRSRepositoryProjectEntity project;
+    private PRSRepositoryLinksEntity links;
 
-    public RepositoryEntity() {
+    public PRSRepositoryEntity() {
     }
 
-    public RepositoryEntity(String id, String slug, String name, String description, String hierarchyId, String scmId, String state, String statusMessage, boolean forkable, boolean aPublic, ProjectEntity project, RepositoryLinksEntity links) {
+    public PRSRepositoryEntity(String id, String slug, String name, String description, String hierarchyId, String scmId, String state, String statusMessage, boolean forkable, boolean aPublic, PRSRepositoryProjectEntity project, PRSRepositoryLinksEntity links) {
         this.id = id;
         this.slug = slug;
         this.name = name;
@@ -117,19 +117,19 @@ public class RepositoryEntity {
         Public = aPublic;
     }
 
-    public ProjectEntity getProject() {
+    public PRSRepositoryProjectEntity getProject() {
         return project;
     }
 
-    public void setProject(ProjectEntity project) {
+    public void setProject(PRSRepositoryProjectEntity project) {
         this.project = project;
     }
 
-    public RepositoryLinksEntity getLinks() {
+    public PRSRepositoryLinksEntity getLinks() {
         return links;
     }
 
-    public void setLinks(RepositoryLinksEntity links) {
+    public void setLinks(PRSRepositoryLinksEntity links) {
         this.links = links;
     }
 }

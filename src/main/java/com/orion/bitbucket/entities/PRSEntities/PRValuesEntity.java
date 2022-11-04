@@ -19,28 +19,28 @@ public class PRValuesEntity {
     private long updatedDate;
     private boolean locked;
 
-    private ArrayList<ParticipantsEntity> participants;
+    private ArrayList<PRSParticipantsEntity> participants;
 
-    private FromRefEntity fromRef;
+    private PRSFromRefEntity fromRef;
 
 
     private PRSToRefEntity toRef;
 
 
-    private AuthorEntity author;
+    private PRSAuthorEntity author;
 
-    private List<ReviewersEntity> reviewers;
-
-
-    private PropertiesEntity properties;
+    private List<PRSReviewersEntity> reviewers;
 
 
-    private LinksEntity links;
+    private PRSPropertiesEntity properties;
+
+
+    private PRSLinksEntity links;
 
     public PRValuesEntity() {
     }
 
-    public PRValuesEntity(String id, int version, String title, String description, String state, String open, String closed, long createdDate, long updatedDate, boolean locked, ArrayList<ParticipantsEntity> participants, FromRefEntity fromRef, PRSToRefEntity toRef, AuthorEntity author, List<ReviewersEntity> reviewers, PropertiesEntity properties, LinksEntity links) {
+    public PRValuesEntity(String id, int version, String title, String description, String state, String open, String closed, long createdDate, long updatedDate, boolean locked, ArrayList<PRSParticipantsEntity> participants, PRSFromRefEntity fromRef, PRSToRefEntity toRef, PRSAuthorEntity author, List<PRSReviewersEntity> reviewers, PRSPropertiesEntity properties, PRSLinksEntity links) {
         this.id = id;
         this.version = version;
         this.title = title;
@@ -140,19 +140,19 @@ public class PRValuesEntity {
         this.locked = locked;
     }
 
-    public ArrayList<ParticipantsEntity> getParticipants() {
+    public ArrayList<PRSParticipantsEntity> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(ArrayList<ParticipantsEntity> participants) {
+    public void setParticipants(ArrayList<PRSParticipantsEntity> participants) {
         this.participants = participants;
     }
 
-    public FromRefEntity getFromRef() {
+    public PRSFromRefEntity getFromRef() {
         return fromRef;
     }
 
-    public void setFromRef(FromRefEntity fromRef) {
+    public void setFromRef(PRSFromRefEntity fromRef) {
         this.fromRef = fromRef;
     }
 
@@ -164,35 +164,35 @@ public class PRValuesEntity {
         this.toRef = toRef;
     }
 
-    public AuthorEntity getAuthor() {
+    public PRSAuthorEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(AuthorEntity author) {
+    public void setAuthor(PRSAuthorEntity author) {
         this.author = author;
     }
 
-    public List<ReviewersEntity> getReviewers() {
+    public List<PRSReviewersEntity> getReviewers() {
         return reviewers;
     }
 
-    public void setReviewers(List<ReviewersEntity> reviewers) {
+    public void setReviewers(List<PRSReviewersEntity> reviewers) {
         this.reviewers = reviewers;
     }
 
-    public PropertiesEntity getProperties() {
+    public PRSPropertiesEntity getProperties() {
         return properties;
     }
 
-    public void setProperties(PropertiesEntity properties) {
+    public void setProperties(PRSPropertiesEntity properties) {
         this.properties = properties;
     }
 
-    public LinksEntity getLinks() {
+    public PRSLinksEntity getLinks() {
         return links;
     }
 
-    public void setLinks(LinksEntity links) {
+    public void setLinks(PRSLinksEntity links) {
         this.links = links;
     }
 }

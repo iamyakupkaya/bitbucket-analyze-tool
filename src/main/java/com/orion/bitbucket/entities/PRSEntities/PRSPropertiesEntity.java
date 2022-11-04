@@ -1,26 +1,26 @@
 package com.orion.bitbucket.entities.PRSEntities;
 
-public class PropertiesEntity {
-    private MergeResultEntity mergeResult;
+public class PRSPropertiesEntity {
+    private PRSPropertiesMergeResultEntity mergeResult;
     private int resolvedTaskCount;
     private int commentCount;
     private int openTaskCount;
 
-    public PropertiesEntity() {
+    public PRSPropertiesEntity() {
     }
 
-    public PropertiesEntity(MergeResultEntity mergeResult, int resolvedTaskCount, int commentCount, int openTaskCount) {
+    public PRSPropertiesEntity(PRSPropertiesMergeResultEntity mergeResult, int resolvedTaskCount, int commentCount, int openTaskCount) {
         this.mergeResult = mergeResult;
         this.resolvedTaskCount = resolvedTaskCount;
         this.commentCount = commentCount;
         this.openTaskCount = openTaskCount;
     }
 
-    public MergeResultEntity getMergeResult() {
+    public PRSPropertiesMergeResultEntity getMergeResult() {
         return mergeResult;
     }
 
-    public void setMergeResult(MergeResultEntity mergeResult) {
+    public void setMergeResult(PRSPropertiesMergeResultEntity mergeResult) {
         this.mergeResult = mergeResult;
     }
 
