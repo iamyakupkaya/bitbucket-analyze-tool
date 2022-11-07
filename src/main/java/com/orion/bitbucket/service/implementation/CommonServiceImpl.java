@@ -9,9 +9,10 @@ import com.orion.bitbucket.entity.pull_request.PREntity;
 import com.orion.bitbucket.entity.pull_request.PRValuesEntity;
 import com.orion.bitbucket.entity.project.ProjectEntity;
 import com.orion.bitbucket.entity.project.ProjectValuesEntity;
+import com.orion.bitbucket.entity.pull_request.asrv.McpCoreRootEntity;
 import com.orion.bitbucket.helper.EndPointsHelper;
 import com.orion.bitbucket.log.Log;
-import com.orion.bitbucket.repository.PRSRepository;
+import com.orion.bitbucket.repository.AsrvMcpCoreRootRepository;
 import com.orion.bitbucket.repository.ProjectRepository;
 import com.orion.bitbucket.service.ICommonService;
 import org.json.JSONException;
@@ -25,7 +26,7 @@ public class CommonServiceImpl implements ICommonService {
     private UtilConfig utilConfig;
 
     @Autowired
-    private PRSRepository allPRSRepository;
+    private AsrvMcpCoreRootRepository allPRSRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -38,7 +39,7 @@ public class CommonServiceImpl implements ICommonService {
     //constructor
 
 
-    public CommonServiceImpl(UtilConfig utilConfig, PRSRepository allPRSRepository,
+    public CommonServiceImpl(UtilConfig utilConfig, AsrvMcpCoreRootRepository allPRSRepository,
                              ProjectRepository projectRepository, JsonResponseServiceImpl response) {
         this.utilConfig = utilConfig;
         this.allPRSRepository = allPRSRepository;
@@ -71,10 +72,10 @@ public class CommonServiceImpl implements ICommonService {
                         entity.setNextPageStart(forStart + 1);
                     }
                     // checking which entity
-                    if (entity instanceof PREntity) {
+                    if (entity instanceof McpCoreRootEntity) {
                         PRValuesEntity jsonToValuesEntity = gson.fromJson(body.getJSONArray("values").get(i).toString(), PRValuesEntity.class);
-                        ((PREntity) entity).setValues(jsonToValuesEntity);
-                        allPRSRepository.save((PREntity) entity);
+                        ((McpCoreRootEntity) entity).setValues(jsonToValuesEntity);
+                        allPRSRepository.save((McpCoreRootEntity) entity);
                     } else if (entity instanceof ProjectEntity) {
                         ProjectValuesEntity jsonToValuesEntity = gson.fromJson(body.getJSONArray("values").get(i).toString(), ProjectValuesEntity.class);
                         ((ProjectEntity) entity).setValues(jsonToValuesEntity);
@@ -109,11 +110,11 @@ public class CommonServiceImpl implements ICommonService {
         this.utilConfig = utilConfig;
     }
 
-    public PRSRepository getAllPRSRepository() {
+    public AsrvMcpCoreRootRepository getAllPRSRepository() {
         return allPRSRepository;
     }
 
-    public void setAllPRSRepository(PRSRepository allPRSRepository) {
+    public void setAllPRSRepository(AsrvMcpCoreRootRepository allPRSRepository) {
         this.allPRSRepository = allPRSRepository;
     }
 

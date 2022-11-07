@@ -1,7 +1,7 @@
 package com.orion.bitbucket.service.implementation;
 import com.orion.bitbucket.config.EntityConfig;
 import com.orion.bitbucket.helper.EndPointsHelper;
-import com.orion.bitbucket.repository.PRSRepository;
+import com.orion.bitbucket.repository.AsrvMcpCoreRootRepository;
 import com.orion.bitbucket.service.IPullRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PullRequestServiceImpl implements IPullRequestService {
     @Autowired
-    private PRSRepository allPRSRepository;
+    private AsrvMcpCoreRootRepository allPRSRepository;
     @Autowired
     private EntityConfig entityConfig;
 
@@ -26,7 +26,7 @@ public class PullRequestServiceImpl implements IPullRequestService {
     // CONSTRUCTOR
 
 
-    public PullRequestServiceImpl(PRSRepository allPRSRepository,
+    public PullRequestServiceImpl(AsrvMcpCoreRootRepository allPRSRepository,
                                   EntityConfig entityConfig, MongoTemplate mongoTemplate,
                                   DBQueryServiceImpl queryService, CommonServiceImpl commonService) {
         this.allPRSRepository = allPRSRepository;
@@ -61,11 +61,11 @@ public class PullRequestServiceImpl implements IPullRequestService {
     // ***************** GETTERs and SETTERs *****************
 
 
-    public PRSRepository getAllPRSRepository() {
+    public AsrvMcpCoreRootRepository getAllPRSRepository() {
         return allPRSRepository;
     }
 
-    public void setAllPRSRepository(PRSRepository allPRSRepository) {
+    public void setAllPRSRepository(AsrvMcpCoreRootRepository allPRSRepository) {
         this.allPRSRepository = allPRSRepository;
     }
 

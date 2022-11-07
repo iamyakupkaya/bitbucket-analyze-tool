@@ -3,6 +3,9 @@ package com.orion.bitbucket.entity.common;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public abstract class CommonValuesEntity {
     private String key;
     @Id

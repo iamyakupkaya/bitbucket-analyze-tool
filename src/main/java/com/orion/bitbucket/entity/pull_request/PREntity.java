@@ -4,8 +4,10 @@ import com.orion.bitbucket.entity.ITopEntity;
 import com.orion.bitbucket.entity.common.CommonBaseEntity;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("allPRS")
-public class PREntity extends CommonBaseEntity implements ITopEntity {
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
+public abstract class PREntity extends CommonBaseEntity implements ITopEntity {
 
     private PRValuesEntity values; // List<ValuesEntity>
     public PREntity(){};
