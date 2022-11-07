@@ -1,10 +1,15 @@
 package com.orion.bitbucket.controller;
 
 import com.orion.bitbucket.helper.ControllerHelper;
+import com.orion.bitbucket.helper.EndPointsHelper;
 import com.orion.bitbucket.helper.MessageHelper;
+import com.orion.bitbucket.service.IAsrvMcpCoreRootService;
 import com.orion.bitbucket.service.IPullRequestService;
 import com.orion.bitbucket.service.IProjectsService;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,18 +18,19 @@ import java.time.Duration;
 import java.time.Instant;
 
 @RestController
+@Data
+@NoArgsConstructor
 public class PageController {
     //FIELDS
     @Autowired
-    private IPullRequestService allPRSService;
+    @Lazy
+    private IAsrvMcpCoreRootService asrvMcpCoreRootService;
+
+    @Autowired
+    @Lazy
+    private IPullRequestService pullRequestService;
     @Autowired
     private IProjectsService projectsService;
-
-    //Parameterized Constructor
-    public PageController(IPullRequestService allPRSService, IProjectsService projectsService) {
-        this.allPRSService = allPRSService;
-        this.projectsService = projectsService;
-    }
 
     // GETs METHODs
 
@@ -32,8 +38,8 @@ public class PageController {
     @GetMapping(ControllerHelper.URL_GET_All_DATA_FROM_API) // url --> /setup
     public ResponseEntity<String> getAllData() {
 
-        boolean boolProjects = projectsService.getAllProjects();
-        boolean boolAllPRS = allPRSService.getAllPRS();
+        boolean boolProjects = projectsService.getProjectsFromAPI(EndPointsHelper.BASE_URL);
+        boolean boolAllPRS = asrvMcpCoreRootService.getAsrvMecpCoreRootPR(EndPointsHelper.ALL_PRS);
 
         if (boolAllPRS && boolProjects) {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(MessageHelper.GET_ALL_DATA_SUCCESS_MESSAGE);
@@ -47,7 +53,7 @@ public class PageController {
     @GetMapping(ControllerHelper.URL_GET_PRS_FROM_DB) // url --> /get-prs
     public void getSpecificPR() {
         Instant start = Instant.now();
-        allPRSService.findAllPRWithEmail("yakup.kaya@orioninc.com");
+        pullRequestService.findAllPRWithEmail("yakup.kaya@orioninc.com");
         Instant finish = Instant.now();
         Duration differenceTime = Duration.between(start, finish);
         System.out.println("Total duration of finding of user prs is: " + differenceTime.toSeconds() + " second.!");

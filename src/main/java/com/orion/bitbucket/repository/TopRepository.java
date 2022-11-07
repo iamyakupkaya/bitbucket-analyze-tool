@@ -1,4 +1,6 @@
 package com.orion.bitbucket.repository;
 
-public class TopRepository {
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+public interface TopRepository {
 }

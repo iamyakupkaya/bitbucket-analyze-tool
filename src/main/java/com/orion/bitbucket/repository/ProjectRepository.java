@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 // @Repository is not necessary because it extented MongoRepository so MongoRepository already has that @annototaion
 @Repository
-public interface ProjectRepository extends MongoRepository<ProjectEntity, String> {
+public interface ProjectRepository extends MongoRepository<ProjectEntity, String>, TopRepository {
 
 
     // custom methods..

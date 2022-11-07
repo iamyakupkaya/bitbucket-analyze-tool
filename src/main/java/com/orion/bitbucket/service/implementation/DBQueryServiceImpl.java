@@ -34,7 +34,7 @@ public class DBQueryServiceImpl implements IDBQueryService {
         int counter=0;
         try (MongoClient mongoClient = MongoClients.create(DatabaseHelper.DATABASE_URL)) {
                 MongoDatabase database = mongoClient.getDatabase(DatabaseHelper.DATABASE_NAME);
-                MongoCollection<Document> collection = database.getCollection(DatabaseHelper.COLLECTION_ALL_PRS);
+                MongoCollection<Document> collection = database.getCollection(DatabaseHelper.PR_ASRV_MCP_CORE_ROOT);
                 BasicDBObject query = new BasicDBObject();
                 query.put(QueryHelper.VALUES_REVIEWERS_USER_EMAIL_ADDRESS, email);
                 Bson projectionFields = Projections.fields(

@@ -5,12 +5,13 @@ import com.orion.bitbucket.entity.pull_request.PRValuesEntity;
 import com.orion.bitbucket.helper.DatabaseHelper;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(DatabaseHelper.PR_ASRV_MCP_CORE_ROOT) // PR_ASRV_mcp_core_root
-public class McpCoreRootEntity extends PREntity {
-    public McpCoreRootEntity() {
+@Document(DatabaseHelper.PR_ASRV_AS_RAF_CORE) //  "PR_ASRV_as_raf_core"
+public class AsRafCoreEntity extends PREntity {
+
+    public AsRafCoreEntity() {
     }
 
-    public McpCoreRootEntity(int size, int limit, boolean isLastPage, int start, int nextPageStart, PRValuesEntity values) {
+    public AsRafCoreEntity(int size, int limit, boolean isLastPage, int start, int nextPageStart, PRValuesEntity values) {
         super(size, limit, isLastPage, start, nextPageStart, values);
     }
 }

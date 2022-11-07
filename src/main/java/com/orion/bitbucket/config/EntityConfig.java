@@ -16,9 +16,14 @@ public class EntityConfig {
         return mcpCoreRootEntity;
     }
 
+    @Bean
+    public PREntity getAllPrEntity(){
+        McpCoreRootEntity mcpCoreRootEntity = new McpCoreRootEntity();
+        return mcpCoreRootEntity;
+    }
 
     @Bean
-    public ITopEntity getProjectsEntity(){
+    public ProjectEntity getProjectsEntity(){
         ProjectEntity projectEntity = new ProjectEntity();
         return projectEntity;
     }
