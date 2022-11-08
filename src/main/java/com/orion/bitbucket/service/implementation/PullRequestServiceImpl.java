@@ -3,19 +3,16 @@ package com.orion.bitbucket.service.implementation;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
-import com.orion.bitbucket.config.EntityConfig;
 import com.orion.bitbucket.config.UtilConfig;
-import com.orion.bitbucket.entity.ITopEntity;
-import com.orion.bitbucket.entity.project.ProjectEntity;
-import com.orion.bitbucket.entity.project.ProjectValuesEntity;
 import com.orion.bitbucket.entity.pull_request.PREntity;
 import com.orion.bitbucket.entity.pull_request.PRValuesEntity;
+import com.orion.bitbucket.entity.pull_request.asrv.AsRafCoreEntity;
 import com.orion.bitbucket.entity.pull_request.asrv.McpCoreRootEntity;
 import com.orion.bitbucket.helper.EndPointsHelper;
 import com.orion.bitbucket.helper.LogHelper;
 import com.orion.bitbucket.log.Log;
-import com.orion.bitbucket.repository.AsrvMcpCoreRootRepository;
-import com.orion.bitbucket.repository.ProjectRepository;
+import com.orion.bitbucket.repository.asrv.AsRafCoreRepository;
+import com.orion.bitbucket.repository.asrv.McpCoreRootRepository;
 import com.orion.bitbucket.service.IPullRequestService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,7 +40,10 @@ public class PullRequestServiceImpl implements IPullRequestService {
 
     @Autowired
     @Lazy
-    private AsrvMcpCoreRootRepository asrvMcpCoreRootRepository;
+    private McpCoreRootRepository asrvMcpCoreRootRepository;
+
+    @Autowired
+    private AsRafCoreRepository asRafCoreRepository;
 
     @Autowired
     private JsonResponseServiceImpl response;
@@ -84,7 +83,11 @@ public class PullRequestServiceImpl implements IPullRequestService {
                     // checking which entity
                     PRValuesEntity jsonToValuesEntity = gson.fromJson(body.getJSONArray("values").get(i).toString(), PRValuesEntity.class);
                     entity.setValues(jsonToValuesEntity);
-                    asrvMcpCoreRootRepository.save((McpCoreRootEntity) entity);
+                    if(entity instanceof McpCoreRootEntity){
+                        asrvMcpCoreRootRepository.save((McpCoreRootEntity) entity);
+                    } else if (entity instanceof AsRafCoreEntity) {
+                        asRafCoreRepository.save((AsRafCoreEntity) entity);
+                    }
                     forStart = forStart + 1;
                 }
 

@@ -10,10 +10,23 @@ public final class EndPointsHelper {
      */
     private EndPointsHelper(){}
 
+    // BASE URL FOR ALL PROJECTS
     public static final String BASE_URL ="http://bitbucket.rbbn.com/rest/api/1.0/projects/";
 
-    public static final String PROJECT = "ASRV/repos/mcp_core_root/";
-    public static final String ALL_PRS = BASE_URL + PROJECT + "pull-requests?state=ALL&limit=100&start=";
+    // BASE URL FOR A SPECIFIC PROJECT
+    public static final String ASRV_PROJECT = "ASRV/repos/";
+
+    // REPOS FOR ASRV PROJECT
+    public static final String ASRV_MCP_CORE_ROOT_REPO="mcp_core_root";
+
+    public static final String ASRV_AS_RAF_CORE_REPO="as_raf_core";
+
+    // END POINT URL
+    public static final String ASRV_MCP_CORE_ROOT_URL = BASE_URL + ASRV_PROJECT + ASRV_MCP_CORE_ROOT_REPO + "/pull-requests?state=ALL&limit=100&start=";
+
+    public static final String ASRV_AS_RAF_CORE__URL = BASE_URL + ASRV_PROJECT + ASRV_AS_RAF_CORE_REPO + "/pull-requests?state=ALL&limit=100&start=";
+
+
     public static final class Bearer {
 
         private Bearer() {
