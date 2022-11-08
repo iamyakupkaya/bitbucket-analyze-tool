@@ -1,5 +1,7 @@
 *** Bitbucket Tool for Orion Innovation Turkey ***
 
+----- SERVER SIDE -----
+
 --> please for setup look A Group
 --> please for adding a new repo to code look B Group
 
@@ -52,3 +54,8 @@ Also can use DatabaseHelper class for collection name. exp: @Document(DatabaseHe
 exp: public interface McpCoreRootRepository extends MongoRepository<McpCoreRootEntity, String>
 
 6-) Go to service package and find PullRequestServiceImpl class and getPullRequestFromAPI method inside the class and it is ready to apply.
+
+
+
+----- CLIENT SIDE -----
+
