@@ -8,6 +8,7 @@ import com.orion.bitbucket.entity.pull_request.PREntity;
 import com.orion.bitbucket.entity.pull_request.PRValuesEntity;
 import com.orion.bitbucket.entity.pull_request.asrv.AsRafCoreEntity;
 import com.orion.bitbucket.entity.pull_request.asrv.McpCoreRootEntity;
+import com.orion.bitbucket.helper.DatabaseHelper;
 import com.orion.bitbucket.helper.EndPointsHelper;
 import com.orion.bitbucket.helper.LogHelper;
 import com.orion.bitbucket.log.Log;
@@ -51,10 +52,6 @@ public class PullRequestServiceImpl implements IPullRequestService {
     // this method get all prs and save to MongoDB
 
     // find one or more documents with user email if there is.
-    @Override
-    public void findAllPRWithEmail(String email) {
-        queryService.findPRSByEmail(email);
-    }
 
     @Override
     public boolean getPullRequestFromAPI(String url, PREntity entity) throws JSONException {
