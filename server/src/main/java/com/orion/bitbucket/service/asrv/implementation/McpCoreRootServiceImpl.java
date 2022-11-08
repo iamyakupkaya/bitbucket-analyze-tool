@@ -20,7 +20,7 @@ public class McpCoreRootServiceImpl implements IMcpCoreRootService {
     private EntityConfig entityConfig;
 
     @Override
-    public boolean getAsrvMecpCoreRootPR(String url) {
+    public boolean getAsrvMcpCoreRootPR(String url) {
         boolean result = pullRequestService.getPullRequestFromAPI(url, entityConfig.getMcpCoreRootEntity());
         return result;
     }

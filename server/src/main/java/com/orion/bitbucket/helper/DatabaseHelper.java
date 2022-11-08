@@ -11,4 +11,6 @@ public class DatabaseHelper {
     public static final String PR_ASRV_MCP_CORE_ROOT="PR_ASRV_mcp_core_root";
     public static final String PR_ASRV_AS_RAF_CORE="PR_ASRV_as_raf_core";
 
+    public static final String PROJECTS="projects";
+
 }

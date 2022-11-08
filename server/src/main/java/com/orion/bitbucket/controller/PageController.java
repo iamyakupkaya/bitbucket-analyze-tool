@@ -1,17 +1,13 @@
 package com.orion.bitbucket.controller;
 
-import com.orion.bitbucket.helper.ControllerHelper;
-import com.orion.bitbucket.helper.DatabaseHelper;
-import com.orion.bitbucket.helper.EndPointsHelper;
-import com.orion.bitbucket.helper.MessageHelper;
+import com.orion.bitbucket.helper.*;
 import com.orion.bitbucket.service.asrv.IMcpCoreRootService;
-import com.orion.bitbucket.service.IPullRequestService;
 import com.orion.bitbucket.service.IProjectsService;
 import com.orion.bitbucket.service.asrv.implementation.AsRafCoreServiceImpl;
 import com.orion.bitbucket.service.implementation.DBQueryServiceImpl;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -23,7 +19,7 @@ import java.time.Instant;
 
 @RestController
 @Data
-@Slf4j
+@Log4j2
 @NoArgsConstructor
 @RequestMapping(path = "/data")
 public class PageController {
@@ -45,23 +41,58 @@ public class PageController {
     // this method get all data from API and save them into MongoDB
     @GetMapping(ControllerHelper.URL_GET_All_DATA_FROM_API) // url --> /setup
     public ResponseEntity<String> getAllData() {
+        try {
+            if (LogHelper.IS_BASE_LOGGING){
+                log.info("Bitbucket project is starting to fill data on data/setup url.");
 
-        boolean boolProjects = projectsService.getProjectsFromAPI(EndPointsHelper.BASE_URL);
-        boolean boolAllPRS = asrvMcpCoreRootService.getAsrvMecpCoreRootPR(EndPointsHelper.ASRV_MCP_CORE_ROOT_URL);
-        boolean boolAsRafCore=asrvAsRafCoreService.getAsrvAsRafCorePR(EndPointsHelper.ASRV_AS_RAF_CORE__URL);
+            }
+            // for All PROJECTS
+            boolean boolProjects = projectsService.getProjectsFromAPI(EndPointsHelper.BASE_URL);
+            if(boolProjects && LogHelper.IS_BASE_LOGGING){
+                log.info(DatabaseHelper.PROJECTS + " collection was created in bitbucket database.");
+            }
+            else {
+                if(LogHelper.IS_BASE_LOGGING){
+                    log.warn( DatabaseHelper.PROJECTS + " collection could not been created in bitbucket database.");
 
-        if(boolProjects){
-            log.info("Project collection was created");
-        }
-        else {
-            log.warn("project collection could not been created");
-        }
-        if (boolAllPRS && boolProjects && boolAsRafCore) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(MessageHelper.GET_ALL_DATA_SUCCESS_MESSAGE);
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(MessageHelper.GET_ALL_DATA_FAILED_MESSAGE + "\nGetting projects is " +
-                (boolProjects ? "successful.. " : "unsuccessful") + " and " + (boolAllPRS ? "successful.. " : "unsuccessful"));
+                }
+            }
+            // for ASVR Project MCP_CORE_ROOT repos PRs
+            boolean boolAllPRS = asrvMcpCoreRootService.getAsrvMcpCoreRootPR(EndPointsHelper.ASRV_MCP_CORE_ROOT_URL);
+            if(boolProjects && LogHelper.IS_BASE_LOGGING){
+                    log.info(DatabaseHelper.PR_ASRV_MCP_CORE_ROOT + " collection was created in bitbucket database.");
+            }
+            else {
+                if(LogHelper.IS_BASE_LOGGING){
+                    log.warn(DatabaseHelper.PR_ASRV_MCP_CORE_ROOT + " collection could not been created in bitbucket database.");
+                }
+            }
+            // for ASVR Project AS_RAF_CORE repos PRs
+            boolean boolAsRafCore=asrvAsRafCoreService.getAsrvAsRafCorePR(EndPointsHelper.ASRV_AS_RAF_CORE__URL);
+            if(boolAsRafCore && LogHelper.IS_BASE_LOGGING){
+                log.info(DatabaseHelper.PR_ASRV_AS_RAF_CORE + " collection was created in bitbucket database.");
+            }
+            else {
+                if(LogHelper.IS_BASE_LOGGING){
+                    log.warn(DatabaseHelper.PR_ASRV_AS_RAF_CORE + " collection could not been created in bitbucket database.");
+                }
+            }
 
+            if (boolAllPRS && boolProjects && boolAsRafCore) {
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(MessageHelper.GET_ALL_DATA_SUCCESS_MESSAGE);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(MessageHelper.GET_ALL_DATA_FAILED_MESSAGE);
+
+
+        }
+        catch (Exception err){
+            log.error("There is an error in getAllData method in PageController class. Error: {}", err);
+        }
+        finally {
+            log.info("getAllData method in PageController class executing has finished");
+        }
+
+        return null;
     }
 
 

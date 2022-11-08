@@ -4,18 +4,15 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.orion.bitbucket.config.EntityConfig;
 import com.orion.bitbucket.config.UtilConfig;
-import com.orion.bitbucket.entity.ITopEntity;
 import com.orion.bitbucket.entity.project.ProjectEntity;
 import com.orion.bitbucket.entity.project.ProjectValuesEntity;
-import com.orion.bitbucket.entity.pull_request.PRValuesEntity;
-import com.orion.bitbucket.entity.pull_request.asrv.McpCoreRootEntity;
 import com.orion.bitbucket.helper.EndPointsHelper;
 import com.orion.bitbucket.helper.LogHelper;
-import com.orion.bitbucket.log.Log;
 import com.orion.bitbucket.repository.ProjectRepository;
 import com.orion.bitbucket.service.IProjectsService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +20,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Data
+@Log4j2
 @NoArgsConstructor
 public class ProjectsServiceImpl implements IProjectsService {
     @Autowired
     private ProjectRepository projectRepository;
-
     @Autowired
     private EntityConfig entityConfig;
     @Autowired
@@ -40,6 +37,9 @@ public class ProjectsServiceImpl implements IProjectsService {
         int start = 0;
         boolean isLastPage = false;
         try {
+            if (LogHelper.IS_BASE_LOGGING){
+                log.info("getProjectsFromAPI method in ProjectsServiceImpl class was invoked.");
+            }
             ProjectEntity entity =entityConfig.getProjectsEntity();
             Gson gson = utilConfig.getGson();
             while (!isLastPage) {
@@ -74,11 +74,18 @@ public class ProjectsServiceImpl implements IProjectsService {
             }
             return true;
 
-        } catch (Exception exception) {
+        } catch (Exception err) {
             if (LogHelper.IS_BASE_LOGGING) {
-                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+                log.error("There is an error in getProjectsFromAPI method in ProjectsServiceImpl class. Error: {0}", err);
+
             }
             return false;
+        }
+        finally {
+            if (LogHelper.IS_BASE_LOGGING){
+                log.info("getProjectsFromAPI method in ProjectsServiceImpl class executing has finished");
+
+            }
         }
     }
 

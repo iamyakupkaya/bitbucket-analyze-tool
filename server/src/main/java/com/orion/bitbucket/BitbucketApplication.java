@@ -9,8 +9,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 public class BitbucketApplication implements CommandLineRunner {
-	@Autowired
-	private MongoTemplate mongoTemplate;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BitbucketApplication.class, args);

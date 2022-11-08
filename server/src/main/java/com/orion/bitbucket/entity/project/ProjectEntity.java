@@ -2,11 +2,12 @@ package com.orion.bitbucket.entity.project;
 
 import com.orion.bitbucket.entity.ITopEntity;
 import com.orion.bitbucket.entity.common.CommonBaseEntity;
+import com.orion.bitbucket.helper.DatabaseHelper;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 // this class inherit some fields from CommonBaseEntity.!
 // DO NOT DELETE
-@Document(collection = "projects")
+@Document(collection = DatabaseHelper.PROJECTS)
 public class ProjectEntity extends CommonBaseEntity implements ITopEntity {
 
     private ProjectValuesEntity values;

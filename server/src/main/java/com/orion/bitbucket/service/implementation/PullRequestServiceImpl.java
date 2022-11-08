@@ -11,12 +11,12 @@ import com.orion.bitbucket.entity.pull_request.asrv.McpCoreRootEntity;
 import com.orion.bitbucket.helper.DatabaseHelper;
 import com.orion.bitbucket.helper.EndPointsHelper;
 import com.orion.bitbucket.helper.LogHelper;
-import com.orion.bitbucket.log.Log;
 import com.orion.bitbucket.repository.asrv.AsRafCoreRepository;
 import com.orion.bitbucket.repository.asrv.McpCoreRootRepository;
 import com.orion.bitbucket.service.IPullRequestService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @Data // setter, getter, toString, constructorWithArgs, HashCode.. together
 @NoArgsConstructor // default constructor
 public class PullRequestServiceImpl implements IPullRequestService {
@@ -59,6 +60,9 @@ public class PullRequestServiceImpl implements IPullRequestService {
         boolean isLastPage = false;
         try {
             Gson gson = utilConfig.getGson();
+            if (LogHelper.IS_BASE_LOGGING){
+                log.info("getPullRequestFromAPI method in PullRequestServiseImpl class was invoked.");
+            }
             while (!isLastPage) {
                 HttpResponse<JsonNode> httpResponse = response.getResponse(url + start, EndPointsHelper.Bearer.TOKEN);
                 JSONObject body = httpResponse.getBody().getObject(); // JSONObject
@@ -96,11 +100,17 @@ public class PullRequestServiceImpl implements IPullRequestService {
 
             return true;
 
-        } catch (Exception exception) {
+        } catch (Exception err) {
             if (LogHelper.IS_BASE_LOGGING) {
-                Log.logger(Log.LogConstant.TAG_WARN, String.valueOf(exception));
+                log.warn("There is an error in getPullRequestFromAPI method in PullRequestServiseImpl class. Error: {}", err);
             }
             return false;
+        }
+        finally {
+            if (LogHelper.IS_BASE_LOGGING){
+                log.info("getPullRequestFromAPI method in PullRequestServiseImpl class executing has finished");
+
+            }
         }
     }
 
