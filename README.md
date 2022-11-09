@@ -3,7 +3,7 @@
 ----- SERVER SIDE -----
 
 --> please for setup look A Group
---> please for adding a new repo to code look B Group
+--> please for adding a new project and repo to code look B Group
 
 
 ** A GROUP
@@ -41,19 +41,16 @@
 ** B GROUP
 -adding a new repo to code-
 
-1-) go to entity package and create a new package with project name. example: asrv
+1-) go to DatabaseHelper class and create a new project name, repo name and create a collection name with created project name and repo name.
 
-2-) inside the project package which was created by you create a new class like RepoNameEntity
+2-) go to EndpointHelper class and create a new url for project and repo. be able to use DatabaseHelper project name and repo name in your url. 
+-please check old url for understanding-
 
-3-) The entity class which created by you inherit from PREntity and add @Document annotation. 
-Also can use DatabaseHelper class for collection name. exp: @Document(DatabaseHelper.PR_ASRV_AS_RAF_CORE) 
+3-) go to PageController class and use this pullRequestService.getPullRequestFromAPI(EndPointsHelper.YOUR_URL,
+DatabaseHelper.YOUR_COLLECTION_NAME, entityConfig.getPullRequestEntity());
+-this method will return a boolean. if it is success, will return true. otherwise false-
 
-4-) Go to service package and apply step-1 in B Group and create a interface after interface implement it in implementation package
-
-5-) create a repository for a new entity. repository generics shoul be <EntityClass, String>
-exp: public interface McpCoreRootRepository extends MongoRepository<McpCoreRootEntity, String>
-
-6-) Go to service package and find PullRequestServiceImpl class and getPullRequestFromAPI method inside the class and it is ready to apply.
+4-) Run Program.
 
 
 

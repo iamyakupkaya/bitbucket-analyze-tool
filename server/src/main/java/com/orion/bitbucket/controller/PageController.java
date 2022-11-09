@@ -79,6 +79,18 @@ public class PageController {
                 }
             }
 
+            // for IAC Project iac repos PRs
+            boolean boolIacIac=pullRequestService.getPullRequestFromAPI(EndPointsHelper.IAC_IAC_URL,
+                    DatabaseHelper.COLLECTION_NAME_IAC_IAC, entityConfig.getPullRequestEntity());
+            if(boolIacIac && LogHelper.IS_BASE_LOGGING){
+                log.info(DatabaseHelper.COLLECTION_NAME_IAC_IAC + " collection was created in bitbucket database.");
+            }
+            else {
+                if(LogHelper.IS_BASE_LOGGING){
+                    log.warn(DatabaseHelper.COLLECTION_NAME_IAC_IAC +  " collection could not been created in bitbucket database.");
+                }
+            }
+
             if (boolAllPRS && boolProjects && boolAsRafCore) {
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(MessageHelper.GET_ALL_DATA_SUCCESS_MESSAGE);
             }

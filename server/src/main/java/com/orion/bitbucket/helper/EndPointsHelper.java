@@ -12,20 +12,15 @@ public final class EndPointsHelper {
 
     // BASE URL FOR ALL PROJECTS
     public static final String BASE_URL ="http://bitbucket.rbbn.com/rest/api/1.0/projects/";
+    public static final String REPOS = "/repos/";
 
-    // BASE URL FOR A SPECIFIC PROJECT
-    public static final String ASRV_PROJECT = "ASRV/repos/";
 
-    // REPOS FOR ASRV PROJECT
-    public static final String ASRV_MCP_CORE_ROOT_REPO="mcp_core_root";
+    // END POINTS URL FOR ASRV PROJECT
+    public static final String ASRV_MCP_CORE_ROOT_URL = BASE_URL + DatabaseHelper.ASRV_PROJECT_NAME +  REPOS + DatabaseHelper.ASRV_REPO_MCP_CORE_ROOT +"/pull-requests?state=ALL&limit=100&start=";
+    public static final String ASRV_AS_RAF_CORE_URL = BASE_URL + DatabaseHelper.ASRV_PROJECT_NAME +  REPOS + DatabaseHelper.ASRV_REPO_AS_RAF_CORE + "/pull-requests?state=ALL&limit=100&start=";
 
-    public static final String ASRV_AS_RAF_CORE_REPO="as_raf_core";
-
-    // END POINT URL
-    public static final String ASRV_MCP_CORE_ROOT_URL = BASE_URL + ASRV_PROJECT + ASRV_MCP_CORE_ROOT_REPO + "/pull-requests?state=ALL&limit=100&start=";
-
-    public static final String ASRV_AS_RAF_CORE_URL = BASE_URL + ASRV_PROJECT + ASRV_AS_RAF_CORE_REPO + "/pull-requests?state=ALL&limit=100&start=";
-
+    // END POINTS URL FOR IAC PROJECT
+    public static final String IAC_IAC_URL= BASE_URL + DatabaseHelper.IAC_PROJECT_NAME + REPOS + DatabaseHelper.IAC_REPO_IAC + "/pull-requests?state=ALL&limit=100&start=";
 
     public static final class Bearer {
 
