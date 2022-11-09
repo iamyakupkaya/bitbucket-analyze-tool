@@ -7,5 +7,5 @@ import org.json.JSONException;
 
 public interface IPullRequestService {
 
-    public boolean getPullRequestFromAPI(String url, PREntity entity) throws JSONException;
+    public boolean getPullRequestFromAPI(String url, String collectionName, PREntity entity) throws JSONException;
 }

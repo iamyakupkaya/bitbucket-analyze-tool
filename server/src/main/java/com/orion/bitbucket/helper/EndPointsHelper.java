@@ -24,7 +24,7 @@ public final class EndPointsHelper {
     // END POINT URL
     public static final String ASRV_MCP_CORE_ROOT_URL = BASE_URL + ASRV_PROJECT + ASRV_MCP_CORE_ROOT_REPO + "/pull-requests?state=ALL&limit=100&start=";
 
-    public static final String ASRV_AS_RAF_CORE__URL = BASE_URL + ASRV_PROJECT + ASRV_AS_RAF_CORE_REPO + "/pull-requests?state=ALL&limit=100&start=";
+    public static final String ASRV_AS_RAF_CORE_URL = BASE_URL + ASRV_PROJECT + ASRV_AS_RAF_CORE_REPO + "/pull-requests?state=ALL&limit=100&start=";
 
 
     public static final class Bearer {

@@ -1,19 +1,15 @@
 package com.orion.bitbucket.service.implementation;
-
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.orion.bitbucket.config.UtilConfig;
 import com.orion.bitbucket.entity.pull_request.PREntity;
 import com.orion.bitbucket.entity.pull_request.PRValuesEntity;
-import com.orion.bitbucket.entity.pull_request.asrv.AsRafCoreEntity;
-import com.orion.bitbucket.entity.pull_request.asrv.McpCoreRootEntity;
-import com.orion.bitbucket.helper.DatabaseHelper;
 import com.orion.bitbucket.helper.EndPointsHelper;
 import com.orion.bitbucket.helper.LogHelper;
-import com.orion.bitbucket.repository.asrv.AsRafCoreRepository;
-import com.orion.bitbucket.repository.asrv.McpCoreRootRepository;
+import com.orion.bitbucket.repository.PullRequestRepository;
 import com.orion.bitbucket.service.IPullRequestService;
+import com.orion.bitbucket.util.CollectionNameHolder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,23 +25,11 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor // default constructor
 public class PullRequestServiceImpl implements IPullRequestService {
 
-
-    @Autowired
-    private DBQueryServiceImpl queryService;
-
-    @Autowired
-    @Lazy
-    private PullRequestServiceImpl pullRequestService;
-
     @Autowired
     private UtilConfig utilConfig;
 
     @Autowired
-    @Lazy
-    private McpCoreRootRepository asrvMcpCoreRootRepository;
-
-    @Autowired
-    private AsRafCoreRepository asRafCoreRepository;
+    private PullRequestRepository pullRequestRepository;
 
     @Autowired
     private JsonResponseServiceImpl response;
@@ -55,7 +39,7 @@ public class PullRequestServiceImpl implements IPullRequestService {
     // find one or more documents with user email if there is.
 
     @Override
-    public boolean getPullRequestFromAPI(String url, PREntity entity) throws JSONException {
+    public boolean getPullRequestFromAPI(String url, String collectionName, PREntity entity) throws JSONException {
         int start = 0;
         boolean isLastPage = false;
         try {
@@ -63,10 +47,10 @@ public class PullRequestServiceImpl implements IPullRequestService {
             if (LogHelper.IS_BASE_LOGGING){
                 log.info("getPullRequestFromAPI method in PullRequestServiseImpl class was invoked.");
             }
+            CollectionNameHolder.set(collectionName);
             while (!isLastPage) {
                 HttpResponse<JsonNode> httpResponse = response.getResponse(url + start, EndPointsHelper.Bearer.TOKEN);
                 JSONObject body = httpResponse.getBody().getObject(); // JSONObject
-
                 int forStart = start;
                 // this cycle take a response which has 100 values, and break into pieces for all value per.
                 for (int i = 0; i < body.getInt("size"); i++) {
@@ -84,19 +68,14 @@ public class PullRequestServiceImpl implements IPullRequestService {
                     // checking which entity
                     PRValuesEntity jsonToValuesEntity = gson.fromJson(body.getJSONArray("values").get(i).toString(), PRValuesEntity.class);
                     entity.setValues(jsonToValuesEntity);
-                    if(entity instanceof McpCoreRootEntity){
-                        asrvMcpCoreRootRepository.save((McpCoreRootEntity) entity);
-                    } else if (entity instanceof AsRafCoreEntity) {
-                        asRafCoreRepository.save((AsRafCoreEntity) entity);
-                    }
+                    pullRequestRepository.save(entity);
+
                     forStart = forStart + 1;
                 }
 
                 start = start + 100;
                 isLastPage = body.getBoolean("isLastPage");
             }
-
-
 
             return true;
 
@@ -107,6 +86,7 @@ public class PullRequestServiceImpl implements IPullRequestService {
             return false;
         }
         finally {
+            CollectionNameHolder.reset();
             if (LogHelper.IS_BASE_LOGGING){
                 log.info("getPullRequestFromAPI method in PullRequestServiseImpl class executing has finished");
 

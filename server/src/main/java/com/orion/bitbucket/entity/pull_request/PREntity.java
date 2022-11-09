@@ -10,14 +10,11 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @Data
-public abstract class PREntity extends CommonBaseEntity implements ITopEntity {
+@NoArgsConstructor
+@Document(collection = "#{T(com.orion.bitbucket.util.CollectionNameHolder).get()}")
+public class PREntity extends CommonBaseEntity {
 
-    private PRValuesEntity values; // List<ValuesEntity>
-    public PREntity(){};
+    private PRValuesEntity values;
 
-    public PREntity(int size, int limit, boolean isLastPage, int start, int nextPageStart, PRValuesEntity values) {
-        super(size, limit, isLastPage, start, nextPageStart);
-        this.values = values;
-    }
 
 }
