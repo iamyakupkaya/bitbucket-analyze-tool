@@ -10,13 +10,13 @@ import com.orion.bitbucket.helper.LogHelper;
 import com.orion.bitbucket.repository.PullRequestRepository;
 import com.orion.bitbucket.service.IPullRequestService;
 import com.orion.bitbucket.util.CollectionNameHolder;
+import com.orion.bitbucket.util.JsonResponseServiceImpl;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,8 +1,7 @@
-package com.orion.bitbucket.service.implementation;
-
+package com.orion.bitbucket.util;
 import com.orion.bitbucket.helper.LogHelper;
-import com.orion.bitbucket.service.IJsonResponceService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -10,9 +9,10 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 @Log4j2
-@Service
-public class JsonResponseServiceImpl implements IJsonResponceService {
+@Component
+public class JsonResponseServiceImpl {
 
+    // this method get connection with API with token.
     public HttpResponse<JsonNode> getResponse(String url, String token) throws UnirestException {
         try {
             if (LogHelper.IS_BASE_LOGGING){

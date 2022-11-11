@@ -1,5 +1,6 @@
 package com.orion.bitbucket.util;
 
+// this class sets and gets collection name for changeable collection names.
 public class CollectionNameHolder {
     private static final ThreadLocal<String> collectionNameThreadLocal = new ThreadLocal<>();
 
