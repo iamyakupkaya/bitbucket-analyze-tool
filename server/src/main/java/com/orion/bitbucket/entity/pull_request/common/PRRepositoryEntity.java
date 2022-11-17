@@ -5,8 +5,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 //This class is used in values/fromRef/repository and values/toRef/repository
 public class PRRepositoryEntity {
-    @Id
-    private String id;
+    @Field("id")
+    private int id;
     private String slug;
     private String name;
     private String description;
@@ -23,7 +23,7 @@ public class PRRepositoryEntity {
     public PRRepositoryEntity() {
     }
 
-    public PRRepositoryEntity(String id, String slug, String name, String description, String hierarchyId, String scmId, String state, String statusMessage, boolean forkable, boolean aPublic, PRRepositoryProjectEntity project, PRRepositoryLinksEntity links) {
+    public PRRepositoryEntity(int id, String slug, String name, String description, String hierarchyId, String scmId, String state, String statusMessage, boolean forkable, boolean aPublic, PRRepositoryProjectEntity project, PRRepositoryLinksEntity links) {
         this.id = id;
         this.slug = slug;
         this.name = name;
@@ -38,11 +38,11 @@ public class PRRepositoryEntity {
         this.links = links;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

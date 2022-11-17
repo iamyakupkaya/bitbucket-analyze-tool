@@ -1,11 +1,12 @@
 package com.orion.bitbucket.entity.pull_request.common;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 // this common class is used in values/author/user and values/reviewers/user
 public class PRUserEntity {
-    @Id
-    private String id;
+    @Field("id")
+    private int id;
     private String name;
     private String emailAddress;
     private String displayName;
@@ -16,7 +17,7 @@ public class PRUserEntity {
 
     public PRUserEntity() {}
 
-    public PRUserEntity(String id, String name, String emailAddress, String displayName, boolean active, String slug, String type, PRLinksEntity links) {
+    public PRUserEntity(int id, String name, String emailAddress, String displayName, boolean active, String slug, String type, PRLinksEntity links) {
         this.id = id;
         this.name = name;
         this.emailAddress = emailAddress;
@@ -27,11 +28,11 @@ public class PRUserEntity {
         this.links = links;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

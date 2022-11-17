@@ -3,7 +3,7 @@ import com.orion.bitbucket.config.EntityConfig;
 import com.orion.bitbucket.helper.*;
 import com.orion.bitbucket.service.IPullRequestService;
 import com.orion.bitbucket.service.IProjectsService;
-import com.orion.bitbucket.service.implementation.DBQueryServiceImpl;
+import com.orion.bitbucket.service.implementation.QueryServiceImpl;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,7 +22,7 @@ import java.time.Instant;
 public class PageController {
     //FIELDS
     @Autowired
-    private DBQueryServiceImpl dbQueryService;
+    private QueryServiceImpl dbQueryService;
     @Autowired
     private IProjectsService projectsService;
 
@@ -107,16 +107,5 @@ public class PageController {
 
         return null;
     }
-
-
-    @GetMapping(ControllerHelper.URL_GET_PRS_FROM_DB) // url --> /get-prs
-    public void getSpecificPR() {
-        Instant start = Instant.now();
-        dbQueryService.findPRSByEmail("can.eren@orioninc.com",DatabaseHelper.COLLECTION_NAME_ASRV_MCP_CORE_ROOT);
-        Instant finish = Instant.now();
-        Duration differenceTime = Duration.between(start, finish);
-        System.out.println("Total duration of finding of user prs is: " + differenceTime.toMillis() + " millis.!");
-    }
-
 
 }

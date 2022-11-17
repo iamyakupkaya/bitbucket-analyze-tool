@@ -2,9 +2,10 @@ package com.orion.bitbucket.entity.pull_request;
 
 import com.orion.bitbucket.entity.pull_request.common.PRRepositoryEntity;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 public class PRFromRefEntity {
-    @Id
+    @Field("id")
     private String id;
     private String displayId;
     private String latestCommit;

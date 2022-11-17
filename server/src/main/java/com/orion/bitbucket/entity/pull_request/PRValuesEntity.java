@@ -2,14 +2,14 @@ package com.orion.bitbucket.entity.pull_request;
 
 import com.orion.bitbucket.entity.pull_request.common.PRLinksEntity;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PRValuesEntity {
-
-    @Id
-    private String id;
+    @Field("id")
+    private int id;
     private int version;
     private String title;
     private String description;
@@ -41,7 +41,7 @@ public class PRValuesEntity {
     public PRValuesEntity() {
     }
 
-    public PRValuesEntity(String id, int version, String title, String description, String state, String open, String closed, long createdDate, long updatedDate, boolean locked, ArrayList<PRParticipantsEntity> participants, PRFromRefEntity fromRef, PRToRefEntity toRef, PRAuthorEntity author, List<PRReviewersEntity> reviewers, PRPropertiesEntity properties, PRLinksEntity links) {
+    public PRValuesEntity(int id, int version, String title, String description, String state, String open, String closed, long createdDate, long updatedDate, boolean locked, ArrayList<PRParticipantsEntity> participants, PRFromRefEntity fromRef, PRToRefEntity toRef, PRAuthorEntity author, List<PRReviewersEntity> reviewers, PRPropertiesEntity properties, PRLinksEntity links) {
         this.id = id;
         this.version = version;
         this.title = title;
@@ -61,11 +61,11 @@ public class PRValuesEntity {
         this.links = links;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
