@@ -30,45 +30,69 @@ public class QueryServiceImpl implements IQueryService {
     private EntityConfig entityConfig;
     @Autowired
     private UtilConfig utilConfig;
-    public List<PREntity> findPRSByEmail(String email, String DBCollectionName) {
+
+
+    public List<PREntity> getAllPullRequests(String query, String condition, String[] collectionNames) {
         List<PREntity> resutlAPI = new ArrayList<PREntity>();
         Gson gson = utilConfig.getGson();
-        try (MongoClient mongoClient = MongoClients.create(DatabaseHelper.DATABASE_URL)) {
-            if (LogHelper.IS_BASE_LOGGING){
-                log.info("findPRSByEmail method in DBQueryServiceImpl class was invoked for {} email.", email);
-            }
-            MongoDatabase database = mongoClient.getDatabase(DatabaseHelper.DATABASE_NAME);
-            MongoCollection<Document> collection = database.getCollection(DBCollectionName);
-            BasicDBObject query = new BasicDBObject();
-            query.put(QueryHelper.VALUES_REVIEWERS_USER_EMAIL_ADDRESS, email);
-            MongoCursor<Document> cursor = collection.find(query).iterator();
+        System.out.println("İÇERDEYİZ");
 
-            while (cursor.hasNext()) {
-               PREntity entity = entityConfig.getPrototypePullRequestEntity(); // must create a new instance
-                Document doc = cursor.next();
-                Document values = (Document) doc.get("values");
-                JSONObject jsonObject = new JSONObject(doc.toJson());
-                entity.setId(jsonObject.getJSONObject("_id").getString("$oid"));
-                entity.setSize(jsonObject.getInt("size"));
-                entity.setLimit(jsonObject.getInt("limit"));
-                entity.setIsLastPage(jsonObject.getBoolean("isLastPage"));
-                entity.setStart(jsonObject.getInt("start"));
-                entity.setNextPageStart(jsonObject.getInt("nextPageStart"));
-                entity.setValues(gson.fromJson(values.toJson(), PRValuesEntity.class));
-                resutlAPI.add(entity);
-            }
+        for (String collectionName : collectionNames){
+            System.out.println("For içi");
+            try (MongoClient mongoClient = MongoClients.create(DatabaseHelper.DATABASE_URL)) {
+                if (LogHelper.IS_BASE_LOGGING){
+                    log.info("getAllPullRequests method in QueryServiceImpl class was invoked for " + collectionName);
+                }
+                BasicDBObject basicQuery = getQuery(query, condition);
+
+                MongoDatabase database = mongoClient.getDatabase(DatabaseHelper.DATABASE_NAME);
+                MongoCollection<Document> collection = database.getCollection(collectionName);
+                MongoCursor<Document> cursor = collection.find(basicQuery).iterator();
+                System.out.println("ÇALIŞTI");
+                while (cursor.hasNext()) {
+                    System.out.println("While içerisindeyiz..");
+                    PREntity entity = entityConfig.getPrototypePullRequestEntity(); // must create a new instance
+                    Document doc = cursor.next();
+                    Document values = (Document) doc.get("values");
+                    JSONObject jsonObject = new JSONObject(doc.toJson());
+                    entity.setId(jsonObject.getJSONObject("_id").getString("$oid"));
+                    entity.setSize(jsonObject.getInt("size"));
+                    entity.setLimit(jsonObject.getInt("limit"));
+                    entity.setIsLastPage(jsonObject.getBoolean("isLastPage"));
+                    entity.setStart(jsonObject.getInt("start"));
+                    entity.setNextPageStart(jsonObject.getInt("nextPageStart"));
+                    entity.setValues(gson.fromJson(values.toJson(), PRValuesEntity.class));
+                    resutlAPI.add(entity);
+                }
 
 
-        } catch (Exception err) {
-            if(LogHelper.IS_BASE_LOGGING){
-                log.error("There is a error in findPRSByEmail method in DBQueryServiceImpl class. Error: {}", err);
-            }
-        } finally {
-            if (LogHelper.IS_BASE_LOGGING){
-                log.info("findPRSByEmail method in DBQueryServiseImpl class executing has finished");
+            } catch (Exception err) {
+                if(LogHelper.IS_BASE_LOGGING){
+                    log.error("There is a error in findPRSByEmail method in QueryServiceImpl class. Error: {}", err);
+                }
+            } finally {
+                if (LogHelper.IS_BASE_LOGGING){
+                    log.info("findPRSByEmail method in QueryServiseImpl class executing has finished");
+                }
             }
         }
-    return resutlAPI;
+        return resutlAPI;
     }
+
+    public BasicDBObject getQuery(String query, String condition){
+        BasicDBObject basicQuery = new BasicDBObject();
+        if(!query.isEmpty() && !condition.isEmpty()){
+            if(condition.toLowerCase().equals("true")  || condition.toLowerCase().equals("false") ){
+                boolean boolCondition= Boolean.parseBoolean(condition);
+                basicQuery.put(query, boolCondition);
+            }
+            else {
+                basicQuery.put(query, condition);
+
+            }
+        }
+        return basicQuery;
+    }
+
 }
 

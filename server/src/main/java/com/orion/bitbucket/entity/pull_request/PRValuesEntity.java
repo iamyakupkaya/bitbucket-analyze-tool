@@ -14,8 +14,8 @@ public class PRValuesEntity {
     private String title;
     private String description;
     private String state;
-    private String open;
-    private String closed;
+    private boolean open;
+    private boolean closed;
     private long createdDate;
     private long updatedDate;
     private boolean locked;
@@ -41,7 +41,7 @@ public class PRValuesEntity {
     public PRValuesEntity() {
     }
 
-    public PRValuesEntity(int id, int version, String title, String description, String state, String open, String closed, long createdDate, long updatedDate, boolean locked, ArrayList<PRParticipantsEntity> participants, PRFromRefEntity fromRef, PRToRefEntity toRef, PRAuthorEntity author, List<PRReviewersEntity> reviewers, PRPropertiesEntity properties, PRLinksEntity links) {
+    public PRValuesEntity(int id, int version, String title, String description, String state, boolean open, boolean closed, long createdDate, long updatedDate, boolean locked, ArrayList<PRParticipantsEntity> participants, PRFromRefEntity fromRef, PRToRefEntity toRef, PRAuthorEntity author, List<PRReviewersEntity> reviewers, PRPropertiesEntity properties, PRLinksEntity links) {
         this.id = id;
         this.version = version;
         this.title = title;
@@ -101,19 +101,19 @@ public class PRValuesEntity {
         this.state = state;
     }
 
-    public String getOpen() {
+    public boolean getOpen() {
         return open;
     }
 
-    public void setOpen(String open) {
+    public void setOpen(boolean open) {
         this.open = open;
     }
 
-    public String getClosed() {
+    public boolean getClosed() {
         return closed;
     }
 
-    public void setClosed(String closed) {
+    public void setClosed(boolean closed) {
         this.closed = closed;
     }
 

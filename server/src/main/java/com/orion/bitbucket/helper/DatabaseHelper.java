@@ -2,6 +2,8 @@ package com.orion.bitbucket.helper;
 
 public class DatabaseHelper {
 
+
+
     public static final String PROJECTS="projects";
 
     // DB INFO
@@ -27,4 +29,13 @@ public class DatabaseHelper {
 
     // DB COLLECTION NAME FOR IAC PROJECT
     public static final String COLLECTION_NAME_IAC_IAC=IAC_PROJECT_NAME + "_" + IAC_REPO_IAC;
+
+
+    // ALL COLLECTIONS ARRAY EXCEPT PROJECTS COLLECTION
+    public static final String [] ALL_COLLECTIONS_ARRAY= new String[]{
+            COLLECTION_NAME_ASRV_MCP_CORE_ROOT,
+            COLLECTION_NAME_ASRV_AS_RAF_CORE,
+            COLLECTION_NAME_IAC_IAC
+    };
+
 }

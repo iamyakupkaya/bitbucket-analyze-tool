@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.orion.bitbucket.entity.pull_request.PREntity;
 import com.orion.bitbucket.helper.ControllerHelper;
 import com.orion.bitbucket.helper.DatabaseHelper;
+import com.orion.bitbucket.helper.QueryHelper;
 import com.orion.bitbucket.service.implementation.QueryServiceImpl;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,14 +33,14 @@ public class QueryController {
 
     // METHODS
     @CrossOrigin
-    @GetMapping(path = ControllerHelper.URL_GET_PRS_FROM_DB) // url --> /get-prs
-    public ResponseEntity<List<PREntity>> getSpecificPR(@PathParam("email") String email) {
+    @GetMapping(path = ControllerHelper.URL_GET_DATA_FROM_DB) // url --> /get-data
+    public ResponseEntity<List<PREntity>> getAllPullRequests(@RequestParam(name = "query", required = false, defaultValue = "") String query, @RequestParam(name = "condition", required = false, defaultValue = "") String condition) {
         Instant start = Instant.now();
         List<PREntity> resultAPI = new ArrayList<PREntity>();
-        resultAPI=queryService.findPRSByEmail(email, DatabaseHelper.COLLECTION_NAME_ASRV_MCP_CORE_ROOT);
+        resultAPI=queryService.getAllPullRequests(query, condition, DatabaseHelper.ALL_COLLECTIONS_ARRAY);
         Instant finish = Instant.now();
         Duration differenceTime = Duration.between(start, finish);
         System.out.println("Total duration of finding of user prs is: " + differenceTime.toMillis() + " millis.!");
-    return ResponseEntity.status(HttpStatus.OK).body(resultAPI);
+        return ResponseEntity.status(HttpStatus.OK).body(resultAPI);
     }
 }
