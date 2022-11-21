@@ -22,7 +22,7 @@ const App = () => {
             <ThemeProvider theme={themes(customization)}>
                 <CssBaseline />
                 <NavigationScroll>
-                    <Routes />
+                    <Routes exact path="/orion" />
                 </NavigationScroll>
             </ThemeProvider>
         </StyledEngineProvider>
