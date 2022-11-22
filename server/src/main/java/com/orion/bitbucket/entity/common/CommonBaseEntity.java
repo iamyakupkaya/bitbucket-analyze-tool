@@ -4,11 +4,12 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class CommonBaseEntity {
-    private int size;
-    private int limit;
-    private boolean isLastPage;
-    private int start;
-    private int nextPageStart;
+    //default values
+    private int size =-1;
+    private int limit=-1;
+    private boolean isLastPage=false;
+    private int start=-1;
+    private int nextPageStart=-1;
 
     public CommonBaseEntity() {
     }

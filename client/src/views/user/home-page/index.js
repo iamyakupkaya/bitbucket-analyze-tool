@@ -1,13 +1,8 @@
-// material-ui
 import { Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
-
-// material-ui
-
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Box from '@mui/material/Box';
-
 import axios from 'axios';
 // CONTANTS
 const columns = [
@@ -53,7 +48,7 @@ const columns = [
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const SamplePage = () => {
+const HomePage = () => {
   const [data, setData] = useState([])
   const [isRefresh, setIsRefresh] = useState(false);
     const [page, setPage] = React.useState(0);
@@ -116,7 +111,7 @@ const rows = openData.map((pr)=> {
     )
 };
 
-export default SamplePage;
+export default HomePage;
 
 
 /*

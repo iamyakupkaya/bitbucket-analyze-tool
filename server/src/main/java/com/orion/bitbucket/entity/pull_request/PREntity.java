@@ -22,6 +22,6 @@ public class PREntity extends CommonBaseEntity {
 
     @Id
     @Field("_id")
-    private String id;
+    private String id="Unknown";
 
 }

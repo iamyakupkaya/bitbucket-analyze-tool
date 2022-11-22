@@ -3,7 +3,7 @@ package com.orion.bitbucket.entity.project;
 import com.orion.bitbucket.entity.common.CommonValuesEntity;
 
 public class ProjectValuesEntity extends CommonValuesEntity {
-    private String description;
+    private String description ="Unknown";
     private ProjectLinksEntity links;
 
   public ProjectValuesEntity(){};

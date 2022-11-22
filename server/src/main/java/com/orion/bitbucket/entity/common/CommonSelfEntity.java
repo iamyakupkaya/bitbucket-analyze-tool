@@ -4,7 +4,7 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class CommonSelfEntity {
-    private String href;
+    private String href="Unknown";
 
     public String getHref() {
         return href;

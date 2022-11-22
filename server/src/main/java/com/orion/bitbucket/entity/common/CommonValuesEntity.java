@@ -7,10 +7,10 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class CommonValuesEntity {
-    private String key;
+    private String key ="Unknown";
     @Id
-    private String id;
-    private String name;
+    private String id="Unknown";
+    private String name="Unknown";
     @Field("public") // it will be showed as public in MongoDB
     private boolean Public;
     private String type;

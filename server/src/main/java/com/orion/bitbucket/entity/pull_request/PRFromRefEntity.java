@@ -6,10 +6,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 public class PRFromRefEntity {
     @Field("id")
-    private String id;
-    private String displayId;
-    private String latestCommit;
-    private String type;
+    private String id="Unknown";
+    private String displayId="Unknown";
+    private String latestCommit="Unknown";
+    private String type="Unknown";
     private PRRepositoryEntity repository;
 
     public PRFromRefEntity() {

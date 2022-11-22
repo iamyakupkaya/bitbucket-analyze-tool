@@ -1,58 +1,40 @@
-// material-ui
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import InfoIcon from '@mui/icons-material/Info';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import {openDialogMethod} from "../../../redux/dialog/dialogSlice"
-
-
-import FullScreenDialog from 'views/utilities/FullScreenDialog';
-
-// material-ui
-
+import FullScreenDialog from 'ui-component/user/FullScreenDialog';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Vortex } from  'react-loader-spinner'
+//import { useDemoData } from '@mui/x-data-grid-generator';
+
 import Box from '@mui/material/Box';
 
 import axios from 'axios';
 
+// Helper functions
+function createData(pr, id, author, emailAddress, name, create, updated, state,  title ) {
+  return {pr, id, author, emailAddress, name, create, updated, state,  title };
+}
 
-// COMPONENT
+// ==============================|| Pull-Request PAGE ||============================== //
 
-
-
-// CONTANTS
-
-  
-
-// ==============================|| SAMPLE PAGE ||============================== //
-
-const SamplePage = () => {
-  const dispatch = useDispatch()
+const PullRequestPage = () => {
+ 
   const [data, setData] = useState([])
-    const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
-  const openData = useSelector( (state)  =>  state.openPR.openPullRequest)
+  const [pageSize, setPageSize] = useState(10);
+  const [pageNum, setPageNum] = useState(0);
   const [open, setOpen] = useState(false);
   const [selectedPR, setSelectedPR] = useState({})
+
   useEffect(() => {
     const getData = async ()=>{
       const responseData = await axios("http://localhost:8989/api/v1/get-data?query=values.open&condition=true")
       setData([...data,...(responseData.data)]);
-      console.log("ReNDER oldu")
     }
     getData();
 
   }, []);
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  }
-
 
   const columns = [
     {
@@ -74,10 +56,11 @@ const SamplePage = () => {
           
           return (
             <Stack direction="row" spacing={2}>
-              <Button variant="outlined" color="error" size="small" onClick={onClick}>More</Button>
+              <Button   sx={{ borderRadius:25, color:"#21a2f6"}}
+ variant="outlined" size="small" onClick={onClick}><InfoIcon/></Button>
             </Stack>
           );},
-      flex: 0.5,
+      flex: 0.75,
     },
        {
           field: "author",
@@ -120,20 +103,7 @@ const SamplePage = () => {
       
     ];
     
-    function createData(pr, id, author, emailAddress, name, create, updated, state,  title ) {
-      return {pr, id, author, emailAddress, name, create, updated, state,  title };
-    }
-
-  const rows2= data.map((pr)=> {
-    return createData(pr,
-    pr.id, pr.values.author.user.name, 
-    pr.values.author.user.emailAddress, 
-    pr.values.fromRef.repository.name, 
-    new Date(pr.values.createdDate).toISOString().split('T')[0],
-    new Date(pr.values.updatedDate).toISOString().split('T')[0], 
-    pr.values.state,  pr.values.title )
-}) 
-const rows = openData.map((pr)=> {
+const rows = data.map((pr)=> {
         return  createData(pr,
           pr.id, pr.values.author.user.name, 
           pr.values.author.user.emailAddress, 
@@ -143,14 +113,21 @@ const rows = openData.map((pr)=> {
           pr.values.state,  pr.values.title )
     })
 
-    if(rows2.length <=0){
-      return
-          <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
-      <CircularProgress color="secondary" />
-    </Stack>
-       
-      
-      
+    if(data.length <=0){
+      return (
+        <Box sx={{ width:"100%", height:"100%", display:"flex", justifyContent: 'center', alignItems:"center" }}>
+          <Vortex
+            visible={true}
+            height="250"
+            width="250"
+            ariaLabel="vortex-loading"
+            wrapperStyle={{}}
+            wrapperClass="vortex-wrapper"
+            colors={['red', 'green', 'blue', 'yellow', 'orange', 'purple']}
+          />
+      </Box>
+      )
+         
     }
 
     if(open){
@@ -165,10 +142,20 @@ const rows = openData.map((pr)=> {
     >
 
       <DataGrid
-        rows={openData.length <=0 ? rows2 : rows}
-        getRowId={openData.length <=0 ? rows2.id : rows.id}
+        rows={rows}
+        getRowId={rows.id}
         columns={columns}
         components={{ Toolbar: GridToolbar }}
+        rowsPerPageOptions={[10, 25, 50, 75, 100]}
+        pageSize={pageSize}
+        onPageChange={(newPage) => setPageNum(newPage)}
+        onPageSizeChange={(newPage) => setPageSize(newPage)}
+        initialState={{
+          pagination: {
+            page: pageNum,
+          },
+        }}
+
         
       >
 </DataGrid>
@@ -180,7 +167,7 @@ const rows = openData.map((pr)=> {
     
 };
 
-export default SamplePage;
+export default PullRequestPage;
 
 
 /*

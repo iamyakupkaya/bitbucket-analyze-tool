@@ -9,16 +9,16 @@ import java.util.List;
 
 public class PRValuesEntity {
     @Field("id")
-    private int id;
-    private int version;
-    private String title;
-    private String description;
-    private String state;
-    private boolean open;
-    private boolean closed;
-    private long createdDate;
-    private long updatedDate;
-    private boolean locked;
+    private int id =-1;
+    private int version=-1;
+    private String title="Unknown";
+    private String description="Unknown";
+    private String state="Unknown";
+    private boolean open=false;
+    private boolean closed=false;
+    private long createdDate=-1;
+    private long updatedDate=-1;
+    private boolean locked=false;
 
     private ArrayList<PRParticipantsEntity> participants;
 

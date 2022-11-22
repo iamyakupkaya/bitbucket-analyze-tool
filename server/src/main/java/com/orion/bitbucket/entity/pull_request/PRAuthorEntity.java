@@ -4,9 +4,9 @@ import com.orion.bitbucket.entity.pull_request.common.PRUserEntity;
 
 public class PRAuthorEntity {
     private PRUserEntity user;
-    private String role;
-    private boolean approved;
-    private String status;
+    private String role ="Unknown";
+    private boolean approved = false;
+    private String status="Unknown";
 
     public PRAuthorEntity() {
     }

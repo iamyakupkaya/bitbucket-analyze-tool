@@ -6,13 +6,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 // this common class is used in values/author/user and values/reviewers/user
 public class PRUserEntity {
     @Field("id")
-    private int id;
-    private String name;
-    private String emailAddress;
-    private String displayName;
-    private boolean active;
-    private String slug;
-    private String type;
+    private int id=-1;
+    private String name="Unknown";
+    private String emailAddress="Unknown";
+    private String displayName="Unknown";
+    private boolean active=false;
+    private String slug="Unknown";
+    private String type="Unknown";
     private PRLinksEntity links;
 
     public PRUserEntity() {}

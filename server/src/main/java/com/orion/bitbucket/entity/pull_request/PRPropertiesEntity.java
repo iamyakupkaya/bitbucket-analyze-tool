@@ -2,9 +2,9 @@ package com.orion.bitbucket.entity.pull_request;
 
 public class PRPropertiesEntity {
     private PRPropertiesMergeResultEntity mergeResult;
-    private int resolvedTaskCount;
-    private int commentCount;
-    private int openTaskCount;
+    private int resolvedTaskCount=-1;
+    private int commentCount=-1;
+    private int openTaskCount=-1;
 
     public PRPropertiesEntity() {
     }

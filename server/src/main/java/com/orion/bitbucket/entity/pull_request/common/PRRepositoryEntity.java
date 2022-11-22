@@ -6,17 +6,17 @@ import org.springframework.data.mongodb.core.mapping.Field;
 //This class is used in values/fromRef/repository and values/toRef/repository
 public class PRRepositoryEntity {
     @Field("id")
-    private int id;
-    private String slug;
-    private String name;
-    private String description;
-    private String hierarchyId;
-    private String scmId;
-    private String state;
-    private String statusMessage;
-    private boolean forkable;
+    private int id =-1;
+    private String slug="Unknown";
+    private String name="Unknown";
+    private String description="Unknown";
+    private String hierarchyId="Unknown";
+    private String scmId="Unknown";
+    private String state="Unknown";
+    private String statusMessage="Unknown";
+    private boolean forkable=false;
     @Field("public")
-    private boolean Public;
+    private boolean Public=false;
     private PRRepositoryProjectEntity project;
     private PRRepositoryLinksEntity links;
 

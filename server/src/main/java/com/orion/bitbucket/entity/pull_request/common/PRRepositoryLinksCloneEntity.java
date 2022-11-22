@@ -1,8 +1,8 @@
 package com.orion.bitbucket.entity.pull_request.common;
 
 public class PRRepositoryLinksCloneEntity {
-    private String href;
-    private String name;
+    private String href="Unknown";
+    private String name="Unknown";
 
     public PRRepositoryLinksCloneEntity() {
     }

@@ -1,8 +1,8 @@
 package com.orion.bitbucket.entity.pull_request;
 
 public class PRPropertiesMergeResultEntity {
-    private String outcome;
-    private boolean current;
+    private String outcome="Unknown";
+    private boolean current=false;
 
     public PRPropertiesMergeResultEntity() {
     }
