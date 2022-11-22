@@ -2,16 +2,20 @@ import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Button from '@mui/material/Button';
+import ReviewerCard from './ReviewerCard';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
+
 
 
 
@@ -20,11 +24,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
+const StyledBadge = styled(Badge)((props) => ({
+  
   '& .MuiBadge-badge': {
-    backgroundColor: '#44b700',
-    color: '#44b700',
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    backgroundColor: `${props.active ? "#44b700" : "red" }`,
+    color: `${props.active ? "#44b700" : "red" }`,
+    boxShadow: `0 0 0 2px ${props.theme.palette.background.paper}`,
     '&::after': {
       position: 'absolute',
       top: 0,
@@ -82,12 +87,7 @@ function stringAvatar(name = "Unknown Unknown") {
 
 
 export default function FullScreenDialog(props) {
-  console.log("gelen props", props)
   const {open, setOpen, selectedPR } = props.data;
-
-  //console.log("Selected pr", selectedPR.values.author.user)
-
-  console.log("HATA OLDu")
   const handleClose = () => {
     setOpen(false)
   };
@@ -100,13 +100,14 @@ export default function FullScreenDialog(props) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative', backgroundColor:"#21a2f6" }}>
+        <AppBar sx={{ position: 'relative', backgroundColor:"#e3f2fd" }}>
           <Toolbar sx={{ display:"flex", justifyContent:"space-between"}}>
           <Stack direction="row" spacing={2}>
           <StyledBadge
   overlap="circular"
   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
   variant="dot"
+  active={selectedPR.values.author.user.active}
 >
 <Avatar {...stringAvatar(selectedPR.values.author.user.displayName)} />
 </StyledBadge>
@@ -117,21 +118,57 @@ export default function FullScreenDialog(props) {
             </Typography>
           </Stack>
             
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
+          <Button
+          onClick={handleClose}
+          variant="contained" sx={{backgroundColor:"#2196f3"}} size="small" startIcon={<CancelIcon color="error" />}>
+          <Typography variant="h5" sx={{fontWeight:"bold", color:"white"}}>
+              Close
+</Typography>
+      </Button>
           </Toolbar>
         </AppBar>
-        <List>
+        <Box sx={{flexGrow:1}}>
+          <Box sx={{mt:1.5}} >
+          <Divider sx={{mb:5}}>
+            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"STATE: " + selectedPR.values.state} />
+            <Chip sx={{marginRight:"15vw", marginLeft:"15vw",  backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"PROJECT: "+selectedPR.values.fromRef.repository.project.name} />
+            <Chip sx={{backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"REPOSITORY: "+selectedPR.values.fromRef.repository.slug} />
+          </Divider>
+          <Divider sx={{mb:5}}>
+            <Chip sx={{marginRight:"15vw", backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"CREATED: " + new Date(selectedPR.values.createdDate).toISOString().split("T")[0]} />
+            <Chip sx={{backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"UPDATED: "+new Date(selectedPR.values.updatedDate).toISOString().split("T")[0]} />
+          </Divider>
+          <Divider textAlign="left" sx={{fontWeight:"bold"}}>TITLE</Divider>
+          <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
+            {selectedPR.values.title}
+          </Box>
+          <Divider textAlign="left" sx={{fontWeight:"bold", mt:2}}>DESCRIPTION</Divider>
+          <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
+            {selectedPR.values.description}
+          </Box>
+          <Divider textAlign="left" sx={{fontWeight:"bold", mt:2}}>DESCRIPTION</Divider>
+          <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
+            {selectedPR.values.description}
+          </Box>
+          </Box>
+        <Grid container spacing={5}>
+        <Grid item xs={6} md={6} lg={4}>
+        <ReviewerCard/>
+
+        </Grid>
+        <Grid item xs={6} md={6} lg={4}>
+        <ReviewerCard/>
+        </Grid>
+        <Grid item xs={6} md={6} lg={4}>
+        <ReviewerCard/>
+        </Grid>
+        
+      </Grid>
          
+
           <Divider />
          
-        </List>
+        </Box>
       </Dialog>
     </div>
   );
