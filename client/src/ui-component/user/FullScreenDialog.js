@@ -9,12 +9,12 @@ import Slide from '@mui/material/Slide';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import CancelIcon from '@mui/icons-material/Cancel';
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import ReviewerCard from './ReviewerCard';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
+import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 
 
 
@@ -118,24 +118,20 @@ export default function FullScreenDialog(props) {
             </Typography>
           </Stack>
             
-          <Button
-          onClick={handleClose}
-          variant="contained" sx={{backgroundColor:"#2196f3"}} size="small" startIcon={<CancelIcon color="error" />}>
-          <Typography variant="h5" sx={{fontWeight:"bold", color:"white"}}>
-              Close
-</Typography>
-      </Button>
+          <IconButton aria-label="delete" color="error" size="medium" onClick={handleClose}>
+  <CancelPresentationIcon  fontSize="inherit" />
+</IconButton>
           </Toolbar>
         </AppBar>
         <Box sx={{flexGrow:1}}>
           <Box sx={{mt:1.5}} >
           <Divider sx={{mb:5}}>
             <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"STATE: " + selectedPR.values.state} />
-            <Chip sx={{marginRight:"15vw", marginLeft:"15vw",  backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"PROJECT: "+selectedPR.values.fromRef.repository.project.name} />
+            <Chip sx={{marginRight:"10vw", marginLeft:"10vw",  backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"PROJECT: "+selectedPR.values.fromRef.repository.project.name} />
             <Chip sx={{backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"REPOSITORY: "+selectedPR.values.fromRef.repository.slug} />
           </Divider>
           <Divider sx={{mb:5}}>
-            <Chip sx={{marginRight:"15vw", backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"CREATED: " + new Date(selectedPR.values.createdDate).toISOString().split("T")[0]} />
+            <Chip sx={{marginRight:"10vw", backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"CREATED: " + new Date(selectedPR.values.createdDate).toISOString().split("T")[0]} />
             <Chip sx={{backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"UPDATED: "+new Date(selectedPR.values.updatedDate).toISOString().split("T")[0]} />
           </Divider>
           <Divider textAlign="left" sx={{fontWeight:"bold"}}>TITLE</Divider>
@@ -146,28 +142,30 @@ export default function FullScreenDialog(props) {
           <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
             {selectedPR.values.description}
           </Box>
-          <Divider textAlign="left" sx={{fontWeight:"bold", mt:2}}>DESCRIPTION</Divider>
-          <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
-            {selectedPR.values.description}
+          <Divider textAlign="left" sx={{fontWeight:"bold", mt:2}}>REVIEWERS</Divider>
           </Box>
-          </Box>
-        <Grid container spacing={5}>
-        <Grid item xs={6} md={6} lg={4}>
-        <ReviewerCard/>
+        <Grid container spacing={2}>
+        {selectedPR.values.reviewers.map((reviewer, index, arr) => {
+          if(arr.length<3){
+            return(
+              <Grid sx={{display:"flex", justifyContent:"center", alignItems:"center"}} item xs={12} sm={6} md={6} lg={4} xl={3}>
+              <ReviewerCard  data={reviewer}/>
+              <br></br>
+              </Grid> 
+  
+            )
+          }
+          return(
+            <Grid sx={{display:"flex", justifyContent:"center", alignItems:"center"}} item xs={12} sm={6} md={6} lg={4} xl={3}>
+            <ReviewerCard data={reviewer}/>
+            <br></br>
 
-        </Grid>
-        <Grid item xs={6} md={6} lg={4}>
-        <ReviewerCard/>
-        </Grid>
-        <Grid item xs={6} md={6} lg={4}>
-        <ReviewerCard/>
-        </Grid>
-        
+            </Grid> 
+
+          )
+        })}
       </Grid>
-         
-
-          <Divider />
-         
+                  
         </Box>
       </Dialog>
     </div>

@@ -5,9 +5,8 @@ import { Button } from "@mui/material";
 import styled from "styled-components"
 import axios from "axios";
 import {useSelector, useDispatch } from 'react-redux'
-import { getOpenPullRequests } from "redux/open_true/OpenPullRequestSlice";
-import Stack from '@mui/material/Stack';
-import LinearProgress from '@mui/material/LinearProgress';
+import { getPullRequests } from "redux/pull_request/PullRequestSlice";
+import LoadingCircle from "ui-component/user/LoadingCircle";
 
 
 
@@ -34,7 +33,9 @@ const StyledBox = styled(Box)`
 
 const StyledLink = styled(Link)`
     text-decoration: none;
-
+    width: 100%;
+    height: 100%;
+    backgroundColor:"red";
     
 
 
@@ -43,33 +44,35 @@ const StyledLink = styled(Link)`
 
 
 const LoginPage = () => {
-  const [data, setData] = useState([]);
   const [show, setShow] = useState(false);
+  const [data, setData] = useState([])
   const dispatch = useDispatch();
-  const loadSurvayer = useCallback(async () => {
-    const dataResponse = await axios("http://localhost:8989/api/v1/get-data?query=values.open&condition=true")
-    dispatch(getOpenPullRequests(dataResponse.data));
-}, [dispatch]);
   useEffect(() => {
-      loadSurvayer();
-      setShow(true)
-    
+    const getData = async () => {
+      const dataResponse = await axios("http://localhost:8989/api/v1/get-data")
+      setData([...data, ...dataResponse.data])
+      setShow(true);
+
+    }
+    getData();
    }, []);
-   const count = useSelector(state => state)
+   
+   console.log("data son durum", data)
+
+   const yaz = useSelector((state) => state)
+console.log("satte", yaz)
 
    if(!show){
-    return <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2}>
-    <LinearProgress color="secondary" />
-    <LinearProgress color="success" />
-    <LinearProgress color="inherit" />
-  </Stack>
+    return (
+      <LoadingCircle/>
+    );
    }
-   console.log("Count", count)
+
   return (
     <>
       <StyledBox>
         <Box>
-            <Button ><StyledLink to="/user" >USER</StyledLink></Button>
+            <Button onClick={()=>dispatch(getPullRequests(data))} ><StyledLink to="/user" >USER</StyledLink></Button>
         </Box>
         <Box>
             <Button id="disable" disabled><StyledLink  to="/user" disabled >ADMIN</StyledLink></Button>

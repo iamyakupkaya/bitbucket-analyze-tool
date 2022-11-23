@@ -1,17 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { applyMiddleware } from 'redux'
 
-import {OpenPullRequestReducer} from "./open_true/OpenPullRequestSlice"
+import {PullRequestReducer} from "./pull_request/PullRequestSlice"
 import {DialogScreenReducer} from "./dialog/dialogSlice"
 import customizationReducer from '../store/customizationReducer';
-import FullScreenDialog from "ui-component/user/FullScreenDialog";
-
-
-const middlewareEnhancer = applyMiddleware(FullScreenDialog)
 
 const reduxStore = configureStore({
   reducer: {
-    openPR:OpenPullRequestReducer,
+    data:PullRequestReducer,
     customization: customizationReducer,
     dialogScreen:DialogScreenReducer
   },

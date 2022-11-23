@@ -2,7 +2,6 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
@@ -10,10 +9,11 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Badge from '@mui/material/Badge';
+import Stack from '@mui/material/Stack';
+
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -26,7 +26,69 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function ReviewerCard() {
+const StyledBadge = styled(Badge)((props) => ({
+  
+  '& .MuiBadge-badge': {
+    backgroundColor: `${props.active ? "#44b700" : "red" }`,
+    color: `${props.active ? "#44b700" : "red" }`,
+    boxShadow: `0 0 0 2px ${props.theme.palette.background.paper}`,
+    '&::after': {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%',
+      animation: 'ripple 1.2s infinite ease-in-out',
+      border: '1px solid currentColor',
+      content: '""',
+    },
+  },
+  '@keyframes ripple': {
+    '0%': {
+      transform: 'scale(.8)',
+      opacity: 1,
+    },
+    '100%': {
+      transform: 'scale(2.4)',
+      opacity: 0,
+    },
+  },
+}));
+
+function stringToColor(string="Unknown Unknown") {
+
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name = "Unknown Unknown") {
+  name = name.includes(" ") ? name : name+" ?";
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+  };
+}
+
+
+export default function ReviewerCard({data}) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -34,26 +96,24 @@ export default function ReviewerCard() {
   };
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
+    <Card sx={{ maxWidth: 350, backgroundColor:"#e3f2fd" }}>
+      <Stack sx={{mt:3, ml:3, display:"flex", justifyContent:"space-between", alignItems:"center"}} direction="row" spacing={2}>
+          <StyledBadge
+  overlap="circular"
+  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+  variant="dot"
+  active={data.user.active}
+>
+<Avatar {...stringAvatar(data.user.displayName)} />
+</StyledBadge>
+<IconButton aria-label="settings">
             <MoreVertIcon />
           </IconButton>
-        }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
-      />
-      <CardMedia
-        component="img"
-        height="194"
-        image="/static/images/cards/paella.jpg"
-        alt="Paella dish"
+          </Stack>
+      <CardHeader
+        title={data.user.displayName}
+        subheader={data.user.emailAddress}
+        sx={{mt:-2}}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
@@ -63,12 +123,6 @@ export default function ReviewerCard() {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}

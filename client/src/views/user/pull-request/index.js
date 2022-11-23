@@ -4,8 +4,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import Stack from "@mui/material/Stack";
 import FullScreenDialog from "ui-component/user/FullScreenDialog";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Vortex } from "react-loader-spinner";
-import Divider from '@mui/material/Divider';
+import LoadingCircle from "ui-component/user/LoadingCircle";
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -163,25 +162,7 @@ const PullRequestPage = () => {
 
   if (data.length <= 0) {
     return (
-      <Box
-        sx={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Vortex
-          visible={true}
-          height="250"
-          width="250"
-          ariaLabel="vortex-loading"
-          wrapperStyle={{}}
-          wrapperClass="vortex-wrapper"
-          colors={["red", "green", "blue", "yellow", "orange", "purple"]} // 6 adet
-        />
-      </Box>
+      <LoadingCircle/>
     );
   }
 
