@@ -13,22 +13,78 @@ const splitUsers=(arr)=>{
 
 const getAllUsers=(userNameArr, allUsers)=>{
   const user = allUsers.map((element) =>{
-    return element.values.author.user
+    return element.values.author
   })
   const newArr = userNameArr.map((name)=> {
     return user.find((element)=> {
-        return element.name === name;
+        return element.user.name === name;
     })
   })
 
   return newArr;
 }
 
+const getMostReviewers=(userNameArr, allUsers)=>{
+  const mostReviewers = new Map(); 
+  for (let index = 0; index < userNameArr.length; index++) {
+    const element = userNameArr[index]
+    let count =0;
+      for (let index = 0; index < allUsers.length; index++) {
+        if(allUsers[index].values.reviewers.length > 0){
+          allUsers[index].values.reviewers.map((reviewer)=>{
+            reviewer.user.name == element ? count++ : null
+            mostReviewers.set(element, count)
+          })
+        }  
+      } 
+  }
+  const mapSort = new Map([...mostReviewers.entries()].sort((a, b) => b[1] - a[1]));
+  const array = Array.from(mapSort, ([name, value]) => ({ name, value }));
+  return array;
+
+}
+
+const getActiveUsers = (allusers) => {
+    return allusers.filter((filteredUser)=>{
+      return filteredUser.user.active == true
+    })
+}
+
+
+const getOpenPR = (pullRequests) => {
+  return pullRequests.filter((element) => {
+    return element.values.state === "OPEN"
+  })
+}
+
+const getMergedPR = (pullRequests) => {
+  return pullRequests.filter((element) => {
+    return element.values.state === "MERGED"
+  })
+}
+
+const getDeclinedPR = (pullRequests) => {
+  return pullRequests.filter((element) => {
+    return element.values.state === "DECLINED"
+  })
+}
+
+const getInactiveUsers = (allusers) => {
+  return allusers.filter((filteredUser)=>{
+    return filteredUser.user.active == false
+  })
+}
+
 const initialState = {
   pullRequest:[],
   activeUser:[],
+  inactiveUser:[],
   userNames:[],
-  allUser:[]
+  allUser:[],
+  openPR:[],
+  mergedPR:[],
+  declinedPR:[],
+  mostReviewingUser:[]
 };
 
 
@@ -42,7 +98,12 @@ const PullRequestSlice = createSlice({
       state.pullRequest = action.payload;
       state.userNames = splitUsers(action.payload);
       state.allUser = getAllUsers(state.userNames, action.payload)
-      console.log("state openpr", state.pullRequest)
+      state.activeUser = getActiveUsers(state.allUser)
+      state.inactiveUser = getInactiveUsers(state.allUser)
+      state.openPR = getOpenPR(state.pullRequest)
+      state.mergedPR = getMergedPR(state.pullRequest)
+      state.declinedPR = getDeclinedPR(state.pullRequest)
+      state.mostReviewingUser = getMostReviewers(state.userNames, state.pullRequest)
     },
   },
 });
