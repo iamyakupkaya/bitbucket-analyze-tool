@@ -1,8 +1,7 @@
 // assets
 import HomeIcon from '@mui/icons-material/Home';
 import ApiIcon from '@mui/icons-material/Api';
-import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
-
+import ContactsIcon from '@mui/icons-material/Contacts';
 // constant
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -28,10 +27,10 @@ const other = {
         },
         {
             id: 'sample-page2',
-            title: 'Reviewers',
+            title: 'Authors',
             type: 'item',
             url: '/user/sample-page2',
-            icon: CollectionsBookmarkIcon,
+            icon: ContactsIcon,
             breadcrumbs: false
         }
     ]

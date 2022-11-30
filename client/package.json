@@ -26,6 +26,7 @@
         "react-apexcharts": "^1.4.0",
         "react-device-detect": "^2.2.2",
         "react-dom": "^18.2.0",
+        "react-draggable": "^4.4.5",
         "react-google-charts": "^4.0.0",
         "react-loader-spinner": "^5.3.4",
         "react-perfect-scrollbar": "^1.5.8",

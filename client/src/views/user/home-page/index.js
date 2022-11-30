@@ -2,7 +2,7 @@
 import Box from '@mui/material/Box';
 import {useState } from 'react';
 import { Chart } from "react-google-charts";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import UserProfile from 'ui-component/user/UserProfile';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -17,7 +17,6 @@ import CenterFocusStrongIcon from '@mui/icons-material/CenterFocusStrong';
 
 
 const HomePage = () => {
-    const dispatch = useDispatch();
     const totalUsers = useSelector(state => state.data.allUser)
     const totalPullRequests = useSelector(state => state.data.pullRequest)
     const activeUsers = useSelector(state => state.data.activeUser)
