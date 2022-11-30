@@ -34,11 +34,13 @@ console.log("Bak burada", mostReviewingUser)
     const [open, setOpen] = useState(false)
     // COLUMN CHART
     const dataColumn = [
-        ["None", "", { role: "style" }],
-        ["Copper", 8.94, "#b87333"], // RGB value
-        ["Silver", 10.49, "red"], // English color name
-        ["Gold", 19.3, "gold"],
-        ["Platinum", 21.45, "color: #e5e4e2"], // CSS-style declaration
+        ["Reviewers", "Total Reviews", { role: "style" }],
+        [mostReviewingUser[0].name, mostReviewingUser[0].value, "#2196f3"], // RGB value
+        [mostReviewingUser[1].name, mostReviewingUser[1].value, "#2196f3"], // English color name
+        [mostReviewingUser[2].name, mostReviewingUser[2].value, "#2196f3"],
+        [mostReviewingUser[3].name, mostReviewingUser[3].value, "#2196f3"], // CSS-style declaration
+        [mostReviewingUser[4].name, mostReviewingUser[4].value, "#2196f3"], // CSS-style declaration
+
       ];
   
 
@@ -48,7 +50,7 @@ console.log("Bak burada", mostReviewingUser)
         title: `Total Author: ${totalUsers.length}`,
         is3D: true,
         backgroundColor: "#e3f2fd",
-        colors: ["#006100", "#870000"],
+        colors: ["#2196f3", "#5e35b1"],
         fontSize:20,
     
       };
@@ -68,9 +70,49 @@ console.log("Bak burada", mostReviewingUser)
 
       if(showPie =="slice#0" && open){
         return <UserProfile data={{open, setOpen, arr:activeUsers}}/>
-      }
+      } 
       else if(showPie =="slice#1" && open){
         return <UserProfile data={{open, setOpen, arr:inactiveUsers }}/>
+
+      }
+      else if(showPie =="bar#0#0" && open){
+        const myarr = totalUsers.filter((author)=> {
+          return author.user.name == mostReviewingUser[0].name
+        })
+        console.log("Al sana my arr", myarr)
+        return <UserProfile data={{open, setOpen, arr:myarr }}/>
+
+      }
+      else if(showPie =="bar#0#1" && open){
+        const myarr = totalUsers.filter((author)=> {
+          return author.user.name == mostReviewingUser[1].name
+        })
+        console.log("Al sana my arr", myarr)
+        return <UserProfile data={{open, setOpen, arr:myarr }}/>
+
+      }
+      else if(showPie =="bar#0#2" && open){
+        const myarr = totalUsers.filter((author)=> {
+          return author.user.name == mostReviewingUser[2].name
+        })
+        console.log("Al sana my arr", myarr)
+        return <UserProfile data={{open, setOpen, arr:myarr }}/>
+
+      }
+      else if(showPie =="bar#0#3" && open){
+        const myarr = totalUsers.filter((author)=> {
+          return author.user.name == mostReviewingUser[3].name
+        })
+        console.log("Al sana my arr", myarr)
+        return <UserProfile data={{open, setOpen, arr:myarr }}/>
+
+      }
+      else if(showPie =="bar#0#4" && open){
+        const myarr = totalUsers.filter((author)=> {
+          return author.user.name == mostReviewingUser[4].name
+        })
+        console.log("Al sana my arr", myarr)
+        return <UserProfile data={{open, setOpen, arr:myarr }}/>
 
       }
  
@@ -81,7 +123,7 @@ console.log("Bak burada", mostReviewingUser)
             data={chartData}
             options={options}
             width={"100%"}
-            height={"300px"}
+            height={"400px"}
             chartEvents={[
                 {
                   eventName: "ready",
@@ -104,16 +146,29 @@ console.log("Bak burada", mostReviewingUser)
               ]}
             
             />
+     <Chart chartType="ColumnChart"            options={optionsColumn}
+ width="100%" height="500px" data={dataColumn}  chartEvents={[
+  {
+    eventName: "ready",
+    callback: ({ chartWrapper, google }) => {
+      const chart = chartWrapper.getChart();
+      google.visualization.events.addListener(chart, "click", e => {
+        console.log("Gelen targetid:", e.targetID)
+        setOpen(true)
+      });
+      google.visualization.events.addListener(chart, "click", e => {
+        console.log("Tıklandı")
 
+          setShowPie(e.targetID)
+          setOpen(true)
+
+      });
+    }
+  }
+]} />
 
 
               <Box sx={{display:"flex", justifyContent:"space-between"}}>
-
-
-              <Chart chartType="ColumnChart"            options={optionsColumn}
- width="100%" height="200px" data={dataColumn} />
-
-
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: '#e3f2fd' }}>
       <ListItem>
         <ListItemAvatar>
