@@ -35,10 +35,8 @@ public class QueryServiceImpl implements IQueryService {
     public List<PREntity> getAllPullRequests(String query, String condition, String[] collectionNames) {
         List<PREntity> resutlAPI = new ArrayList<PREntity>();
         Gson gson = utilConfig.getGson();
-        System.out.println("İÇERDEYİZ");
 
         for (String collectionName : collectionNames){
-            System.out.println("For içi");
             try (MongoClient mongoClient = MongoClients.create(DatabaseHelper.DATABASE_URL)) {
                 if (LogHelper.IS_BASE_LOGGING){
                     log.info("getAllPullRequests method in QueryServiceImpl class was invoked for " + collectionName);
@@ -48,9 +46,7 @@ public class QueryServiceImpl implements IQueryService {
                 MongoDatabase database = mongoClient.getDatabase(DatabaseHelper.DATABASE_NAME);
                 MongoCollection<Document> collection = database.getCollection(collectionName);
                 MongoCursor<Document> cursor = collection.find(basicQuery).iterator();
-                System.out.println("ÇALIŞTI");
                 while (cursor.hasNext()) {
-                    System.out.println("While içerisindeyiz..");
                     PREntity entity = entityConfig.getPrototypePullRequestEntity(); // must create a new instance
                     Document doc = cursor.next();
                     Document values = (Document) doc.get("values");

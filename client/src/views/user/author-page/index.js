@@ -4,7 +4,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import Stack from "@mui/material/Stack";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import LoadingCircle from "ui-component/user/LoadingCircle";
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -14,11 +14,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+
 
 //import { useDemoData } from '@mui/x-data-grid-generator';
 
 import Box from "@mui/material/Box";
 import PullRequestList from "ui-component/user/PullRequestList";
+import ReviewerList from "ui-component/user/ReviewerList";
+
 
 
 // Helper functions
@@ -61,7 +65,8 @@ const [showActive, setShowActive] = useState(false)
  const [userPullRequest, setUserPullRequest] = useState([]);
  const [userReviewer, setUserReviewer] = useState([]);
 const [showMore, setShowMore] = useState(false);
-console.log("UsePull request", userPullRequest)
+const [showMoreReviewer, setShowMoreReviewer] = useState(false);
+console.log("revieerssss", userReviewer)
 
  const columns = [
     {
@@ -88,14 +93,9 @@ console.log("UsePull request", userPullRequest)
   
           return (
             <Stack direction="row" spacing={2}>
-              <Button
-                sx={{ borderRadius: 25, color: "#21a2f6" }}
-                variant="outlined"
-                size="small"
-                onClick={onClick}
-              >
-                <InfoIcon />
-              </Button>
+              <IconButton onClick={onClick} sx={{ borderRadius: 25, color: "#21a2f6" }} aria-label="info">
+  <InfoIcon />
+</IconButton>
             </Stack>
           );
         },
@@ -127,7 +127,6 @@ console.log("UsePull request", userPullRequest)
  
   ];
 
-  console.log("userReviewer: ", userReviewer)
 
   const rows = data.map((pr) => {
     return createData(
@@ -152,13 +151,15 @@ console.log("UsePull request", userPullRequest)
   const handleMore = () => {
     setShowMore(true)
   };
+  const handleMoreReviewers = () => {
+    setShowMoreReviewer(true)
+  };
   const handleActiveButton = () =>{
         setShowActive((prev) => !prev)  
         setButtonText(`${showActive ? "Show Inactive Users" : "Show Active Users"}`)
         setData(totalUsers.filter((filteredUser) => showActive ? filteredUser.user.active == true : filteredUser.user.active == false))
   }
 
-  console.log("Kişiye özel pr: ", userPullRequest)
 
   if (totalUsers.length <= 0) {
     return (
@@ -168,6 +169,10 @@ console.log("UsePull request", userPullRequest)
 
   if(showMore){
     return <PullRequestList data={{ open: showMore, setOpen: setShowMore, selectedPR: userPullRequest }}/>
+  }
+
+  if(showMoreReviewer){
+    return <ReviewerList data={{ open: showMoreReviewer, setOpen: setShowMoreReviewer, selectedPR: userReviewer, selectedUser:currentData }}/>
   }
 
   if (open) {
@@ -200,8 +205,14 @@ console.log("UsePull request", userPullRequest)
             {userReviewer.length}
           </DialogContentText>
           <DialogContentText>
-            To check all pull requests for {currentData.user.name} user click more button.
+            To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">pull requests</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{currentData.user.name}</Typography> user click more button.
             <Button onClick={handleMore}>
+            More
+          </Button>
+          </DialogContentText>
+          <DialogContentText>
+            To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">reviewers</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{currentData.user.name}</Typography> user click more button.
+            <Button onClick={handleMoreReviewers}>
             More
           </Button>
           </DialogContentText>

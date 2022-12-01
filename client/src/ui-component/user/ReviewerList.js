@@ -33,7 +33,7 @@ const StyledBadge = styled(Badge)((props) => ({
   
   '& .MuiBadge-badge': {
     backgroundColor: `${props.active == true ? "#44b700" : "red" }`,
-    color: `${props.active == true ? "#44b700" : "red" }`,
+    color: `${props.active ? "#44b700" : "red" }`,
     boxShadow: `0 0 0 2px ${props.theme.palette.background.paper}`,
     '&::after': {
       position: 'absolute',
@@ -93,6 +93,9 @@ function stringAvatar(name = "Unknown Unknown") {
 function createData(
     pr,
     id,
+    name,
+    displayName,
+    emailAddress,
     state,
     slug,
     createdDate,
@@ -100,7 +103,7 @@ function createData(
     title,
     description,
   ) {
-    return { pr, id, state, slug, createdDate, updatedDate, title, description };
+    return { pr, id, name, displayName, emailAddress,  state, slug, createdDate, updatedDate, title, description };
   }
 
   function PaperComponent(props) {
@@ -114,8 +117,8 @@ function createData(
     );
   }
 
-export default function PullRequestList(props) {
-  const {open, setOpen, selectedPR } = props.data;
+export default function ReviewerList(props) {
+  const {open, setOpen, selectedPR, selectedUser } = props.data;
   const [pageSize, setPageSize] = useState(10);
   const [pageNum, setPageNum] = React.useState(0);
   const [currentData, setCurrentData] = useState({});
@@ -134,6 +137,9 @@ const [showInfo, setShowInfo] = useState(false)
     return createData(
       pr,
       pr.id,
+      pr.values.author.user.name,
+      pr.values.author.user.displayName,
+      pr.values.author.user.emailAddress,
       pr.values.state,
       pr.values.fromRef.repository.slug,
       new Date(pr.values.createdDate).toISOString().split("T")[0],
@@ -144,6 +150,7 @@ const [showInfo, setShowInfo] = useState(false)
 
     );
   });
+
 
   const columns = [
     {
@@ -172,11 +179,26 @@ const [showInfo, setShowInfo] = useState(false)
         flex: 0.3,
       },
     {
-      field: "state",
-      headerName: "State",
+      field: "name",
+      headerName: "Name",
       flex: 0.5,
     },
     {
+        field: "displayName",
+        headerName: "Display Name",
+        flex: 0.5,
+      },
+      {
+        field: "emailAddress",
+        headerName: "E-mail Address",
+        flex: 0.5,
+      },
+      {
+        field: "state",
+        headerName: "State",
+        flex: 0.5,
+      },
+      {
         field: "slug",
         headerName: "Repository",
         flex: 0.5,
@@ -191,6 +213,7 @@ const [showInfo, setShowInfo] = useState(false)
       headerName: "Updated Date",
       flex: 0.5,
     },
+    
     {
       field: "title",
       headerName: "Title",
@@ -205,7 +228,6 @@ const [showInfo, setShowInfo] = useState(false)
 
  
   ];
-
 console.log("gelen current data", currentData)
 
   if (showInfo) {
@@ -218,9 +240,20 @@ console.log("gelen current data", currentData)
         maxWidth={"xl"}
       >
         <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
+          Pull Request Owner:
+            <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{currentData.values.author.user.displayName}</Typography>
+            <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{currentData.values.author.user.name}</Typography>
+            <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{currentData.values.author.user.emailAddress}</Typography>
+        </DialogTitle>
+        <Divider sx={{mt:2, mb:2}}>
+            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Title of Pull Request"} />
+          </Divider>
+        <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
           {currentData.values.title || "Unknown"}
         </DialogTitle>
-       
+        <Divider sx={{mt:2, mb:2}}>
+            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Description of Pull Request"} />
+          </Divider>
         <Box sx={{display:"flex", flexDirection:"column"}}>
         <DialogContent sx={{wordWrap: "break-word"}}>
         {currentData.values.description || "Unknown"}
@@ -265,14 +298,14 @@ console.log("gelen current data", currentData)
   overlap="circular"
   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
   variant="dot"
-  active={selectedPR[0].values.author.user.active}
+  active={selectedUser.user.active}
 >
-<Avatar {...stringAvatar(selectedPR[0].values.author.user.displayName)} />
+<Avatar {...stringAvatar(selectedUser.user.displayName)} />
 </StyledBadge>
           <Typography sx={{ ml: -1, flex: 1 }} variant="h5" component="div">
-            {selectedPR[0].values.author.user.displayName}
+            {selectedUser.user.displayName}
             <br/>
-            {selectedPR[0].values.author.user.emailAddress}
+            {selectedUser.user.emailAddress}
             </Typography>
           </Stack>
             
@@ -309,7 +342,8 @@ console.log("gelen current data", currentData)
     },
           }}
         ></DataGrid>
-      </Box>                  
+      </Box>
+                 
         </Box>
       </Dialog>
       

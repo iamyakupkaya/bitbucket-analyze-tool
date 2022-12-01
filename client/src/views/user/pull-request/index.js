@@ -7,6 +7,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import LoadingCircle from "ui-component/user/LoadingCircle";
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
@@ -101,18 +102,13 @@ const PullRequestPage = () => {
 
         return (
           <Stack direction="row" spacing={2}>
-            <Button
-              sx={{ borderRadius: 25, color: "#21a2f6" }}
-              variant="outlined"
-              size="small"
-              onClick={onClick}
-            >
-              <InfoIcon />
-            </Button>
+            <IconButton onClick={onClick} sx={{ borderRadius: 25, color: "#21a2f6" }} aria-label="info">
+  <InfoIcon />
+</IconButton>
           </Stack>
         );
       },
-      flex: 0.5,
+      flex: 0.25,
     },
     {
       field: "author",
