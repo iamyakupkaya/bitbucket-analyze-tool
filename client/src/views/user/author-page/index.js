@@ -18,6 +18,7 @@ import Typography from '@mui/material/Typography';
 //import { useDemoData } from '@mui/x-data-grid-generator';
 
 import Box from "@mui/material/Box";
+import PullRequestList from "ui-component/user/PullRequestList";
 
 
 // Helper functions
@@ -57,10 +58,12 @@ const [showActive, setShowActive] = useState(false)
   }))
   const [open, setOpen] = React.useState(false);
   const [currentData, setCurrentData] = useState({});
- const [userPullRequest, setUserPullRequest] = useState([])
- const [userReviewer, setUserReviewer] = useState([])
+ const [userPullRequest, setUserPullRequest] = useState([]);
+ const [userReviewer, setUserReviewer] = useState([]);
+const [showMore, setShowMore] = useState(false);
+console.log("UsePull request", userPullRequest)
 
-  const columns = [
+ const columns = [
     {
         field: "info",
         headerName: "INFO",
@@ -72,13 +75,13 @@ const [showActive, setShowActive] = useState(false)
           const onClick = (e) => {
             setCurrentData(params.row.pr);
             setUserPullRequest(pullRequest.filter((filteredPull) => {
-                return filteredPull.values.author.user.name == params.row.pr.user.name
-            }))
+              return filteredPull.values.author.user.name == params.row.pr.user.name
+          }))
             setUserReviewer(pullRequest.filter((element)=>{
-                 return (element.values.reviewers.find((insideMap) => {
-                    return insideMap.user.name == params.row.pr.user.name
-                 }))
-            }))
+              return (element.values.reviewers.find((insideMap) => {
+                 return insideMap.user.name == params.row.pr.user.name
+              }))
+         }))
             
             handleClickOpen();
           };
@@ -147,7 +150,7 @@ const [showActive, setShowActive] = useState(false)
   };
 
   const handleMore = () => {
-    alert("use for all reviewers for this user.!")
+    setShowMore(true)
   };
   const handleActiveButton = () =>{
         setShowActive((prev) => !prev)  
@@ -162,6 +165,11 @@ const [showActive, setShowActive] = useState(false)
       <LoadingCircle/>
     );
   }
+
+  if(showMore){
+    return <PullRequestList data={{ open: showMore, setOpen: setShowMore, selectedPR: userPullRequest }}/>
+  }
+
   if (open) {
     return (
         <Dialog
@@ -192,7 +200,7 @@ const [showActive, setShowActive] = useState(false)
             {userReviewer.length}
           </DialogContentText>
           <DialogContentText>
-            To check all reviewers for {currentData.user.name} user. click more button.
+            To check all pull requests for {currentData.user.name} user click more button.
             <Button onClick={handleMore}>
             More
           </Button>
@@ -207,6 +215,8 @@ const [showActive, setShowActive] = useState(false)
       </Dialog>
     );
   }
+
+ 
 
   return (
     <>   
