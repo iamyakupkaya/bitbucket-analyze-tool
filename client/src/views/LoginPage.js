@@ -35,10 +35,9 @@ const StyledLink = styled(Link)`
     text-decoration: none;
     width: 100%;
     height: 100%;
-    backgroundColor:"red";
+
     
-
-
+    
 `;
 
 
@@ -74,8 +73,8 @@ console.log("satte", yaz)
         <Box>
             <Button onClick={()=>dispatch(getPullRequests(data))} ><StyledLink to="/user" >USER</StyledLink></Button>
         </Box>
-        <Box>
-            <Button id="disable" disabled><StyledLink  to="/user" disabled >ADMIN</StyledLink></Button>
+        <Box style={{cursor: "no-drop"}}>
+            <Button id="disable"  disabled><StyledLink style={{color:"grey"}}  to="/user" disabled >ADMIN</StyledLink></Button>
         </Box>
         
       </StyledBox>

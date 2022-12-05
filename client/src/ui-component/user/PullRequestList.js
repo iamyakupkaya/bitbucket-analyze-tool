@@ -128,7 +128,6 @@ const [showInfo, setShowInfo] = useState(false)
   };
   
 
-  console.log("Gelen selctedPPRRR: ", selectedPR)
 
   const rows = selectedPR.map((pr) => {
     return createData(
@@ -155,7 +154,6 @@ const [showInfo, setShowInfo] = useState(false)
   
         renderCell: (params) => {
           const onClick = (e) => {
-            console.log(params);
             //setSelectedPR({ ...params.row.pr });
             setCurrentData(params.row.pr);
             setShowInfo(true)
@@ -206,7 +204,6 @@ const [showInfo, setShowInfo] = useState(false)
  
   ];
 
-console.log("gelen current data", currentData)
 
   if (showInfo) {
     return (

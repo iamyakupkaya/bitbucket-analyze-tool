@@ -27,8 +27,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const StyledBadge = styled(Badge)((props) => ({
   
   '& .MuiBadge-badge': {
-    backgroundColor: `${props.active ? "#44b700" : "red" }`,
-    color: `${props.active ? "#44b700" : "red" }`,
+    backgroundColor: `${props.active.toString() == "true" ? "#44b700" : "red" }`,
+    color: `${props.active.toString() == "true" ? "#44b700" : "red" }`,
     boxShadow: `0 0 0 2px ${props.theme.palette.background.paper}`,
     '&::after': {
       position: 'absolute',
@@ -88,7 +88,6 @@ function stringAvatar(name = "Unknown Unknown") {
 
 export default function UserProfile(props) {
   const {open, setOpen, arr} = props.data
-  console.log("Gelen arr:", arr[0].user.active)
   const handleClose = () => {
     setOpen(false)
   };
@@ -104,7 +103,7 @@ export default function UserProfile(props) {
           <Toolbar sx={{ display:"flex", justifyContent:"space-between"}}>
           <Stack direction="row" spacing={2}>
           <Divider>
-            <Chip sx={{backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={arr[0].user.active == true ? "ACTIVE USERS" : "INACTIVE USERS"} />
+            <Chip sx={{backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={arr[0].user.active.toString() == "true" ? "ACTIVE USERS" : "INACTIVE USERS"} />
           </Divider>
           <Typography sx={{ ml: -1, flex: 1 }} variant="h5" component="div">
             {arr.displayName}

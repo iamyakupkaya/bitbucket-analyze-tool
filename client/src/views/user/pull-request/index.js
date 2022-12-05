@@ -16,10 +16,7 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
-//import { useDemoData } from '@mui/x-data-grid-generator';
-
 import Box from "@mui/material/Box";
-
 import axios from "axios";
 
 // Helper functions
@@ -62,9 +59,6 @@ const PullRequestPage = () => {
     setButtonsOpen(false);
   };
 
-  const handleChangeUrl = () => {
-    setData([])
-  };
   const handleToggle = () => {
     setButtonsOpen((prevOpen) => !prevOpen);
   };
@@ -95,7 +89,6 @@ const PullRequestPage = () => {
 
       renderCell: (params) => {
         const onClick = (e) => {
-          console.log(params);
           setSelectedPR({ ...params.row.pr });
           setOpen(true);
         };
@@ -169,7 +162,6 @@ const PullRequestPage = () => {
       />
     );
   }
-console.log("render sayısı")
   return (
     <>
     <Box>
@@ -214,7 +206,7 @@ console.log("render sayısı")
                       onClick={(event) => {
                         handleMenuItemClick(event, index)
                         if(option !== buttons){
-                          setData(d => [])
+                          setData([])
                           if(option == "MERGED" && buttons != "MERGED"){
                             setUrl("http://localhost:8989/api/v1/get-data?query=values.state&condition=MERGED")
 
@@ -227,9 +219,7 @@ console.log("render sayısı")
                             setUrl("http://localhost:8989/api/v1/get-data?query=values.state&condition=OPEN")
 
                           }
-                         else{
-                          setData(d => console.log("gelen d ", d))
-                         }
+                        
                          setButtons(option)
 
                         }

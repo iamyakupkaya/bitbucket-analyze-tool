@@ -44,6 +44,16 @@ const getMostReviewers=(userNameArr, allUsers)=>{
 
 }
 
+const getCollections=(pullRequests)=>{
+  const repoNames = pullRequests.map((pull)=> {
+    return pull.values.fromRef.repository.slug;
+  })
+  const collections = [...(new Set(repoNames))]
+  collections.unshift("total");
+  return collections;
+
+}
+
 const getActiveUsers = (allusers) => {
     return allusers.filter((filteredUser)=>{
       return filteredUser.user.active == true
@@ -75,6 +85,9 @@ const getInactiveUsers = (allusers) => {
   })
 }
 
+
+
+
 const initialState = {
   pullRequest:[],
   activeUser:[],
@@ -84,7 +97,8 @@ const initialState = {
   openPR:[],
   mergedPR:[],
   declinedPR:[],
-  mostReviewingUser:[]
+  mostReviewingUser:[],
+  collections:[],
 };
 
 
@@ -94,7 +108,6 @@ const PullRequestSlice = createSlice({
   initialState, //this is initial state
   reducers: {
     getPullRequests: (state, action) => {
-      console.log("GELEN DEĞER", action.payload)
       state.pullRequest = action.payload;
       state.userNames = splitUsers(action.payload);
       state.allUser = getAllUsers(state.userNames, action.payload)
@@ -104,7 +117,10 @@ const PullRequestSlice = createSlice({
       state.mergedPR = getMergedPR(state.pullRequest)
       state.declinedPR = getDeclinedPR(state.pullRequest)
       state.mostReviewingUser = getMostReviewers(state.userNames, state.pullRequest)
-    },
+      state.collections = getCollections(state.pullRequest);
+
+
+    }
   },
 });
 
