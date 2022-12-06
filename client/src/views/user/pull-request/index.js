@@ -18,6 +18,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Box from "@mui/material/Box";
 import axios from "axios";
+import ConfirmDialog from "ui-component/user/ConfirmDialog";
 
 // Helper functions
 function createData(
@@ -28,9 +29,10 @@ function createData(
   slug,
   create,
   updated,
+  commentCount,
   title
 ) {
-  return { pr, id, author, emailAddress, slug, create, updated, title };
+  return { pr, id, author, emailAddress, slug, create, updated, commentCount, title };
 }
 
 const options = ['OPEN', 'MERGED', 'DECLINED'];
@@ -39,7 +41,7 @@ const options = ['OPEN', 'MERGED', 'DECLINED'];
 // ==============================|| Pull-Request PAGE ||============================== //
 
 const PullRequestPage = () => {
-  const [data, setData] = useState([]);
+  const pullRequest = useSelector(state => state.data.pullRequest);
   const [pageSize, setPageSize] = useState(10);
   const [pageNum, setPageNum] = useState(0);
   const [open, setOpen] = useState(false);
@@ -47,8 +49,18 @@ const PullRequestPage = () => {
   const [buttonsOpen, setButtonsOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [url, setUrl] = useState("http://localhost:8989/api/v1/get-data?query=values.open&condition=true")
   const [buttons, setButtons] = useState("OPEN")
+  const openPR = useSelector(state => state.data.openPR);
+  const mergedPR = useSelector(state => state.data.mergedPR);
+  const declinedPR = useSelector(state => state.data.declinedPR)
+  const [data, setData] = useState(openPR);
+
+
+  if(pullRequest.length <= 0 || !pullRequest){
+    return (
+      <ConfirmDialog/>
+    ); 
+  }
 
   const handleClick = () => {
     console.info(`You clicked ${options[selectedIndex]}`);
@@ -70,14 +82,6 @@ const PullRequestPage = () => {
 
     setButtonsOpen(false);
   };
-
-  useEffect(() => {
-    const getData = async () => {
-      const responseData = await axios(url);
-      setData([...data, ...responseData.data]);
-    };
-    getData();
-  }, [url]);
 
   const columns = [
     {
@@ -111,7 +115,7 @@ const PullRequestPage = () => {
     {
       field: "emailAddress",
       headerName: "E-mail",
-      flex: 1,
+      flex: 0.75,
     },
     {
       field: "slug",
@@ -128,11 +132,16 @@ const PullRequestPage = () => {
       headerName: "Updated",
       flex: 0.5,
     },
+    {
+      field: "commentCount",
+      headerName: "Comments",
+      flex: 0.5,
+    },
 
     {
       field: "title",
       headerName: "Title",
-      flex: 2,
+      flex: 1.5,
     },
   ];
 
@@ -145,6 +154,7 @@ const PullRequestPage = () => {
       pr.values.fromRef.repository.slug,
       new Date(pr.values.createdDate).toISOString().split("T")[0],
       new Date(pr.values.updatedDate).toISOString().split("T")[0],
+      pr.values.properties.commentCount < 0 ? 0 : pr.values.properties.commentCount,
       pr.values.title
     );
   });
@@ -208,15 +218,14 @@ const PullRequestPage = () => {
                         if(option !== buttons){
                           setData([])
                           if(option == "MERGED" && buttons != "MERGED"){
-                            setUrl("http://localhost:8989/api/v1/get-data?query=values.state&condition=MERGED")
-
+                            setData(mergedPR)
                           }
                           else if(option == "DECLINED" && buttons != "DECLINED"){
-                            setUrl("http://localhost:8989/api/v1/get-data?query=values.state&condition=DECLINED")
+                            setData(declinedPR)
 
                           }
                           else if(option == "OPEN" && buttons != "OPEN"){
-                            setUrl("http://localhost:8989/api/v1/get-data?query=values.state&condition=OPEN")
+                            setData(openPR)
 
                           }
                         

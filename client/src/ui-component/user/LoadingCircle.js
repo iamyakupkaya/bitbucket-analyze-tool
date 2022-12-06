@@ -1,27 +1,25 @@
 import React from 'react'
-import { Vortex } from "react-loader-spinner";
+import { RotatingLines } from "react-loader-spinner";
 import Box from "@mui/material/Box";
 
 const LoadingCircle = () => {
   return (
     <Box
     sx={{
-      width: "100%",
-      height: "100%",
+      width: "100vw",
+      height: "100vh",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
     }}
   >
-    <Vortex
-      visible={true}
-      height="250"
-      width="250"
-      ariaLabel="vortex-loading"
-      wrapperStyle={{}}
-      wrapperClass="vortex-wrapper"
-      colors={["red", "green", "blue", "yellow", "orange", "purple"]} // 6 adet
-    />
+    <RotatingLines
+  strokeColor="#2196f3"
+  strokeWidth="8"
+  animationDuration="0.75"
+  width="150"
+  visible={true}
+/>
   </Box>
   )
 }

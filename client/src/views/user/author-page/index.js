@@ -15,7 +15,6 @@ import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { useNavigate } from "react-router-dom";
 
 
 //import { useDemoData } from '@mui/x-data-grid-generator';
@@ -23,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import PullRequestList from "ui-component/user/PullRequestList";
 import ReviewerList from "ui-component/user/ReviewerList";
+import ConfirmDialog from "ui-component/user/ConfirmDialog";
 
 
 
@@ -68,11 +68,11 @@ const [showActive, setShowActive] = useState(false)
 const [showMore, setShowMore] = useState(false);
 const [showMoreReviewer, setShowMoreReviewer] = useState(false);
 
-let navigate = useNavigate(); 
-  const routeChange = () =>{ 
-    let path = `http://localhost:3000/orion`; 
-    navigate(path);
-  }
+if(pullRequest.length <= 0 || !pullRequest){
+  return (
+    <ConfirmDialog/>
+  ); 
+}
 
  const columns = [
     {
@@ -165,7 +165,8 @@ let navigate = useNavigate();
         setButtonText(`${showActive ? "Show Inactive Users" : "Show Active Users"}`)
         setData(totalUsers.filter((filteredUser) => showActive ? filteredUser.user.active == true : filteredUser.user.active == false))
   }
-
+  
+  
 
   if (totalUsers.length <= 0) {
       return (
@@ -213,13 +214,13 @@ let navigate = useNavigate();
           </DialogContentText>
           <DialogContentText>
             To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">pull requests</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{currentData.user.name}</Typography> user click more button.
-            <Button onClick={handleMore}>
+            <Button disabled={userPullRequest.length <=0 ? true : false} onClick={handleMore}>
             More
           </Button>
           </DialogContentText>
           <DialogContentText>
             To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">reviewers</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{currentData.user.name}</Typography> user click more button.
-            <Button onClick={handleMoreReviewers}>
+            <Button disabled={userReviewer.length <=0 ? true : false} onClick={handleMoreReviewers}>
             More
           </Button>
           </DialogContentText>

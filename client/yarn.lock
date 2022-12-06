@@ -8082,6 +8082,11 @@
   dependencies:
     "ua-parser-js" "^1.0.2"
 
+"react-dialog-confirm@^1.1.0":
+  "integrity" "sha512-VWVd5HulPtrc08wq09rS26ReORBEe0Ejn8Fo1lLn0ZBB+Sb8cGZKrhJwSfvHHm5y75L1uSk8w8C905dmvl9yIg=="
+  "resolved" "https://registry.npmjs.org/react-dialog-confirm/-/react-dialog-confirm-1.1.0.tgz"
+  "version" "1.1.0"
+
 "react-dom@^18.2.0":
   "integrity" "sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz"

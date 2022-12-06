@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import React, {useState } from 'react';
+import React, {useState, useEffect } from 'react';
 import { Chart } from "react-google-charts";
 import { useSelector, useDispatch } from 'react-redux';
 import UserProfile from 'ui-component/user/UserProfile';
@@ -18,20 +18,27 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
+import {getPullRequests} from "../../../redux/pull_request/PullRequestSlice"
+import LoadingCircle from 'ui-component/user/LoadingCircle';
+import LoginPage from 'views/LoginPage';
+import ConfirmDialog from 'ui-component/user/ConfirmDialog';
+
 // ==============================|| SAMPLE PAGE ||============================== //
 
 
 const HomePage = () => {
+
     const totalUsers = useSelector(state => state.data.allUser)
     const totalPullRequests = useSelector(state => state.data.pullRequest)
     const activeUsers = useSelector(state => state.data.activeUser)
     const inactiveUsers = useSelector(state => state.data.inactiveUser)
     const openPR = useSelector(state => state.data.openPR);
     const mergedPR = useSelector(state => state.data.mergedPR);
+    const declinedPR = useSelector(state => state.data.declinedPR)
+
     const userNames = useSelector(state => state.data.userNames);
     const mostReviewingUser = useSelector(state => state.data.mostReviewingUser)
     
-    const declinedPR = useSelector(state => state.data.declinedPR)
     const [showPie, setShowPie] = useState("home")
     const [open, setOpen] = useState(false)
     const buttonOptions = useSelector(state => state.data.collections);
@@ -42,10 +49,23 @@ const HomePage = () => {
     const [authorText, setAuthorText] = useState("total");
     const [reposActiveUsers, setReposActiveUsers] = useState(activeUsers);
     const [reposInactiveUsers, setReposInactiveUsers] = useState(inactiveUsers)
-
-  
-
     const [repoMostReviewingUser, setRepoMostReviewingUser] = useState(mostReviewingUser)
+    
+    
+    
+
+
+
+    if(totalPullRequests.length <= 0 || !totalPullRequests){
+      return (
+        <ConfirmDialog/>
+      );
+      
+    }
+
+    
+ 
+
     const handleClick = () => {
       console.info(`You clicked ${options[selectedIndex]}`);
     };
@@ -57,7 +77,6 @@ const HomePage = () => {
     }
 
     const getMostReviewers=(userNameArr, allUsers)=>{
-      console.log("GELEN DEPER: ", allUsers)
       const mostReviewers = new Map(); 
       for (let index = 0; index < userNameArr.length; index++) {
         const element = userNameArr[index]
@@ -77,11 +96,9 @@ const HomePage = () => {
       return array;
     
     }
-    console.log("AHAAsasas: ", mostReviewingUser)
     const handleMenuItemClick = (event, index, option) => {
       setSelectedIndex(index);
       setButtonOpen(false);
-      console.log(buttonOptions[index])
       if(option == "total"){
         setReposActiveUsers(activeUsers)
         setReposInactiveUsers(inactiveUsers)
@@ -92,7 +109,6 @@ const HomePage = () => {
         const reposUsers = totalPullRequests.filter((filteredPull) => {
           return filteredPull.values.fromRef.repository.slug == buttonOptions[index];
         })
-        console.log("REPO: ", reposUsers)
         
         const activeUserOnRepos = activeUsers.filter((element)=>{
           return reposUsers.find((repoUser) => {
@@ -313,7 +329,7 @@ const HomePage = () => {
             <CenterFocusStrongIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} pull request`} secondary={totalPullRequests.length} />
+        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} pull request`} secondary={authorText == "total" ? totalPullRequests.length : (getRepoPullRequests(totalPullRequests, authorText)).length} />
       </ListItem>
       <ListItem>
         <ListItemAvatar>
@@ -321,7 +337,7 @@ const HomePage = () => {
             <CenterFocusStrongIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} open pull request`} secondary={openPR.length} />
+        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} open pull request`} secondary={authorText == "total" ? openPR.length : (getRepoPullRequests(openPR, authorText)).length} />
       </ListItem>
       <ListItem>
         <ListItemAvatar>
@@ -329,7 +345,7 @@ const HomePage = () => {
             <CenterFocusStrongIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} declined pull request`} secondary={declinedPR.length} />
+        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} declined pull request`} secondary={authorText == "total" ? declinedPR.length : (getRepoPullRequests(declinedPR, authorText)).length} />
       </ListItem>
       <ListItem>
         <ListItemAvatar>
@@ -337,7 +353,7 @@ const HomePage = () => {
             <CenterFocusStrongIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} merged pull request`} secondary={mergedPR.length} />
+        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} merged pull request`} secondary={authorText == "total" ? mergedPR.length : (getRepoPullRequests(mergedPR, authorText)).length} />
       </ListItem>
     </List>
               </Box>
