@@ -26,7 +26,10 @@ const LoginPage = () => {
 
    if(!show){
     return (
+      <>
       <LoadingCircle/>
+      </>
+            
       
     );
    }

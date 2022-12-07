@@ -21,13 +21,13 @@ export const theme = (customization) => {
         heading: color.grey900,
         paper: color.paper,
         backgroundDefault: color.paper,
-        background: color.primaryLight,
+        background: color.grey300,
         darkTextPrimary: color.grey700,
         darkTextSecondary: color.grey500,
         textDark: color.grey900,
-        menuSelected: color.secondaryDark,
-        menuSelectedBack: color.secondaryLight,
-        divider: color.grey200,
+        menuSelected: color.primaryDark,
+        menuSelectedBack: color.grey300,
+        divider: color.grey300,
         customization
     };
 

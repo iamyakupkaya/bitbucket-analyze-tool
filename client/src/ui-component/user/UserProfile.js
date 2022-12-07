@@ -99,7 +99,7 @@ export default function UserProfile(props) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative', backgroundColor:"#e3f2fd", mb:5}}>
+        <AppBar sx={{ position: 'relative', backgroundColor:"#e0e0e0", mb:5}}>
           <Toolbar sx={{ display:"flex", justifyContent:"space-between"}}>
           <Stack direction="row" spacing={2}>
           <Divider>

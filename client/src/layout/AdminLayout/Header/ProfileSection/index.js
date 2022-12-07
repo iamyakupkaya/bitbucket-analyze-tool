@@ -95,14 +95,14 @@ const ProfileSection = () => {
                     alignItems: 'center',
                     borderRadius: '27px',
                     transition: 'all .2s ease-in-out',
-                    borderColor: theme.palette.primary.light,
-                    backgroundColor: theme.palette.primary.light,
+                    borderColor: theme.palette.grey[300],
+                    backgroundColor: theme.palette.grey[300],
                     '&[aria-controls="menu-list-grow"], &:hover': {
                         borderColor: theme.palette.primary.main,
                         background: `${theme.palette.primary.main}!important`,
-                        color: theme.palette.primary.light,
+                        color: theme.palette.grey[300],
                         '& svg': {
-                            stroke: theme.palette.primary.light
+                            stroke: theme.palette.grey[300]
                         }
                     },
                     '& .MuiChip-label': {
@@ -188,7 +188,7 @@ const ProfileSection = () => {
                                             <Divider />
                                             <Card
                                                 sx={{
-                                                    bgcolor: theme.palette.primary.light,
+                                                    bgcolor: theme.palette.grey[300],
                                                     my: 2
                                                 }}
                                             >

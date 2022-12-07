@@ -69,7 +69,7 @@ const UIColor = () => (
                             <ColorBox bgcolor="primary.200" data={{ label: 'Blue-200', color: '#90CAF9' }} title="primary[200]" dark />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="primary.main" data={{ label: 'Blue-500', color: '#2196F3' }} title="primary.main" />
+                            <ColorBox bgcolor="primary.main" data={{ label: 'Blue-500', color: '#2196f3' }} title="primary.main" />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4} lg={2}>
                             <ColorBox bgcolor="primary.dark" data={{ label: 'Blue-600', color: '#1E88E5' }} title="primary.dark" />
@@ -109,7 +109,7 @@ const UIColor = () => (
                         <Grid item xs={12} sm={6} md={4} lg={2}>
                             <ColorBox
                                 bgcolor="secondary.dark"
-                                data={{ label: 'DeepPurple-600', color: '#5e35b1' }}
+                                data={{ label: 'DeepPurple-600', color: '#90caf9' }}
                                 title="secondary.dark"
                             />
                         </Grid>
@@ -197,7 +197,7 @@ const UIColor = () => (
                             <ColorBox bgcolor="grey.100" data={{ label: 'Grey-100', color: '#f5f5f5' }} title="grey[100]" dark />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="grey.200" data={{ label: 'Grey-200', color: '#eeeeee' }} title="grey[200]" dark />
+                            <ColorBox bgcolor="grey.200" data={{ label: 'Grey-200', color: '#e0e0e0' }} title="grey[300]" dark />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4} lg={2}>
                             <ColorBox bgcolor="grey.300" data={{ label: 'Grey-300', color: '#e0e0e0' }} title="grey[300]" dark />
@@ -209,7 +209,7 @@ const UIColor = () => (
                             <ColorBox bgcolor="grey.700" data={{ label: 'Grey-600', color: '#757575' }} title="grey[600]" />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <ColorBox bgcolor="grey.700" data={{ label: 'Grey-700', color: '#616161' }} title="grey[700]" />
+                            <ColorBox bgcolor="grey.700" data={{ label: 'Grey-700', color: '#2196f3' }} title="grey[700]" />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4} lg={2}>
                             <ColorBox bgcolor="grey.900" data={{ label: 'Grey-900', color: '#212121' }} title="grey[900]" />

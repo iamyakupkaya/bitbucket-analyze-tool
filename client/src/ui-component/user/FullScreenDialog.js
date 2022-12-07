@@ -15,6 +15,7 @@ import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import ReactMarkdown from 'react-markdown'
 
 
 
@@ -101,7 +102,7 @@ export default function FullScreenDialog(props) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative', backgroundColor:"#e3f2fd" }}>
+        <AppBar sx={{ position: 'relative', backgroundColor:"#e0e0e0" }}>
           <Toolbar sx={{ display:"flex", justifyContent:"space-between"}}>
           <Stack direction="row" spacing={2}>
           <StyledBadge
@@ -137,11 +138,11 @@ export default function FullScreenDialog(props) {
           </Divider>
           <Divider textAlign="left" sx={{fontWeight:"bold"}}>TITLE</Divider>
           <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
-            {selectedPR.values.title}
+          <ReactMarkdown>{selectedPR.values.title}</ReactMarkdown>
           </Box>
           <Divider textAlign="left" sx={{fontWeight:"bold", mt:2}}>DESCRIPTION</Divider>
           <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
-            {selectedPR.values.description}
+          <ReactMarkdown>{selectedPR.values.description}</ReactMarkdown>
           </Box>
           <Divider textAlign="left" sx={{fontWeight:"bold", mt:2, mb:2}}>REVIEWERS</Divider>
           </Box>

@@ -33,7 +33,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 const CardStyle = styled(Card)(({ theme }) => ({
-    background: theme.palette.primary.light,
+    background: theme.palette.grey[300],
     marginBottom: '22px',
     overflow: 'hidden',
     position: 'relative',

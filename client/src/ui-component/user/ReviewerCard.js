@@ -96,7 +96,7 @@ export default function ReviewerCard({data}) {
   };
 
   return (
-    <Card sx={{ maxWidth: 350, backgroundColor:"#e3f2fd" }}>
+    <Card sx={{ maxWidth: 350, backgroundColor:"#e0e0e0" }}>
       <Stack sx={{mt:3, ml:3, display:"flex", justifyContent:"space-between", alignItems:"center"}} direction="row" spacing={2}>
           <StyledBadge
   overlap="circular"

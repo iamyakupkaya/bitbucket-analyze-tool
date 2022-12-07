@@ -43,7 +43,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
     const { navType } = customization;
     const { primary } = theme.palette.text;
     const darkLight = theme.palette.dark.light;
-    const grey200 = theme.palette.grey[200];
+    const grey200 = theme.palette.grey[300];
     const grey500 = theme.palette.grey[500];
 
     const primary200 = theme.palette.primary[200];

@@ -26,7 +26,7 @@ const ListItemWrapper = styled('div')(({ theme }) => ({
     cursor: 'pointer',
     padding: 16,
     '&:hover': {
-        background: theme.palette.primary.light
+        background: theme.palette.grey[300]
     },
     '& .MuiListItem-root': {
         padding: 0
@@ -161,7 +161,7 @@ const NotificationList = () => {
                         <Avatar
                             sx={{
                                 color: theme.palette.primary.dark,
-                                backgroundColor: theme.palette.primary.light,
+                                backgroundColor: theme.palette.grey[300],
                                 border: 'none',
                                 borderColor: theme.palette.primary.main
                             }}

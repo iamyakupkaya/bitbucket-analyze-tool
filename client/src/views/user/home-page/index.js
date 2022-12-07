@@ -8,7 +8,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import CenterFocusStrongIcon from '@mui/icons-material/CenterFocusStrong';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -22,6 +21,7 @@ import {getPullRequests} from "../../../redux/pull_request/PullRequestSlice"
 import LoadingCircle from 'ui-component/user/LoadingCircle';
 import LoginPage from 'views/LoginPage';
 import ConfirmDialog from 'ui-component/user/ConfirmDialog';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -160,16 +160,16 @@ const HomePage = () => {
       const options = {
         title: `Total ${authorText} Author: ${authorText == "total" ? totalUsers.length : (reposActiveUsers.length + reposInactiveUsers.length) } `,
         is3D: true,
-        backgroundColor: "#e3f2fd",
-        colors: ["#2196f3", "#5e35b1"],
+        backgroundColor: "#e0e0e0",
+        colors: ["#2196f3", "#9E9E9E"],
         fontSize:20,
     
       };
       const optionsColumn = {
         title: `Most Reviewing User for ${authorText}`,
         is3D: true,
-        backgroundColor: "#e3f2fd",
-        colors: ["#006100", "#870000"],
+        backgroundColor: "#e0e0e0",
+        colors: ["#2196f3", "#870000"],
         fontSize:20,
     
       };
@@ -228,6 +228,7 @@ const HomePage = () => {
   <ButtonGroup sx={{mb:5}} variant="contained" ref={anchorRef} aria-label="split button">
         <Button onClick={handleClick}>{buttonOptions[selectedIndex]}</Button>
         <Button
+        
           size="small"
           aria-controls={buttonOpen ? 'split-button-menu' : undefined}
           aria-expanded={buttonOpen ? 'true' : undefined}
@@ -322,35 +323,35 @@ const HomePage = () => {
 
 
               <Box sx={{display:"flex", justifyContent:"space-between"}}>
-    <List sx={{ width: '100%', maxWidth: 460, bgcolor: '#e3f2fd' }}>
+    <List sx={{ width: '100%', maxWidth: 460, bgcolor: '#e0e0e0' }}>
       <ListItem>
         <ListItemAvatar>
-          <Avatar>
-            <CenterFocusStrongIcon />
+          <Avatar sx={{backgroundColor:"#9e9e9e"}}>
+            <ArrowRightIcon/>
           </Avatar>
         </ListItemAvatar>
         <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} pull request`} secondary={authorText == "total" ? totalPullRequests.length : (getRepoPullRequests(totalPullRequests, authorText)).length} />
       </ListItem>
       <ListItem>
         <ListItemAvatar>
-          <Avatar>
-            <CenterFocusStrongIcon />
+          <Avatar sx={{backgroundColor:"#9e9e9e"}}>
+            <ArrowRightIcon />
           </Avatar>
         </ListItemAvatar>
         <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} open pull request`} secondary={authorText == "total" ? openPR.length : (getRepoPullRequests(openPR, authorText)).length} />
       </ListItem>
       <ListItem>
         <ListItemAvatar>
-          <Avatar>
-            <CenterFocusStrongIcon />
+          <Avatar sx={{backgroundColor:"#9e9e9e"}}>
+            <ArrowRightIcon />
           </Avatar>
         </ListItemAvatar>
         <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} declined pull request`} secondary={authorText == "total" ? declinedPR.length : (getRepoPullRequests(declinedPR, authorText)).length} />
       </ListItem>
       <ListItem>
         <ListItemAvatar>
-          <Avatar>
-            <CenterFocusStrongIcon />
+          <Avatar sx={{backgroundColor:"#9e9e9e"}}>
+            <ArrowRightIcon />
           </Avatar>
         </ListItemAvatar>
         <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} merged pull request`} secondary={authorText == "total" ? mergedPR.length : (getRepoPullRequests(mergedPR, authorText)).length} />

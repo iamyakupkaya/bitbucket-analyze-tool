@@ -19,7 +19,7 @@ import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.grey[500],
     color: '#fff',
     overflow: 'hidden',
     position: 'relative',
@@ -98,7 +98,7 @@ const EarningCard = ({ isLoading }) => {
                                             sx={{
                                                 ...theme.typography.commonAvatar,
                                                 ...theme.typography.mediumAvatar,
-                                                backgroundColor: theme.palette.secondary.dark,
+                                                backgroundColor: theme.palette.grey[500],
                                                 color: theme.palette.secondary[200],
                                                 zIndex: 1
                                             }}
@@ -153,7 +153,7 @@ const EarningCard = ({ isLoading }) => {
                                                 cursor: 'pointer',
                                                 ...theme.typography.smallAvatar,
                                                 backgroundColor: theme.palette.secondary[200],
-                                                color: theme.palette.secondary.dark
+                                                color: theme.palette.grey[500]
                                             }}
                                         >
                                             <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />

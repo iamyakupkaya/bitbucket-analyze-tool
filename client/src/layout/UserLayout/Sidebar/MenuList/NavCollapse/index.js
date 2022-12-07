@@ -105,7 +105,7 @@ const NavCollapse = ({ menu, level }) => {
                             height: '100%',
                             width: '1px',
                             opacity: 1,
-                            background: theme.palette.primary.light
+                            background: theme.palette.grey[300]
                         }
                     }}
                 >

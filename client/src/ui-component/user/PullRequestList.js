@@ -22,6 +22,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import Typography from '@mui/material/Typography';
+import ReactMarkdown from 'react-markdown'
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -215,12 +216,12 @@ const [showInfo, setShowInfo] = useState(false)
         maxWidth={"xl"}
       >
         <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
-          {currentData.values.title || "Unknown"}
+        <ReactMarkdown>{currentData.values.title || "Unknown"}</ReactMarkdown>
         </DialogTitle>
        
         <Box sx={{display:"flex", flexDirection:"column"}}>
         <DialogContent sx={{wordWrap: "break-word"}}>
-        {currentData.values.description || "Unknown"}
+        <ReactMarkdown>{currentData.values.description || "Unknown"}</ReactMarkdown>
         </DialogContent>
         <DialogContent sx={{wordWrap: "break-word"}}>
         <Divider sx={{mt:2, mb:2}}>
@@ -255,7 +256,7 @@ const [showInfo, setShowInfo] = useState(false)
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative', backgroundColor:"#e3f2fd" }}>
+        <AppBar sx={{ position: 'relative', backgroundColor:"#e0e0e0" }}>
           <Toolbar sx={{ display:"flex", justifyContent:"space-between"}}>
           <Stack direction="row" spacing={2}>
           <StyledBadge
