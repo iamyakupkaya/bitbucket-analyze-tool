@@ -99,6 +99,7 @@ const initialState = {
   declinedPR:[],
   mostReviewingUser:[],
   collections:[],
+  lastPage:"home"
 };
 
 
@@ -120,9 +121,12 @@ const PullRequestSlice = createSlice({
       state.collections = getCollections(state.pullRequest);
 
 
+    },
+    getLastPage:(state, action) =>{
+      state.lastPage = action.payload;
     }
   },
 });
 
 export const PullRequestReducer =  PullRequestSlice.reducer;
-export const { getPullRequests } = PullRequestSlice.actions;
+export const { getPullRequests, getLastPage } = PullRequestSlice.actions;

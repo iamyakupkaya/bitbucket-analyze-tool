@@ -261,10 +261,11 @@ const [showInfo, setShowInfo] = useState(false)
             <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Reviewers of this Pull Request"} />
           </Divider>
         {currentData.values.reviewers.map((mappingReviewer) => {
-            return (<DialogContent key={mappingReviewer.user.id} sx={{wordWrap: "break-word"}}> 
-                      <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.displayName}</Typography>
-                      <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.emailAddress}</Typography>
-                      <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.name}</Typography>
+            return (
+            <DialogContent key={mappingReviewer.user.id} sx={{wordWrap: "break-word"}}> 
+              <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.displayName}</Typography>
+              <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.emailAddress}</Typography>
+              <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.name}</Typography>
 
             </DialogContent>)
             
@@ -314,7 +315,7 @@ const [showInfo, setShowInfo] = useState(false)
         </AppBar>
         <Box sx={{flexGrow:1}}>
         <Divider sx={{mt:3}}>
-            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Pull Requests of " + selectedPR[0].values.author.user.name} />
+            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Reviewing of " + selectedUser.user.name} />
           </Divider>
 
       <Box m="20px 0 0 0" height="75vh" sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}>

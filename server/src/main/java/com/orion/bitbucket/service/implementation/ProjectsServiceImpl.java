@@ -1,4 +1,5 @@
 package com.orion.bitbucket.service.implementation;
+
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -34,17 +35,17 @@ public class ProjectsServiceImpl implements IProjectsService {
     private JsonResponseServiceImpl response;
 
     public boolean getProjectsFromAPI(String url) throws JSONException {
-        String urlAdd="?limit=100&start=";
+        String urlAdd = "?limit=100&start=";
         int start = 0;
         boolean isLastPage = false;
         try {
-            if (LogHelper.IS_BASE_LOGGING){
+            if (LogHelper.IS_BASE_LOGGING) {
                 log.info("getProjectsFromAPI method in ProjectsServiceImpl class was invoked.");
             }
-            ProjectEntity entity =entityConfig.getProjectsEntity();
+            ProjectEntity entity = entityConfig.getProjectsEntity();
             Gson gson = utilConfig.getGson();
             while (!isLastPage) {
-                HttpResponse<JsonNode> httpResponse = response.getResponse(url + urlAdd+ start, EndPointsHelper.Bearer.TOKEN);
+                HttpResponse<JsonNode> httpResponse = response.getResponse(url + urlAdd + start, EndPointsHelper.Bearer.TOKEN);
                 JSONObject body = httpResponse.getBody().getObject(); // JSONObject
 
                 int forStart = start;
@@ -81,9 +82,8 @@ public class ProjectsServiceImpl implements IProjectsService {
 
             }
             return false;
-        }
-        finally {
-            if (LogHelper.IS_BASE_LOGGING){
+        } finally {
+            if (LogHelper.IS_BASE_LOGGING) {
                 log.info("getProjectsFromAPI method in ProjectsServiceImpl class executing has finished");
 
             }

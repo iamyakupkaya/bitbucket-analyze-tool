@@ -23,7 +23,7 @@ import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import Typography from '@mui/material/Typography';
 import ReactMarkdown from 'react-markdown'
-
+import Link from '@mui/material/Link';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -205,6 +205,32 @@ const [showInfo, setShowInfo] = useState(false)
  
   ];
 
+  function getJiraID(str) {
+    let after_ ="";
+    if (str.includes('#reasons')){
+      let textArr = str.substring(str.indexOf('#reasons ') + 1).split(" ");
+      after_ = textArr[1]
+    }
+    else if (str.includes('Bugfix')){
+      let splitText = str.substring(str.indexOf('Bugfix/')).split(" ");
+      console.log("sptlit text", splitText)
+      after_ = splitText[0].substring(8);
+  
+    }
+    else if (str.includes('Feature')){
+      let splitText = str.substring(str.indexOf('Feature/')).split(" ");
+      console.log("sptlit text", splitText)
+      after_ = splitText[0].substring(8);
+      console.log("Gelen ", after_)
+  
+    }
+    else {
+      after_ ="unknown"
+    }
+  
+  
+    return "https://jira.rbbn.com/rest/agile/1.0/issue/" + after_;
+  }
 
   if (showInfo) {
     return (
@@ -217,6 +243,10 @@ const [showInfo, setShowInfo] = useState(false)
       >
         <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
         <ReactMarkdown>{currentData.values.title || "Unknown"}</ReactMarkdown>
+        
+        <Link target="_blank" href={getJiraID(currentData.values.title)} underline="hover">
+        {getJiraID(currentData.values.title) || "Unknown"}
+        </Link>
         </DialogTitle>
        
         <Box sx={{display:"flex", flexDirection:"column"}}>

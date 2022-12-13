@@ -8,13 +8,14 @@ export const initialState = {
     isOpen: [], // for active default menu
     fontFamily: config.fontFamily,
     borderRadius: config.borderRadius,
-    opened: true
+    opened: true,
 };
 
 // ==============================|| CUSTOMIZATION REDUCER ||============================== //
 
 const customizationReducer = (state = initialState, action) => {
     let id;
+    console.log("Gelen action type", action)
     switch (action.type) {
         case actionTypes.MENU_OPEN:
             id = action.id;

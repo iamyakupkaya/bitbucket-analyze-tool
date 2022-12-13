@@ -17,15 +17,15 @@ const MainRoutes = {
     element: <UserLayout />,
     children: [
         {
-            path: '',
+            path: 'home',
             element: <HomePage />
         },
         {
-            path: 'sample-page',
+            path: 'pull-requests',
             element: <PullRequestPage />
         },
         {
-            path: 'sample-page2',
+            path: 'authors',
             element: <AuthorPage />
         }
     ]

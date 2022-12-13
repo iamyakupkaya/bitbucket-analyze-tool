@@ -32,8 +32,6 @@ public class PageController {
     @Autowired
     private EntityConfig entityConfig;
 
-
-
     // GETs METHODs
 
     // this method get all data from API and save them into MongoDB

@@ -16,6 +16,7 @@ import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import ReactMarkdown from 'react-markdown'
+import Link from '@mui/material/Link';
 
 
 
@@ -86,6 +87,32 @@ function stringAvatar(name = "Unknown Unknown") {
   };
 }
 
+function getJiraID(str) {
+  let after_ ="";
+  if (str.includes('#reasons')){
+    let textArr = str.substring(str.indexOf('#reasons ') + 1).split(" ");
+    after_ = textArr[1]
+  }
+  else if (str.includes('Bugfix')){
+    let splitText = str.substring(str.indexOf('Bugfix/')).split(" ");
+    console.log("sptlit text", splitText)
+    after_ = splitText[0].substring(8);
+
+  }
+  else if (str.includes('Feature')){
+    let splitText = str.substring(str.indexOf('Feature/')).split(" ");
+    console.log("sptlit text", splitText)
+    after_ = splitText[0].substring(8);
+    console.log("Gelen ", after_)
+
+  }
+  else {
+    after_ ="unknown"
+  }
+
+
+  return "https://jira.rbbn.com/rest/agile/1.0/issue/" + after_;
+}
 
 export default function FullScreenDialog(props) {
   const {open, setOpen, selectedPR } = props.data;
@@ -139,6 +166,9 @@ export default function FullScreenDialog(props) {
           <Divider textAlign="left" sx={{fontWeight:"bold"}}>TITLE</Divider>
           <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
           <ReactMarkdown>{selectedPR.values.title}</ReactMarkdown>
+          <Link target="_blank" href={getJiraID(selectedPR.values.title)} underline="hover">
+        {getJiraID(selectedPR.values.title) || "Unknown"}
+        </Link>
           </Box>
           <Divider textAlign="left" sx={{fontWeight:"bold", mt:2}}>DESCRIPTION</Divider>
           <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
@@ -174,19 +204,7 @@ export default function FullScreenDialog(props) {
   );
 }
 
-/* FullScreenDialog.defaultProps = {
-  data:{
-    selectedPR:{
-      values:{
-        author:{
-          user:{
-            displayName:"Unknown",
-            emailAddress:"Unknown"
-          }
-        }
-      }
-    }
-  }
-};
 
-*/
+
+
+

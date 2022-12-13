@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
+import GlobalStyles from "./globalStyle";
 
 // routing
 import Routes from 'routes';
@@ -21,6 +22,7 @@ const App = () => {
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={themes(customization)}>
                 <CssBaseline />
+                <GlobalStyles/>
                 <NavigationScroll>
                     <Routes exact path="/orion" />
                 </NavigationScroll>

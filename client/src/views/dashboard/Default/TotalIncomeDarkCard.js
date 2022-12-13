@@ -13,7 +13,7 @@ import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.light,
     overflow: 'hidden',
     position: 'relative',
@@ -41,7 +41,8 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ==============================|| DASHBOARD - TOTAL INCOME DARK CARD ||============================== //
 
-const TotalIncomeDarkCard = ({ isLoading }) => {
+const TotalIncomeDarkCard = (props) => {
+    const {isLoading, count, name} = props.data;
     const theme = useTheme();
 
     return (
@@ -59,8 +60,10 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                                         sx={{
                                             ...theme.typography.commonAvatar,
                                             ...theme.typography.largeAvatar,
-                                            backgroundColor: theme.palette.primary[800],
-                                            color: '#fff'
+                                            backgroundColor: theme.palette.primary[200],
+                                            color: theme.palette.primary[800],
+                                            cursor:"default"
+                                            
                                         }}
                                     >
                                         <TableChartOutlinedIcon fontSize="inherit" />
@@ -74,12 +77,12 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                                     }}
                                     primary={
                                         <Typography variant="h4" sx={{ color: '#fff' }}>
-                                            $203k
+                                            {count}
                                         </Typography>
                                     }
                                     secondary={
                                         <Typography variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
-                                            Total Income
+                                            {name}
                                         </Typography>
                                     }
                                 />

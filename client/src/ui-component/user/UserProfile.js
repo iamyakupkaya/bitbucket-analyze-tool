@@ -88,6 +88,7 @@ function stringAvatar(name = "Unknown Unknown") {
 
 export default function UserProfile(props) {
   const {open, setOpen, arr} = props.data
+  console.log("gelen arr: ", arr)
   const handleClose = () => {
     setOpen(false)
   };

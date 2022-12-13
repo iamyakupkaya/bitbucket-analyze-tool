@@ -17,17 +17,20 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
-import {getPullRequests} from "../../../redux/pull_request/PullRequestSlice"
+import {getLastPage} from "../../../redux/pull_request/PullRequestSlice"
 import LoadingCircle from 'ui-component/user/LoadingCircle';
 import LoginPage from 'views/LoginPage';
 import ConfirmDialog from 'ui-component/user/ConfirmDialog';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-
+import BoltIcon from '@mui/icons-material/Bolt';
+import Grid from '@mui/material/Grid';
+import EarningCard from 'views/dashboard/Default/EarningCard';
+import TotalIncomeDarkCard from 'views/dashboard/Default/TotalIncomeDarkCard';
+import { FortTwoTone } from '@mui/icons-material';
 // ==============================|| SAMPLE PAGE ||============================== //
 
 
 const HomePage = () => {
-
+    const dispatch = useDispatch();
     const totalUsers = useSelector(state => state.data.allUser)
     const totalPullRequests = useSelector(state => state.data.pullRequest)
     const activeUsers = useSelector(state => state.data.activeUser)
@@ -53,7 +56,9 @@ const HomePage = () => {
     
     
     
-
+useEffect(() => {
+  dispatch(getLastPage("home")) 
+}, [])
 
 
     if(totalPullRequests.length <= 0 || !totalPullRequests){
@@ -62,9 +67,6 @@ const HomePage = () => {
       );
       
     }
-
-    
- 
 
     const handleClick = () => {
       console.info(`You clicked ${options[selectedIndex]}`);
@@ -151,26 +153,38 @@ const HomePage = () => {
         [repoMostReviewingUser[2].name, repoMostReviewingUser[2].value, "#2196f3"],
         [repoMostReviewingUser[3].name, repoMostReviewingUser[3].value, "#2196f3"], // CSS-style declaration
         [repoMostReviewingUser[4].name, repoMostReviewingUser[4].value, "#2196f3"], // CSS-style declaration
-
+        [repoMostReviewingUser[5].name, repoMostReviewingUser[5].value, "#2196f3"],
+        [repoMostReviewingUser[6].name, repoMostReviewingUser[6].value, "#2196f3"],
+        [repoMostReviewingUser[7].name, repoMostReviewingUser[7].value, "#2196f3"],
+        [repoMostReviewingUser[8].name, repoMostReviewingUser[8].value, "#2196f3"],
+        [repoMostReviewingUser[9].name, repoMostReviewingUser[9].value, "#2196f3"],
       ];
-  
 
       // PIE
 
       const options = {
-        title: `Total ${authorText} Author: ${authorText == "total" ? totalUsers.length : (reposActiveUsers.length + reposInactiveUsers.length) } `,
+        title: `Total ${authorText == "total" ? "" : authorText} Author: ${authorText == "total" ? totalUsers.length : (reposActiveUsers.length + reposInactiveUsers.length) } `,
         is3D: true,
+        titleTextStyle: {
+          color: '#616161'
+      },
         backgroundColor: "#e0e0e0",
-        colors: ["#2196f3", "#9E9E9E"],
-        fontSize:20,
+        colors: ["#2196f3", "#90CAF9"],
+        fontSize:18,
+        chartArea:{left:0,top:30,width:"100%",height:"70%"}
     
       };
       const optionsColumn = {
         title: `Most Reviewing User for ${authorText}`,
         is3D: true,
+        titleTextStyle: {
+          color: '#616161'
+      },
         backgroundColor: "#e0e0e0",
         colors: ["#2196f3", "#870000"],
         fontSize:20,
+        chartArea:{top:50, right:20, left:100, width:"75%",height:"70%"}
+
     
       };
       const chartData = [
@@ -188,44 +202,80 @@ const HomePage = () => {
       }
       else if(showPie =="bar#0#0" && open){
         const myarr = totalUsers.filter((author)=> {
-          return author.user.name == mostReviewingUser[0].name
+          return author.user.name == repoMostReviewingUser[0].name
         })
         return <UserProfile data={{open, setOpen, arr:myarr }}/>
 
       }
       else if(showPie =="bar#0#1" && open){
         const myarr = totalUsers.filter((author)=> {
-          return author.user.name == mostReviewingUser[1].name
+          return author.user.name == repoMostReviewingUser[1].name
         })
         return <UserProfile data={{open, setOpen, arr:myarr }}/>
 
       }
       else if(showPie =="bar#0#2" && open){
         const myarr = totalUsers.filter((author)=> {
-          return author.user.name == mostReviewingUser[2].name
+          return author.user.name == repoMostReviewingUser[2].name
         })
         return <UserProfile data={{open, setOpen, arr:myarr }}/>
 
       }
       else if(showPie =="bar#0#3" && open){
         const myarr = totalUsers.filter((author)=> {
-          return author.user.name == mostReviewingUser[3].name
+          return author.user.name == repoMostReviewingUser[3].name
         })
         return <UserProfile data={{open, setOpen, arr:myarr }}/>
 
       }
       else if(showPie =="bar#0#4" && open){
         const myarr = totalUsers.filter((author)=> {
-          return author.user.name == mostReviewingUser[4].name
+          return author.user.name == repoMostReviewingUser[4].name
         })
         return <UserProfile data={{open, setOpen, arr:myarr }}/>
 
       }
+      else if(showPie =="bar#0#5" && open){
+        const myarr = totalUsers.filter((author)=> {
+          return author.user.name == repoMostReviewingUser[5].name
+        })
+        return <UserProfile data={{open, setOpen, arr:myarr }}/>
+
+      }
+      else if(showPie =="bar#0#6" && open){
+        const myarr = totalUsers.filter((author)=> {
+          return author.user.name == repoMostReviewingUser[6].name
+        })
+        return <UserProfile data={{open, setOpen, arr:myarr }}/>
+
+      }
+      else if(showPie =="bar#0#7" && open){
+        const myarr = totalUsers.filter((author)=> {
+          return author.user.name == repoMostReviewingUser[7].name
+        })
+        return <UserProfile data={{open, setOpen, arr:myarr }}/>
+
+      }
+      else if(showPie =="bar#0#8" && open){
+        const myarr = totalUsers.filter((author)=> {
+          return author.user.name == repoMostReviewingUser[8].name
+        })
+        return <UserProfile data={{open, setOpen, arr:myarr }}/>
+
+      }
+      else if(showPie =="bar#0#9" && open){
+        const myarr = totalUsers.filter((author)=> {
+          return author.user.name == repoMostReviewingUser[9].name
+        })
+        return <UserProfile data={{open, setOpen, arr:myarr }}/>
+
+      }
+      
  
     return (
     
   <>
-  <ButtonGroup sx={{mb:5}} variant="contained" ref={anchorRef} aria-label="split button">
+  <ButtonGroup sx={{mb:0}} variant="contained" ref={anchorRef} aria-label="split button">
         <Button onClick={handleClick}>{buttonOptions[selectedIndex]}</Button>
         <Button
         
@@ -275,13 +325,82 @@ const HomePage = () => {
           </Grow>
         )}
       </Popper>
+       
+       <Box sx={{width:"100%", display:"flex"}}>
+       <Grid container spacing={2} sx={{mt:4, mb:0}}>
+      <Grid item xs={6} md={6}>
+        <EarningCard data={{isLoading:false,  name:"Active Users", users:reposActiveUsers}} />
 
-        <Chart
+      </Grid>
+      <Grid item xs={6} md={6}>
+<EarningCard data={{isLoading:false, name:"Inactive Users", users:reposInactiveUsers}} />
+      </Grid> 
+</Grid>
+                    
+
+
+       </Box>
+
+
+<Grid container spacing={2} sx={{mt:1, mb:5}}>
+      <Grid item xs={6} md={6}>
+        <TotalIncomeDarkCard data={{isLoading:false, count: (authorText == "total" ? totalPullRequests.length : (getRepoPullRequests(totalPullRequests, authorText)).length), name:(`${authorText} Pull Requests`)}} />
+      </Grid>
+      <Grid item xs={6} md={6}>
+      <TotalIncomeDarkCard data={{isLoading:false, count: (authorText == "total" ? mergedPR.length : (getRepoPullRequests(mergedPR, authorText)).length), name:(`${authorText} Merged Pull Requests`)}} />
+
+      </Grid>
+      <Grid item xs={6} md={6}>
+      <TotalIncomeDarkCard data={{isLoading:false, count: (authorText == "total" ? declinedPR.length : (getRepoPullRequests(declinedPR, authorText)).length), name:(`${authorText} Declined Pull Requests`)}} />
+      </Grid>
+      <Grid item xs={6} md={6}>
+      <TotalIncomeDarkCard data={{isLoading:false, count: (authorText == "total" ? openPR.length : (getRepoPullRequests(openPR, authorText)).length), name:(`${authorText} Open Pull Requests`)}} />
+
+      </Grid> 
+</Grid>
+
+
+<Chart chartType="ColumnChart"            options={optionsColumn}
+ width="100%" height="500px" data={dataColumn}  chartEvents={[
+  {
+    eventName: "ready",
+    callback: ({ chartWrapper, google }) => {
+      const chart = chartWrapper.getChart();
+      google.visualization.events.addListener(chart, "click", e => {
+        setOpen(true)
+      });
+      google.visualization.events.addListener(chart, "click", e => {
+
+          setShowPie(e.targetID)
+          setOpen(true)
+
+      });
+    }
+  }
+]} />
+
+    </>
+       
+)
+};
+
+export default HomePage;
+
+
+
+
+
+/*
+
+
+       <Chart
             chartType="PieChart"
             data={chartData}
             options={options}
             width={"100%"}
             height={"400px"}
+            left={0}
+            
             chartEvents={[
                 {
                   eventName: "ready",
@@ -302,69 +421,5 @@ const HomePage = () => {
               ]}
             
             />
-     <Chart chartType="ColumnChart"            options={optionsColumn}
- width="100%" height="500px" data={dataColumn}  chartEvents={[
-  {
-    eventName: "ready",
-    callback: ({ chartWrapper, google }) => {
-      const chart = chartWrapper.getChart();
-      google.visualization.events.addListener(chart, "click", e => {
-        setOpen(true)
-      });
-      google.visualization.events.addListener(chart, "click", e => {
 
-          setShowPie(e.targetID)
-          setOpen(true)
-
-      });
-    }
-  }
-]} />
-
-
-              <Box sx={{display:"flex", justifyContent:"space-between"}}>
-    <List sx={{ width: '100%', maxWidth: 460, bgcolor: '#e0e0e0' }}>
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar sx={{backgroundColor:"#9e9e9e"}}>
-            <ArrowRightIcon/>
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} pull request`} secondary={authorText == "total" ? totalPullRequests.length : (getRepoPullRequests(totalPullRequests, authorText)).length} />
-      </ListItem>
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar sx={{backgroundColor:"#9e9e9e"}}>
-            <ArrowRightIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} open pull request`} secondary={authorText == "total" ? openPR.length : (getRepoPullRequests(openPR, authorText)).length} />
-      </ListItem>
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar sx={{backgroundColor:"#9e9e9e"}}>
-            <ArrowRightIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} declined pull request`} secondary={authorText == "total" ? declinedPR.length : (getRepoPullRequests(declinedPR, authorText)).length} />
-      </ListItem>
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar sx={{backgroundColor:"#9e9e9e"}}>
-            <ArrowRightIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primaryTypographyProps={{fontSize: '20px', fontWeight:"bold"}} secondaryTypographyProps={{fontSize: '15px', fontWeight:"bold"}} primary={`${authorText} merged pull request`} secondary={authorText == "total" ? mergedPR.length : (getRepoPullRequests(mergedPR, authorText)).length} />
-      </ListItem>
-    </List>
-              </Box>
-    </>
-       
-)
-};
-
-export default HomePage;
-
-
-
-
+*/

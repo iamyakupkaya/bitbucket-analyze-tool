@@ -1,15 +1,30 @@
-import React, {useState} from 'react'
+import React, {useEffect} from 'react'
 import { useNavigate } from "react-router-dom";
 import ConfirmBox from "react-dialog-confirm";
 import '../../../node_modules/react-dialog-confirm/build/index.css';
 import LOGOIMG from "../../assets/images/orion_logo.png"
+import {useDispatch } from 'react-redux'
+
 import styled from "styled-components";
 import { blue } from '@mui/material/colors';
+import { SET_MENU } from '../../store/actions';
+import {useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 const ConfirmDialog = () => {
-    let navigate = useNavigate();    
-    const handleConfirm = () => { return navigate("/."); }
+    let navigate = useNavigate();
+    const theme = useTheme();
+  
+    const matchDownMd = useMediaQuery(theme.breakpoints.down('lg'));
+    const dispatch = useDispatch();  
+    const handleConfirm = () => {
+      return navigate("/."); }
     const handleCancel = () => { alert('Please click YES to load data!'); }
+useEffect(() => {
+  dispatch({ type: SET_MENU, opened: false });
+
+
+}, [])
 
   return (
     <ConfirmBox // Note : in this example all props are required

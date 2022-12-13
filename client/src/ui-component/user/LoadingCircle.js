@@ -36,7 +36,7 @@ const LoadingCircle = () => {
     loop:true,
     delay:50,
     cursor:"<strong>|</strong>",
-    strings:["<strong>Please wait data is loading..!</strong>"]
+    strings:["<strong>Please wait, data is loading...</strong>"]
   }}
 />
   </Box>

@@ -19,6 +19,7 @@ import MenuList from '@mui/material/MenuList';
 import Box from "@mui/material/Box";
 import axios from "axios";
 import ConfirmDialog from "ui-component/user/ConfirmDialog";
+import {getLastPage} from "../../../redux/pull_request/PullRequestSlice"
 
 // Helper functions
 function createData(
@@ -41,6 +42,7 @@ const options = ['OPEN', 'MERGED', 'DECLINED'];
 // ==============================|| Pull-Request PAGE ||============================== //
 
 const PullRequestPage = () => {
+  const dispatch = useDispatch();
   const pullRequest = useSelector(state => state.data.pullRequest);
   const [pageSize, setPageSize] = useState(10);
   const [pageNum, setPageNum] = useState(0);
@@ -55,6 +57,9 @@ const PullRequestPage = () => {
   const declinedPR = useSelector(state => state.data.declinedPR)
   const [data, setData] = useState(openPR);
 
+  useEffect(() => {
+    dispatch(getLastPage("pull-requests")) 
+  }, [])
 
   if(pullRequest.length <= 0 || !pullRequest){
     return (
@@ -251,7 +256,13 @@ const PullRequestPage = () => {
    
       <Box m="20px 0 0 0" height="75vh" sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}>
         <DataGrid
-        sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}
+        sx={{backgroundColor:"white", borderRadius:"20px", 
+        border:"0px solid black !important",
+          "& .MuiDataGrid-virtualScroller::-webkit-scrollbar": {             
+              display: "none"
+          
+          },
+      }}
           rows={rows}
           getRowId={rows.id}
           columns={columns}

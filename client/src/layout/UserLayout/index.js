@@ -16,6 +16,7 @@ import { SET_MENU } from 'store/actions';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
+import { borderRadius } from '@mui/system';
 
 // styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -58,7 +59,10 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
         [theme.breakpoints.down('sm')]: {
             marginLeft: '10px'
         }
-    })
+    }),
+    marginTop:"95px",
+    borderRadius:"4px",
+    boxShadow:"5px 5px 7px #949494, -5px -5px 7px #ffffff;"
 }));
 
 // ==============================|| MAIN LAYOUT ||============================== //
@@ -73,11 +77,12 @@ const UserLayout = () => {
     const handleLeftDrawerToggle = () => {
         dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
     };
-
     useEffect(() => {
+
         dispatch({ type: SET_MENU, opened: !matchDownMd });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+ 
     }, [matchDownMd]);
+
 
     return (
         <Box sx={{ display: 'flex' }}>

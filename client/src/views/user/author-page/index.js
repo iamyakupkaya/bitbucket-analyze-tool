@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import InfoIcon from "@mui/icons-material/Info";
 import Stack from "@mui/material/Stack";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -15,8 +15,10 @@ import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-
-
+import {getLastPage} from "../../../redux/pull_request/PullRequestSlice"
+import Diversity2Icon from '@mui/icons-material/Diversity2';
+import TextField from '@mui/material/TextField'; 
+import FormControl from '@mui/material/FormControl';
 //import { useDemoData } from '@mui/x-data-grid-generator';
 
 import Box from "@mui/material/Box";
@@ -52,6 +54,7 @@ function PaperComponent(props) {
 // ==============================|| Pull-Request PAGE ||============================== //
 
 const AuthorPage = () => {
+  const dispatch = useDispatch();
     const totalUsers = useSelector(state => state.data.allUser)
     const pullRequest = useSelector(state => state.data.pullRequest)
   const [pageSize, setPageSize] = useState(10);
@@ -67,12 +70,23 @@ const [showActive, setShowActive] = useState(false)
  const [userReviewer, setUserReviewer] = useState([]);
 const [showMore, setShowMore] = useState(false);
 const [showMoreReviewer, setShowMoreReviewer] = useState(false);
+const [checkboxSelection, setCheckboxSelection] = useState(true);
+const [teamButton, setTeamButton] = useState(false);
+const [checkboxSelectedUsers, setCheckboxSelectedUsers] = useState([]);
+const [teamText, setTeamText] = useState("");
+
+useEffect(() => {
+  dispatch(getLastPage("authors"))
+
+  
+}, [])
 
 if(pullRequest.length <= 0 || !pullRequest){
   return (
     <ConfirmDialog/>
   ); 
 }
+
 
  const columns = [
     {
@@ -166,6 +180,16 @@ if(pullRequest.length <= 0 || !pullRequest){
         setData(totalUsers.filter((filteredUser) => showActive ? filteredUser.user.active == true : filteredUser.user.active == false))
   }
   
+  const handleTeamButton = () => {
+    setTeamButton(true)
+  }
+  const handleSubmitTeam = ()=> {
+    console.log("checkboxt: ", teamText)
+
+    setCheckboxSelectedUsers([]);
+    setTeamButton(false);
+    setTeamText("");
+  }
   
 
   if (totalUsers.length <= 0) {
@@ -173,6 +197,29 @@ if(pullRequest.length <= 0 || !pullRequest){
         <LoadingCircle/>
       );
     
+  }
+  if(teamButton){
+    return <Dialog
+    open={teamButton}
+    onClose={()=> setTeamButton(false)}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+  >
+    <FormControl>
+    <TextField sx={{mt:5, mb:2, ml:5,mr:5}} 
+    id="outlined-basic" label="Team Name" variant="outlined" 
+    onChange={(event)=> setTeamText(event.target.value)}
+    defaultValue={teamText}
+    />
+
+</FormControl>
+    <DialogActions>
+      <Button onClick={()=> setTeamButton(false)}>Close</Button>
+      <Button onClick={handleSubmitTeam}>
+        Submit
+      </Button>
+    </DialogActions>
+  </Dialog>
   }
 
   if(showMore){
@@ -193,9 +240,9 @@ if(pullRequest.length <= 0 || !pullRequest){
       >
         <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
           {currentData.user.displayName || "Unknown"}
-          <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>          {currentData.user.name || "Unknown"}
+          <Typography  variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>          {currentData.user.name || "Unknown"}
 </Typography>
-<Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>          {currentData.user.emailAddress || "Unknown"}
+<Typography  variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>          {currentData.user.emailAddress || "Unknown"}
 </Typography>
         </DialogTitle>
        
@@ -208,7 +255,7 @@ if(pullRequest.length <= 0 || !pullRequest){
           </DialogContentText>
           <DialogContentText style={{fontWeight:"bolder", fontSize:"15px"}}>
           <DialogTitle style={{fontWeight:"bold", marginLeft:"0px", display:"inline-block", fontSize:"15px" }} id="draggable-dialog-title">
-          Total Reviewer Count:
+          Total Reviewing Count:
         </DialogTitle>
             {userReviewer.length}
           </DialogContentText>
@@ -219,7 +266,7 @@ if(pullRequest.length <= 0 || !pullRequest){
           </Button>
           </DialogContentText>
           <DialogContentText>
-            To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">reviewers</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{currentData.user.name}</Typography> user click more button.
+            To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">reviewing</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{currentData.user.name}</Typography> user click more button.
             <Button disabled={userReviewer.length <=0 ? true : false} onClick={handleMoreReviewers}>
             More
           </Button>
@@ -239,12 +286,18 @@ if(pullRequest.length <= 0 || !pullRequest){
 
   return (
     <>   
+    <Box sx={{display:"flex", justifyContent:"space-between"}}>
     <Button onClick={handleActiveButton} sx={{borderRadius:"10px"}} variant="contained" endIcon={<VisibilityIcon />}>
   {buttonText}
 </Button>
+<Button onClick={handleTeamButton} sx={{borderRadius:"10px"}} variant="contained" endIcon={<Diversity2Icon />}>ADD TEAM</Button>
+    </Box>
+
       <Box m="20px 0 0 0" height="75vh" sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}>
       
         <DataGrid
+                  checkboxSelection={checkboxSelection}
+
         sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}
           rows={rows}
           getRowId={rows.id}
@@ -253,7 +306,18 @@ if(pullRequest.length <= 0 || !pullRequest){
           rowsPerPageOptions={[10, 25, 50, 75, 100]}
           pageSize={pageSize}
           onPageChange={(newPage) => setPageNum(newPage)}
-          onPageSizeChange={(newPage) => setPageSize(newPage)} 
+          onPageSizeChange={(newPage) => setPageSize(newPage)}
+          onSelectionModelChange={(ids) => {
+            const selectedIDs = Array.from(new Set(ids))
+            const selectedData = data.filter((element) => {
+              return selectedIDs.find((idElement) => {
+                return element.user.id == idElement
+              })
+            }
+            )
+            setCheckboxSelectedUsers(selectedData);
+
+          }}
           initialState={{
             pagination: {
               page: pageNum,
@@ -264,6 +328,7 @@ if(pullRequest.length <= 0 || !pullRequest){
       },
     },
           }}
+
         ></DataGrid>
       </Box>
       </>
