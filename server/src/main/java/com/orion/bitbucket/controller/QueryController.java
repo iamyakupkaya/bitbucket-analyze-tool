@@ -43,4 +43,6 @@ public class QueryController {
         System.out.println("Total duration of finding of user prs is: " + differenceTime.toMillis() + " millis.!");
         return ResponseEntity.status(HttpStatus.OK).body(resultAPI);
     }
+
+
 }

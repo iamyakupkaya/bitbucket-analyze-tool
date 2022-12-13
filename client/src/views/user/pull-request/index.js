@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import InfoIcon from "@mui/icons-material/Info";
 import Stack from "@mui/material/Stack";
 import FullScreenDialog from "ui-component/user/FullScreenDialog";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar, GridLinkOperator} from "@mui/x-data-grid";
 import LoadingCircle from "ui-component/user/LoadingCircle";
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
@@ -28,20 +28,23 @@ function createData(
   author,
   emailAddress,
   slug,
+  teamName,
   create,
   updated,
   commentCount,
   title
 ) {
-  return { pr, id, author, emailAddress, slug, create, updated, commentCount, title };
+  return { pr, id, author, emailAddress, slug, teamName, create, updated, commentCount, title };
 }
 
 const options = ['OPEN', 'MERGED', 'DECLINED'];
 
 
+
 // ==============================|| Pull-Request PAGE ||============================== //
 
 const PullRequestPage = () => {
+
   const dispatch = useDispatch();
   const pullRequest = useSelector(state => state.data.pullRequest);
   const [pageSize, setPageSize] = useState(10);
@@ -56,6 +59,12 @@ const PullRequestPage = () => {
   const mergedPR = useSelector(state => state.data.mergedPR);
   const declinedPR = useSelector(state => state.data.declinedPR)
   const [data, setData] = useState(openPR);
+  const [filterInfo, setFilterInfo] = useState({
+    id: 1,
+    columnField: '',
+    operatorValue: '',
+    value: '',
+  })
 
   useEffect(() => {
     dispatch(getLastPage("pull-requests")) 
@@ -128,6 +137,11 @@ const PullRequestPage = () => {
       flex: 0.5,
     },
     {
+      field: "teamName",
+      headerName: "Team Name",
+      flex: 0.5,
+    },
+    {
       field: "create",
       headerName: "Created",
       flex: 0.5,
@@ -157,6 +171,7 @@ const PullRequestPage = () => {
       pr.values.author.user.name,
       pr.values.author.user.emailAddress,
       pr.values.fromRef.repository.slug,
+      pr.values.author.teamName,
       new Date(pr.values.createdDate).toISOString().split("T")[0],
       new Date(pr.values.updatedDate).toISOString().split("T")[0],
       pr.values.properties.commentCount < 0 ? 0 : pr.values.properties.commentCount,
@@ -271,16 +286,65 @@ const PullRequestPage = () => {
           pageSize={pageSize}
           onPageChange={(newPage) => setPageNum(newPage)}
           onPageSizeChange={(newPage) => setPageSize(newPage)} 
+          componentsProps={{
+            filterPanel: {
+              // Force usage of "And" operator
+              linkOperators: [GridLinkOperator.And],
+              // Display columns by ascending alphabetical order
+              filterFormProps: {
+                // Customize inputs by passing props
+                linkOperatorInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                },
+                columnInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                  sx: { mt: 'auto' },
+                },
+                operatorInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                  sx: { mt: 'auto' },
+                },
+                valueInputProps: {
+                  InputComponentProps: {
+                    variant: 'outlined',
+                    size: 'small',
+                  },
+                },
+                deleteIconProps: {
+                  sx: {
+                    '& .MuiSvgIcon-root': { color: '#d32f2f' },
+                  },
+                },
+              },
+              sx: {
+                // Customize inputs using css selectors
+                '& .MuiDataGrid-filterForm': { p: 2 },
+                '& .MuiDataGrid-filterForm:nth-child(even)': {
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark' ? '#444' : '#f5f5f5',
+                },
+                '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },
+                '& .MuiDataGrid-filterFormColumnInput': { mr: 2, width: 150 },
+                '& .MuiDataGrid-filterFormOperatorInput': { mr: 2, width:150 },
+                '& .MuiDataGrid-filterFormValueInput': { width: 150 },
+              },
+            },
+          }}
           initialState={{
             pagination: {
               page: pageNum,
             },
             filter: {
       filterModel: {
-        items: [{ columnField: 'rating', operatorValue: '>', value: '2.5' }],
+        items: [filterInfo],
       },
+      
     },
           }}
+          
         ></DataGrid>
       </Box>
     </Box>

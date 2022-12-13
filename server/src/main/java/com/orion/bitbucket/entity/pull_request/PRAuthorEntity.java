@@ -8,14 +8,17 @@ public class PRAuthorEntity {
     private boolean approved = false;
     private String status="Unknown";
 
+    private String teamName="Unknown";
+
     public PRAuthorEntity() {
     }
 
-    public PRAuthorEntity(PRUserEntity user, String role, boolean approved, String status) {
+    public PRAuthorEntity(PRUserEntity user, String role, boolean approved, String status, String teamName) {
         this.user = user;
         this.role = role;
         this.approved = approved;
         this.status = status;
+        this.teamName = teamName;
     }
 
     public PRUserEntity getUser() {
@@ -48,5 +51,13 @@ public class PRAuthorEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 }

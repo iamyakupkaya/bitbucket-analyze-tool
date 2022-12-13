@@ -91,5 +91,6 @@ public class PRUserEntity {
     public void setLinks(PRLinksEntity links) {
         this.links = links;
     }
+
 }
 

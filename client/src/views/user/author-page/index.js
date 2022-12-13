@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import InfoIcon from "@mui/icons-material/Info";
 import Stack from "@mui/material/Stack";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar, GridLinkOperator } from "@mui/x-data-grid";
 import LoadingCircle from "ui-component/user/LoadingCircle";
 import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -17,16 +17,17 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {getLastPage} from "../../../redux/pull_request/PullRequestSlice"
 import Diversity2Icon from '@mui/icons-material/Diversity2';
-import TextField from '@mui/material/TextField'; 
 import FormControl from '@mui/material/FormControl';
-//import { useDemoData } from '@mui/x-data-grid-generator';
-
 import Box from "@mui/material/Box";
-import PullRequestList from "ui-component/user/PullRequestList";
-import ReviewerList from "ui-component/user/ReviewerList";
-import ConfirmDialog from "ui-component/user/ConfirmDialog";
-
-
+import PullRequestList from "../../../ui-component/user/PullRequestList";
+import ReviewerList from "../../../ui-component/user/ReviewerList";
+import ConfirmDialog from "../../../ui-component/user/ConfirmDialog";
+import InputLabel from '@mui/material/InputLabel';
+import { styled } from '@mui/material/styles';
+import NativeSelect from '@mui/material/NativeSelect';
+import InputBase from '@mui/material/InputBase';
+import axios from "axios";
+import { getPullRequests } from "../../../redux/pull_request/PullRequestSlice";
 
 // Helper functions
 function createData(
@@ -34,10 +35,11 @@ function createData(
   id,
   name,
   displayName,
+  teamName,
   emailAddress,
-  type,
+ 
 ) {
-  return { pr, id, name, displayName, emailAddress, type };
+  return { pr, id, name, displayName,  teamName, emailAddress };
 }
 
 function PaperComponent(props) {
@@ -52,6 +54,43 @@ function PaperComponent(props) {
   }
 
 // ==============================|| Pull-Request PAGE ||============================== //
+
+
+const BootstrapInput = styled(InputBase)(({ theme }) => ({
+  'label + &': {
+    marginTop: theme.spacing(3),
+  },
+  '& .MuiInputBase-input': {
+    borderRadius: 4,
+    position: 'relative',
+    backgroundColor: theme.palette.background.paper,
+    border: '1px solid #ced4da',
+    fontSize: 16,
+    padding: '10px 26px 10px 12px',
+    transition: theme.transitions.create(['border-color', 'box-shadow']),
+    // Use the system font instead of the default Roboto font.
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+    '&:focus': {
+      borderRadius: 4,
+      borderColor: '#80bdff',
+      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+    },
+  },
+}));
+
+
+const teamNames = ["Unknown", "NRD1112", "DENEME12", "OCM45", "IST3434"];
 
 const AuthorPage = () => {
   const dispatch = useDispatch();
@@ -74,12 +113,34 @@ const [checkboxSelection, setCheckboxSelection] = useState(true);
 const [teamButton, setTeamButton] = useState(false);
 const [checkboxSelectedUsers, setCheckboxSelectedUsers] = useState([]);
 const [teamText, setTeamText] = useState("");
+const [selectedRows, setSelectedRows] = React.useState([]);
+
+
+const updateDataWithTeam = (arr) => {
+  let newData = (pullRequest.map((dataElement) => {
+    let newTeamName = arr.find((element)=> {
+      return element.user.id == dataElement.values.author.user.id
+    })
+        const newObj = {
+          ...dataElement,
+          values:{
+            ...dataElement.values,
+            author:{
+              ...dataElement.values.author,
+              teamName:newTeamName ? teamText : dataElement.values.author.teamName
+            }
+          }
+        }
+        return newObj;
+      }))
+  dispatch(getPullRequests([...newData]))
+}
 
 useEffect(() => {
-  dispatch(getLastPage("authors"))
-
-  
+  dispatch(getLastPage("authors")) 
 }, [])
+
+
 
 if(pullRequest.length <= 0 || !pullRequest){
   return (
@@ -132,15 +193,16 @@ if(pullRequest.length <= 0 || !pullRequest){
         headerName: "Display Name",
         flex: 0.5,
       },
+    
+    {
+      field: "teamName",
+      headerName: "Team Name",
+      flex: 0.5,
+    },
     {
       field: "emailAddress",
       headerName: "E-mail",
       flex: 1,
-    },
-    {
-      field: "type",
-      headerName: "Type",
-      flex: 0.5,
     },
     
 
@@ -154,12 +216,14 @@ if(pullRequest.length <= 0 || !pullRequest){
       pr.user.id,
       pr.user.name,
       pr.user.displayName,
+      pr.teamName,
       pr.user.emailAddress,
-      pr.user.type,
+
 
 
     );
   });
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -180,17 +244,35 @@ if(pullRequest.length <= 0 || !pullRequest){
         setData(totalUsers.filter((filteredUser) => showActive ? filteredUser.user.active == true : filteredUser.user.active == false))
   }
   
-  const handleTeamButton = () => {
-    setTeamButton(true)
-  }
+ 
   const handleSubmitTeam = ()=> {
-    console.log("checkboxt: ", teamText)
-
+    
+    
+    let newData = (data.map((dataElement) => {
+      let newTeamName = checkboxSelectedUsers.find((element)=> {
+        console.log("Girdik.!")
+        console.log()
+        return element.user.id == dataElement.user.id
+      })
+        console.log("name: ", newTeamName)
+          return {...dataElement, teamName:newTeamName ? teamText : dataElement.teamName}
+        }))
+    updateDataWithTeam(checkboxSelectedUsers);
+    setData([...newData])
     setCheckboxSelectedUsers([]);
-    setTeamButton(false);
     setTeamText("");
+    setSelectedRows([]);
+    setTeamButton(false);
+
   }
-  
+  const handleSelectClose = () =>{
+    setTeamText("");
+    setTeamButton(false)
+  }
+  const handleSelectChange = (event) => {
+    console.log("Gelen event", event.target.value)
+    setTeamText(event.target.value)
+  }
 
   if (totalUsers.length <= 0) {
       return (
@@ -201,20 +283,25 @@ if(pullRequest.length <= 0 || !pullRequest){
   if(teamButton){
     return <Dialog
     open={teamButton}
-    onClose={()=> setTeamButton(false)}
+    onClose={handleSelectClose}
     aria-labelledby="alert-dialog-title"
     aria-describedby="alert-dialog-description"
   >
-    <FormControl>
-    <TextField sx={{mt:5, mb:2, ml:5,mr:5}} 
-    id="outlined-basic" label="Team Name" variant="outlined" 
-    onChange={(event)=> setTeamText(event.target.value)}
-    defaultValue={teamText}
-    />
-
-</FormControl>
+<FormControl sx={{ m: 1, width:300, height:25, mb:10, mr:5, ml:5 }} variant="standard">
+      <InputLabel htmlFor="demo-customized-select-native">Team Name</InputLabel>
+        <NativeSelect
+          id="demo-customized-select-native"
+          value={teamText}
+          onChange={handleSelectChange}
+          input={<BootstrapInput />}
+        >
+          {teamNames.map((name)=>{
+          return <option key={name} value={name}>{name}</option>
+        })}
+        </NativeSelect>
+    </FormControl>
     <DialogActions>
-      <Button onClick={()=> setTeamButton(false)}>Close</Button>
+      <Button onClick={handleSelectClose}>Close</Button>
       <Button onClick={handleSubmitTeam}>
         Submit
       </Button>
@@ -290,14 +377,14 @@ if(pullRequest.length <= 0 || !pullRequest){
     <Button onClick={handleActiveButton} sx={{borderRadius:"10px"}} variant="contained" endIcon={<VisibilityIcon />}>
   {buttonText}
 </Button>
-<Button onClick={handleTeamButton} sx={{borderRadius:"10px"}} variant="contained" endIcon={<Diversity2Icon />}>ADD TEAM</Button>
+<Button onClick={()=> setTeamButton(true)} sx={{borderRadius:"10px"}} variant="contained" endIcon={<Diversity2Icon />}>ADD TEAM</Button>
     </Box>
 
       <Box m="20px 0 0 0" height="75vh" sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}>
       
         <DataGrid
-                  checkboxSelection={checkboxSelection}
 
+        checkboxSelection={checkboxSelection}
         sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}
           rows={rows}
           getRowId={rows.id}
@@ -308,9 +395,11 @@ if(pullRequest.length <= 0 || !pullRequest){
           onPageChange={(newPage) => setPageNum(newPage)}
           onPageSizeChange={(newPage) => setPageSize(newPage)}
           onSelectionModelChange={(ids) => {
-            const selectedIDs = Array.from(new Set(ids))
+            const selectedIDs = new Set(ids);
+            const selectedArr = Array.from(selectedIDs)
+            setSelectedRows(selectedArr);
             const selectedData = data.filter((element) => {
-              return selectedIDs.find((idElement) => {
+              return selectedArr.find((idElement) => {
                 return element.user.id == idElement
               })
             }
@@ -318,18 +407,62 @@ if(pullRequest.length <= 0 || !pullRequest){
             setCheckboxSelectedUsers(selectedData);
 
           }}
+          componentsProps={{
+            filterPanel: {
+              // Force usage of "And" operator
+              linkOperators: [GridLinkOperator.And],
+              // Display columns by ascending alphabetical order
+              filterFormProps: {
+                // Customize inputs by passing props
+                linkOperatorInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                },
+                columnInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                  sx: { mt: 'auto' },
+                },
+                operatorInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                  sx: { mt: 'auto' },
+                },
+                valueInputProps: {
+                  InputComponentProps: {
+                    variant: 'outlined',
+                    size: 'small',
+                  },
+                },
+                deleteIconProps: {
+                  sx: {
+                    '& .MuiSvgIcon-root': { color: '#d32f2f' },
+                  },
+                },
+              },
+              sx: {
+                // Customize inputs using css selectors
+                '& .MuiDataGrid-filterForm': { p: 2 },
+                '& .MuiDataGrid-filterForm:nth-child(even)': {
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark' ? '#444' : '#f5f5f5',
+                },
+                '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },
+                '& .MuiDataGrid-filterFormColumnInput': { mr: 2, width: 150 },
+                '& .MuiDataGrid-filterFormOperatorInput': { mr: 2, width:150 },
+                '& .MuiDataGrid-filterFormValueInput': { width: 150 },
+              },
+            },
+          }}
+          selectionModel={selectedRows}
           initialState={{
             pagination: {
               page: pageNum,
             },
-            filter: {
-      filterModel: {
-        items: [{ columnField: 'rating', operatorValue: '>', value: '2.5' }],
-      },
-    },
+            
           }}
 
-        ></DataGrid>
+        />
       </Box>
       </>
     

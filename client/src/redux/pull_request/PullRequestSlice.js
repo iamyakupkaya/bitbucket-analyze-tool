@@ -109,6 +109,7 @@ const PullRequestSlice = createSlice({
   initialState, //this is initial state
   reducers: {
     getPullRequests: (state, action) => {
+      console.log("gelen data: ", action.payload);
       state.pullRequest = action.payload;
       state.userNames = splitUsers(action.payload);
       state.allUser = getAllUsers(state.userNames, action.payload)

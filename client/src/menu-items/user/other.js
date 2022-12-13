@@ -33,14 +33,6 @@ const other = {
             url: '/user/authors',
             icon: ContactsIcon,
             breadcrumbs: false
-        },
-        {
-            id: 'create-team',
-            title: 'Create Team',
-            type: 'item',
-            url: '/user/create-team',
-            icon: Diversity2Icon,
-            breadcrumbs: false
         }
 
     ]
