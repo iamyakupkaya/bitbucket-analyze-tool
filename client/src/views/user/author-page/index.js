@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import InfoIcon from "@mui/icons-material/Info";
 import Stack from "@mui/material/Stack";
 import { DataGrid, GridToolbar, GridLinkOperator } from "@mui/x-data-grid";
-import LoadingCircle from "ui-component/user/LoadingCircle";
+import LoadingCircle from "../../../ui-component/user/LoadingCircle";
 import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Dialog from '@mui/material/Dialog';
@@ -90,7 +90,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 }));
 
 
-const teamNames = ["Unknown", "NRD1112", "DENEME12", "OCM45", "IST3434"];
+const teamNames = ["Unknown", "NRD12", "NRD1210", "NRD1211", "NRD1212", "NRD1213", "NRD1214", "NRD1221", "NRD1222"];
 
 const AuthorPage = () => {
   const dispatch = useDispatch();
@@ -114,9 +114,19 @@ const [teamButton, setTeamButton] = useState(false);
 const [checkboxSelectedUsers, setCheckboxSelectedUsers] = useState([]);
 const [teamText, setTeamText] = useState("");
 const [selectedRows, setSelectedRows] = React.useState([]);
-
+const [updateDatabase, setUpdateDatabase] = useState(false);
+const [updateData, setUpdateData] = useState({});
+const [filterInfo, setFilterInfo] = useState({
+  id: 1,
+  columnField: '',
+  operatorValue: '',
+  value: '',
+})
 
 const updateDataWithTeam = (arr) => {
+  setUpdateData(arr)
+  setUpdateDatabase(true)
+
   let newData = (pullRequest.map((dataElement) => {
     let newTeamName = arr.find((element)=> {
       return element.user.id == dataElement.values.author.user.id
@@ -134,6 +144,7 @@ const updateDataWithTeam = (arr) => {
         return newObj;
       }))
   dispatch(getPullRequests([...newData]))
+
 }
 
 useEffect(() => {
@@ -141,6 +152,8 @@ useEffect(() => {
 }, [])
 
 
+
+console.log("Tekrar render ediliyor.")
 
 if(pullRequest.length <= 0 || !pullRequest){
   return (
@@ -150,38 +163,7 @@ if(pullRequest.length <= 0 || !pullRequest){
 
 
  const columns = [
-    {
-        field: "info",
-        headerName: "INFO",
-        filterable: false,
-        disableClickEventBubbling: true,
-        sortable: false,
-  
-        renderCell: (params) => {
-          const onClick = (e) => {
-            setCurrentData(params.row.pr);
-            setUserPullRequest(pullRequest.filter((filteredPull) => {
-              return filteredPull.values.author.user.name == params.row.pr.user.name
-          }))
-            setUserReviewer(pullRequest.filter((element)=>{
-              return (element.values.reviewers.find((insideMap) => {
-                 return insideMap.user.name == params.row.pr.user.name
-              }))
-         }))
-            
-            handleClickOpen();
-          };
-  
-          return (
-            <Stack direction="row" spacing={2}>
-              <IconButton onClick={onClick} sx={{ borderRadius: 25, color: "#21a2f6" }} aria-label="info">
-  <InfoIcon />
-</IconButton>
-            </Stack>
-          );
-        },
-        flex: 0.25,
-      },
+
 
     {
       field: "name",
@@ -203,6 +185,38 @@ if(pullRequest.length <= 0 || !pullRequest){
       field: "emailAddress",
       headerName: "E-mail",
       flex: 1,
+    },
+    {
+      field: "info",
+      headerName: "INFO",
+      filterable: false,
+      disableClickEventBubbling: true,
+      sortable: false,
+
+      renderCell: (params) => {
+        const onClick = (e) => {
+          setCurrentData(params.row.pr);
+          setUserPullRequest(pullRequest.filter((filteredPull) => {
+            return filteredPull.values.author.user.name == params.row.pr.user.name
+        }))
+          setUserReviewer(pullRequest.filter((element)=>{
+            return (element.values.reviewers.find((insideMap) => {
+               return insideMap.user.name == params.row.pr.user.name
+            }))
+       }))
+          
+          handleClickOpen();
+        };
+
+        return (
+          <Stack direction="row" spacing={2}>
+            <IconButton onClick={onClick} sx={{ borderRadius: 25, color: "#21a2f6" }} aria-label="info">
+<InfoIcon />
+</IconButton>
+          </Stack>
+        );
+      },
+      flex: 0.25,
     },
     
 
@@ -245,24 +259,20 @@ if(pullRequest.length <= 0 || !pullRequest){
   }
   
  
-  const handleSubmitTeam = ()=> {
-    
-    
+  const handleSubmitTeam = (selectedUser)=> {
     let newData = (data.map((dataElement) => {
-      let newTeamName = checkboxSelectedUsers.find((element)=> {
-        console.log("Girdik.!")
-        console.log()
+      let newTeamName = selectedUser.find((element)=> {
         return element.user.id == dataElement.user.id
       })
-        console.log("name: ", newTeamName)
           return {...dataElement, teamName:newTeamName ? teamText : dataElement.teamName}
         }))
-    updateDataWithTeam(checkboxSelectedUsers);
+    updateDataWithTeam(selectedUser);
     setData([...newData])
     setCheckboxSelectedUsers([]);
     setTeamText("");
     setSelectedRows([]);
     setTeamButton(false);
+    setUpdateDatabase(true)
 
   }
   const handleSelectClose = () =>{
@@ -270,7 +280,6 @@ if(pullRequest.length <= 0 || !pullRequest){
     setTeamButton(false)
   }
   const handleSelectChange = (event) => {
-    console.log("Gelen event", event.target.value)
     setTeamText(event.target.value)
   }
 
@@ -287,7 +296,7 @@ if(pullRequest.length <= 0 || !pullRequest){
     aria-labelledby="alert-dialog-title"
     aria-describedby="alert-dialog-description"
   >
-<FormControl sx={{ m: 1, width:300, height:25, mb:10, mr:5, ml:5 }} variant="standard">
+<FormControl sx={{ mt: 3, width:300, height:25, mb:10, mr:5, ml:5 }} variant="standard">
       <InputLabel htmlFor="demo-customized-select-native">Team Name</InputLabel>
         <NativeSelect
           id="demo-customized-select-native"
@@ -302,7 +311,7 @@ if(pullRequest.length <= 0 || !pullRequest){
     </FormControl>
     <DialogActions>
       <Button onClick={handleSelectClose}>Close</Button>
-      <Button onClick={handleSubmitTeam}>
+      <Button onClick={()=>handleSubmitTeam(checkboxSelectedUsers)}>
         Submit
       </Button>
     </DialogActions>
@@ -394,6 +403,9 @@ if(pullRequest.length <= 0 || !pullRequest){
           pageSize={pageSize}
           onPageChange={(newPage) => setPageNum(newPage)}
           onPageSizeChange={(newPage) => setPageSize(newPage)}
+          onFilterModelChange={(props)=>{
+            setFilterInfo({...filterInfo, ...props.items[0]})
+           }}
           onSelectionModelChange={(ids) => {
             const selectedIDs = new Set(ids);
             const selectedArr = Array.from(selectedIDs)
@@ -470,3 +482,26 @@ if(pullRequest.length <= 0 || !pullRequest){
 };
 
 export default AuthorPage;
+
+
+/*
+useEffect(() => {
+  console.log("UseEffect çalıştı")
+  console.log(updateData)
+  if(updateData.length > 0 && updateDatabase){
+    const sendData = async () => {
+      const dataResponse = await axios.put("http://localhost:8989/api/v1/set-data", updateData)
+      
+      console.log("Update result", dataResponse)
+      setUpdateData({});
+      setUpdateDatabase(false)
+
+    }
+    sendData();
+  }
+  else{
+    console.log("HATA")
+    setUpdateDatabase(false)
+  }
+}, [updateDatabase])
+*/

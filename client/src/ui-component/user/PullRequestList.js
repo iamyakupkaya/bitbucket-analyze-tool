@@ -205,31 +205,16 @@ const [showInfo, setShowInfo] = useState(false)
  
   ];
 
-  function getJiraID(str) {
-    let after_ ="";
-    if (str.includes('#reasons')){
-      let textArr = str.substring(str.indexOf('#reasons ') + 1).split(" ");
-      after_ = textArr[1]
+  function getJiraID(str="Unknown") {
+    let result = []
+    let pattern = /[A-Z]+-+[0-9]+/g;
+    result = str.match(pattern);
+    if(result){
+      const newResult = Array.from(new Set(result));
+      return newResult;
     }
-    else if (str.includes('Bugfix')){
-      let splitText = str.substring(str.indexOf('Bugfix/')).split(" ");
-      console.log("sptlit text", splitText)
-      after_ = splitText[0].substring(8);
-  
-    }
-    else if (str.includes('Feature')){
-      let splitText = str.substring(str.indexOf('Feature/')).split(" ");
-      console.log("sptlit text", splitText)
-      after_ = splitText[0].substring(8);
-      console.log("Gelen ", after_)
-  
-    }
-    else {
-      after_ ="unknown"
-    }
-  
-  
-    return "https://jira.rbbn.com/rest/agile/1.0/issue/" + after_;
+      return [];
+    
   }
 
   if (showInfo) {
@@ -243,14 +228,32 @@ const [showInfo, setShowInfo] = useState(false)
       >
         <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
         <ReactMarkdown>{currentData.values.title || "Unknown"}</ReactMarkdown>
-        
-        <Link target="_blank" href={getJiraID(currentData.values.title)} underline="hover">
-        {getJiraID(currentData.values.title) || "Unknown"}
-        </Link>
+        <ReactMarkdown>Links:</ReactMarkdown>
+          {getJiraID(currentData.values.title).length <=0
+          ? <ReactMarkdown>There is no Link</ReactMarkdown>
+          :
+          getJiraID(currentData.values.title).map((ID) => {
+            return <Box key={ID}>
+              <Link target="_blank"  href={"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID} underline="hover">
+            {"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID}
+            </Link>
+            </Box>
+          })}
         </DialogTitle>
        
         <Box sx={{display:"flex", flexDirection:"column"}}>
         <DialogContent sx={{wordWrap: "break-word"}}>
+        <ReactMarkdown>Links:</ReactMarkdown>
+          {getJiraID(currentData.values.description).length <=0
+          ? <ReactMarkdown>There is no Link</ReactMarkdown>
+          :
+          getJiraID(currentData.values.description).map((ID) => {
+            return <Box key={ID}>
+              <Link target="_blank"  href={"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID} underline="hover">
+            {"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID}
+            </Link>
+            </Box>
+          })}
         <ReactMarkdown>{currentData.values.description || "Unknown"}</ReactMarkdown>
         </DialogContent>
         <DialogContent sx={{wordWrap: "break-word"}}>

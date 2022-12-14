@@ -23,6 +23,8 @@ import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import Typography from '@mui/material/Typography';
 import ReactMarkdown from 'react-markdown'
+import Link from '@mui/material/Link';
+
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -59,6 +61,18 @@ const StyledBadge = styled(Badge)((props) => ({
     },
   },
 }));
+
+function getJiraID(str="Unknown") {
+  let result = []
+  let pattern = /[A-Z]+-+[0-9]+/g;
+  result = str.match(pattern);
+  if(result){
+    const newResult = Array.from(new Set(result));
+    return newResult;
+  }
+    return [];
+  
+}
 
 function stringToColor(string="Unknown Unknown") {
 
@@ -248,12 +262,34 @@ const [showInfo, setShowInfo] = useState(false)
           </Divider>
         <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
           {currentData.values.title || "Unknown"}
+          <ReactMarkdown>Links:</ReactMarkdown>
+          {getJiraID(currentData.values.title).length <=0
+          ? <ReactMarkdown>There is no Link</ReactMarkdown>
+          :
+          getJiraID(currentData.values.title).map((ID) => {
+            return <Box key={ID}>
+              <Link target="_blank"  href={"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID} underline="hover">
+            {"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID}
+            </Link>
+            </Box>
+          })}
         </DialogTitle>
         <Divider sx={{mt:2, mb:2}}>
             <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Description of Pull Request"} />
           </Divider>
         <Box sx={{display:"flex", flexDirection:"column"}}>
         <DialogContent sx={{wordWrap: "break-word"}}>
+        <ReactMarkdown>Links:</ReactMarkdown>
+          {getJiraID(currentData.values.description).length <=0
+          ? <ReactMarkdown>There is no Link</ReactMarkdown>
+          :
+          getJiraID(currentData.values.description).map((ID) => {
+            return <Box key={ID}>
+              <Link target="_blank"  href={"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID} underline="hover">
+            {"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID}
+            </Link>
+            </Box>
+          })}
         <ReactMarkdown>{currentData.values.description || "Unknown"}</ReactMarkdown>
         </DialogContent>
         <DialogContent sx={{wordWrap: "break-word"}}>

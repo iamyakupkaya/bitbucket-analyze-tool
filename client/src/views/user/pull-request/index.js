@@ -143,16 +143,21 @@ const PullRequestPage = () => {
     },
     {
       field: "create",
+      type: 'date',
+      valueGetter: ({ value }) => value && new Date(value),
       headerName: "Created",
       flex: 0.5,
     },
     {
       field: "updated",
       headerName: "Updated",
+      type: 'date',
+      valueGetter: ({ value }) => value && new Date(value),
       flex: 0.5,
     },
     {
       field: "commentCount",
+      type:"number",
       headerName: "Comments",
       flex: 0.5,
     },
@@ -172,8 +177,9 @@ const PullRequestPage = () => {
       pr.values.author.user.emailAddress,
       pr.values.fromRef.repository.slug,
       pr.values.author.teamName,
-      new Date(pr.values.createdDate).toISOString().split("T")[0],
-      new Date(pr.values.updatedDate).toISOString().split("T")[0],
+      //new Date(pr.values.createdDate).toISOString().split("T")[0],
+      pr.values.createdDate,
+      pr.values.updatedDate,
       pr.values.properties.commentCount < 0 ? 0 : pr.values.properties.commentCount,
       pr.values.title
     );
@@ -286,6 +292,9 @@ const PullRequestPage = () => {
           pageSize={pageSize}
           onPageChange={(newPage) => setPageNum(newPage)}
           onPageSizeChange={(newPage) => setPageSize(newPage)} 
+          onFilterModelChange={(props)=>{
+           setFilterInfo({...filterInfo, ...props.items[0]})
+          }}
           componentsProps={{
             filterPanel: {
               // Force usage of "And" operator

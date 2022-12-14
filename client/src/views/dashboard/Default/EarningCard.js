@@ -3,21 +3,14 @@ import { useState } from 'react';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
-import { Avatar, Box, Grid, Menu, MenuItem, Typography } from '@mui/material';
+import { Avatar, Box, Grid, Typography } from '@mui/material';
 
 // project imports
-import MainCard from 'ui-component/cards/MainCard';
-import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
+import MainCard from '../../../ui-component/cards/MainCard';
+import SkeletonEarningCard from '../../../ui-component/cards/Skeleton/EarningCard';
 
 // assets
-import EarningIcon from 'assets/images/icons/earning.svg';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
-import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
-import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
-import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
-import UserProfile from 'ui-component/user/UserProfile';
+import UserProfile from '../../../ui-component/user/UserProfile';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -66,7 +59,6 @@ const EarningCard = (props) => {
     const [open, setOpen] = useState(false);
 
     const handleClick = (event) => {
-        console.log("Tıklandı", event)
         setAnchorEl(event.currentTarget);
         setOpen(true)
     };
@@ -95,11 +87,11 @@ const EarningCard = (props) => {
                                                 ...theme.typography.commonAvatar,
                                                 ...theme.typography.largeAvatar,
                                                 backgroundColor: theme.palette.secondary[800],
+                                                color: theme.palette.grey[500],
                                                 mt: 1,
                                                 cursor:"default"
                                             }}
                                         >
-                                            <img src={EarningIcon} alt="Notification" />
                                         </Avatar>
                                     </Grid>
                                     <Grid sx={{pointerEvents:users.length > 0 ? "default" : "none"}} item>

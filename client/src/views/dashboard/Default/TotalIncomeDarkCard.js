@@ -60,8 +60,8 @@ const TotalIncomeDarkCard = (props) => {
                                         sx={{
                                             ...theme.typography.commonAvatar,
                                             ...theme.typography.largeAvatar,
-                                            backgroundColor: theme.palette.primary[200],
-                                            color: theme.palette.primary[800],
+                                            backgroundColor: theme.palette.secondary[800],
+                                            color: theme.palette.grey[500],
                                             cursor:"default"
                                             
                                         }}

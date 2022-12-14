@@ -2,12 +2,7 @@ import Box from '@mui/material/Box';
 import React, {useState, useEffect } from 'react';
 import { Chart } from "react-google-charts";
 import { useSelector, useDispatch } from 'react-redux';
-import UserProfile from 'ui-component/user/UserProfile';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
+import UserProfile from '../../../ui-component/user/UserProfile';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -18,15 +13,12 @@ import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import {getLastPage} from "../../../redux/pull_request/PullRequestSlice"
-import LoadingCircle from 'ui-component/user/LoadingCircle';
-import LoginPage from 'views/LoginPage';
-import ConfirmDialog from 'ui-component/user/ConfirmDialog';
-import BoltIcon from '@mui/icons-material/Bolt';
+import ConfirmDialog from '../../../ui-component/user/ConfirmDialog';
 import Grid from '@mui/material/Grid';
-import EarningCard from 'views/dashboard/Default/EarningCard';
-import TotalIncomeDarkCard from 'views/dashboard/Default/TotalIncomeDarkCard';
-import { FortTwoTone } from '@mui/icons-material';
+import EarningCard from '../../../views/dashboard/Default/EarningCard';
+import TotalIncomeDarkCard from '../../../views/dashboard/Default/TotalIncomeDarkCard';
 // ==============================|| SAMPLE PAGE ||============================== //
+
 
 
 const HomePage = () => {

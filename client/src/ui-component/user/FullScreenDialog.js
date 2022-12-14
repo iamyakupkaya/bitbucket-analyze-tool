@@ -87,31 +87,16 @@ function stringAvatar(name = "Unknown Unknown") {
   };
 }
 
-function getJiraID(str) {
-  let after_ ="";
-  if (str.includes('#reasons')){
-    let textArr = str.substring(str.indexOf('#reasons ') + 1).split(" ");
-    after_ = textArr[1]
+function getJiraID(str="Unknown") {
+  let result = []
+  let pattern = /[A-Z]+-+[0-9]+/g;
+  result = str.match(pattern);
+  if(result){
+    const newResult = Array.from(new Set(result));
+    return newResult;
   }
-  else if (str.includes('Bugfix')){
-    let splitText = str.substring(str.indexOf('Bugfix/')).split(" ");
-    console.log("sptlit text", splitText)
-    after_ = splitText[0].substring(8);
-
-  }
-  else if (str.includes('Feature')){
-    let splitText = str.substring(str.indexOf('Feature/')).split(" ");
-    console.log("sptlit text", splitText)
-    after_ = splitText[0].substring(8);
-    console.log("Gelen ", after_)
-
-  }
-  else {
-    after_ ="unknown"
-  }
-
-
-  return "https://jira.rbbn.com/rest/agile/1.0/issue/" + after_;
+    return [];
+  
 }
 
 export default function FullScreenDialog(props) {
@@ -166,12 +151,32 @@ export default function FullScreenDialog(props) {
           <Divider textAlign="left" sx={{fontWeight:"bold"}}>TITLE</Divider>
           <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
           <ReactMarkdown>{selectedPR.values.title}</ReactMarkdown>
-          <Link target="_blank" href={getJiraID(selectedPR.values.title)} underline="hover">
-        {getJiraID(selectedPR.values.title) || "Unknown"}
-        </Link>
+          <ReactMarkdown>Links:</ReactMarkdown>
+          {getJiraID(selectedPR.values.title).length <=0
+          ? <ReactMarkdown>There is no Link</ReactMarkdown>
+          :
+          getJiraID(selectedPR.values.title).map((ID) => {
+            return <Box key={ID}>
+              <Link target="_blank"  href={"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID} underline="hover">
+            {"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID}
+            </Link>
+            </Box>
+          })}
+          
           </Box>
           <Divider textAlign="left" sx={{fontWeight:"bold", mt:2}}>DESCRIPTION</Divider>
           <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
+          <ReactMarkdown>Links:</ReactMarkdown>
+          {getJiraID(selectedPR.values.description).length <=0
+          ? <ReactMarkdown>There is no Link</ReactMarkdown>
+          :
+          getJiraID(selectedPR.values.description).map((ID) => {
+            return <Box key={ID}>
+              <Link target="_blank"  href={"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID} underline="hover">
+            {"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID}
+            </Link>
+            </Box>
+          })}
           <ReactMarkdown>{selectedPR.values.description}</ReactMarkdown>
           </Box>
           <Divider textAlign="left" sx={{fontWeight:"bold", mt:2, mb:2}}>REVIEWERS</Divider>
