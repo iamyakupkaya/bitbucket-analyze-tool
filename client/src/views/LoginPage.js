@@ -12,14 +12,14 @@ import { Navigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [show, setShow] = useState(false);
+
   const page = useSelector(state => state.data.lastPage)
   const dispatch = useDispatch();
   useEffect(() => {
     const getData = async () => {
       const dataResponse = await axios("http://localhost:8989/api/v1/get-data")
-      dispatch(getPullRequests([...dataResponse.data]))
-      console.log("Login page")
-      setShow(true);
+        dispatch(getPullRequests([...dataResponse.data]))
+        setShow(true);
 
     }
     getData();

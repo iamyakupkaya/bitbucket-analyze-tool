@@ -3,7 +3,7 @@ const config = {
     // like '/berry-material-react/react/default'
     basename: '/orion',
     defaultPath: '/user',
-    fontFamily: `'Roboto', sans-serif`,
+    fontFamily: `'Chakra Petch', sans-serif`,
     borderRadius: 12
 };
 

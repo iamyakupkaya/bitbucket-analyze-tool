@@ -13,6 +13,7 @@ import Sidebar from './Sidebar';
 import navigation from 'menu-items/user';
 import { drawerWidth } from 'store/constant';
 import { SET_MENU } from 'store/actions';
+import Customization from '../Customization';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
@@ -112,6 +113,7 @@ const UserLayout = () => {
                 <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
                 <Outlet />
             </Main>
+            <Customization />
         </Box>
     );
 };

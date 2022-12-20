@@ -14,8 +14,7 @@ import ReviewerCard from './ReviewerCard';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
-import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 
 
@@ -113,7 +112,7 @@ export default function UserProfile(props) {
           </Stack>
             
           <IconButton aria-label="delete" color="error" size="medium" onClick={handleClose}>
-  <CancelPresentationIcon  fontSize="inherit" />
+  <HighlightOffIcon  fontSize="medium" />
 </IconButton>
           </Toolbar>
         </AppBar>

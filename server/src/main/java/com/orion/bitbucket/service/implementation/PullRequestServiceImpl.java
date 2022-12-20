@@ -49,6 +49,7 @@ public class PullRequestServiceImpl implements IPullRequestService {
             }
             CollectionNameHolder.set(collectionName);
             while (!isLastPage) {
+
                 HttpResponse<JsonNode> httpResponse = response.getResponse(url + start, EndPointsHelper.Bearer.TOKEN);
                 JSONObject body = httpResponse.getBody().getObject(); // JSONObject
                 int forStart = start;

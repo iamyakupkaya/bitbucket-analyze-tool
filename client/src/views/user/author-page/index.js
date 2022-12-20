@@ -114,8 +114,6 @@ const [teamButton, setTeamButton] = useState(false);
 const [checkboxSelectedUsers, setCheckboxSelectedUsers] = useState([]);
 const [teamText, setTeamText] = useState("");
 const [selectedRows, setSelectedRows] = React.useState([]);
-const [updateDatabase, setUpdateDatabase] = useState(false);
-const [updateData, setUpdateData] = useState({});
 const [filterInfo, setFilterInfo] = useState({
   id: 1,
   columnField: '',
@@ -124,8 +122,6 @@ const [filterInfo, setFilterInfo] = useState({
 })
 
 const updateDataWithTeam = (arr) => {
-  setUpdateData(arr)
-  setUpdateDatabase(true)
 
   let newData = (pullRequest.map((dataElement) => {
     let newTeamName = arr.find((element)=> {
@@ -168,26 +164,31 @@ if(pullRequest.length <= 0 || !pullRequest){
     {
       field: "name",
       headerName: "Name",
+      description: "This column shows user nickname",
       flex: 0.5,
     },
     {
         field: "displayName",
+        description: "This column shows user display name",
         headerName: "Display Name",
         flex: 0.5,
       },
     
     {
       field: "teamName",
+      description: "This column shows user team name",
       headerName: "Team Name",
       flex: 0.5,
     },
     {
       field: "emailAddress",
+      description: "This column shows user e-mail address",
       headerName: "E-mail",
       flex: 1,
     },
     {
       field: "info",
+      description: "This column clickable for more information of user",
       headerName: "INFO",
       filterable: false,
       disableClickEventBubbling: true,
@@ -260,6 +261,7 @@ if(pullRequest.length <= 0 || !pullRequest){
   
  
   const handleSubmitTeam = (selectedUser)=> {
+   if(checkboxSelectedUsers.length > 0){
     let newData = (data.map((dataElement) => {
       let newTeamName = selectedUser.find((element)=> {
         return element.user.id == dataElement.user.id
@@ -272,8 +274,27 @@ if(pullRequest.length <= 0 || !pullRequest){
     setTeamText("");
     setSelectedRows([]);
     setTeamButton(false);
-    setUpdateDatabase(true)
+    const IDs = selectedUser.map((element) => {
+      return element.user.name
+    })
+    console.log("IDLER: ", IDs)
+    const uniqueIDs = Array.from(new Set(IDs));
+    const sendData = async () => {
+      const dataResponse = await axios({
+        method: 'put',
+        headers: { 'Content-Type': 'application/json'},
+        withCredentials: false,
+        url: `http://localhost:8989/api/v1/update-data/${teamText}`,
+        data: uniqueIDs,
+      })
+      console.log(dataResponse.data)
 
+    }
+    sendData();
+   }
+   else{
+
+   }
   }
   const handleSelectClose = () =>{
     setTeamText("");
@@ -383,18 +404,19 @@ if(pullRequest.length <= 0 || !pullRequest){
   return (
     <>   
     <Box sx={{display:"flex", justifyContent:"space-between"}}>
-    <Button onClick={handleActiveButton} sx={{borderRadius:"10px"}} variant="contained" endIcon={<VisibilityIcon />}>
+    <Button onClick={handleActiveButton} sx={{borderRadius:"4px"}} variant="contained" endIcon={<VisibilityIcon />}>
   {buttonText}
 </Button>
-<Button onClick={()=> setTeamButton(true)} sx={{borderRadius:"10px"}} variant="contained" endIcon={<Diversity2Icon />}>ADD TEAM</Button>
+<Button disabled={checkboxSelectedUsers.length <= 0 ? true : false} onClick={()=> setTeamButton(true)} sx={{borderRadius:"4px"}} variant="contained" endIcon={<Diversity2Icon />}>ADD TEAM</Button>
     </Box>
 
       <Box m="20px 0 0 0" height="75vh" sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}>
       
         <DataGrid
+        disableSelectionOnClick
 
         checkboxSelection={checkboxSelection}
-        sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}
+        sx={{backgroundColor:"white", borderRadius:"4px", border:"0px solid black !important"}}
           rows={rows}
           getRowId={rows.id}
           columns={columns}

@@ -70,7 +70,7 @@ const PullRequestPage = () => {
     dispatch(getLastPage("pull-requests")) 
   }, [])
 
-  if(pullRequest.length <= 0 || !pullRequest){
+if(pullRequest.length <= 0 || !pullRequest){
     return (
       <ConfirmDialog/>
     ); 
@@ -102,6 +102,7 @@ const PullRequestPage = () => {
       field: "info",
       headerName: "INFO",
       filterable: false,
+      description: "This column clickable for more information of user's pull requests",
       disableClickEventBubbling: true,
       sortable: false,
 
@@ -123,26 +124,31 @@ const PullRequestPage = () => {
     },
     {
       field: "author",
+      description: "This column shows user nickname",
       headerName: "Author",
       flex: 0.5,
     },
     {
       field: "emailAddress",
+      description: "This column shows user e-mail address",
       headerName: "E-mail",
       flex: 0.75,
     },
     {
       field: "slug",
+      description: "This column shows the repository the user is working on",
       headerName: "Repository",
       flex: 0.5,
     },
     {
       field: "teamName",
+      description: "This column shows user's team name",
       headerName: "Team Name",
       flex: 0.5,
     },
     {
       field: "create",
+      description: "This column shows the pull request time was created",
       type: 'date',
       valueGetter: ({ value }) => value && new Date(value),
       headerName: "Created",
@@ -150,6 +156,7 @@ const PullRequestPage = () => {
     },
     {
       field: "updated",
+      description: "This column shows the pull request time was updated",
       headerName: "Updated",
       type: 'date',
       valueGetter: ({ value }) => value && new Date(value),
@@ -157,6 +164,7 @@ const PullRequestPage = () => {
     },
     {
       field: "commentCount",
+      description: "This column shows comments of the pull request",
       type:"number",
       headerName: "Comments",
       flex: 0.5,
@@ -164,6 +172,7 @@ const PullRequestPage = () => {
 
     {
       field: "title",
+      description: "This column shows title of the pull request",
       headerName: "Title",
       flex: 1.5,
     },
@@ -277,7 +286,8 @@ const PullRequestPage = () => {
    
       <Box m="20px 0 0 0" height="75vh" sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}>
         <DataGrid
-        sx={{backgroundColor:"white", borderRadius:"20px", 
+          disableSelectionOnClick
+        sx={{backgroundColor:"white", borderRadius:"4px", 
         border:"0px solid black !important",
           "& .MuiDataGrid-virtualScroller::-webkit-scrollbar": {             
               display: "none"

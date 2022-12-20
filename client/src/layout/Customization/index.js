@@ -57,8 +57,12 @@ const Customization = () => {
 
     let initialFont;
     switch (customization.fontFamily) {
+        
         case `'Inter', sans-serif`:
             initialFont = 'Inter';
+            break;
+        case `'Chakra Petch', sans-serif`:
+            initialFont = 'Chakra';
             break;
         case `'Poppins', sans-serif`:
             initialFont = 'Poppins';
@@ -79,6 +83,9 @@ const Customization = () => {
                 break;
             case 'Poppins':
                 newFont = `'Poppins', sans-serif`;
+                break;
+            case 'Chakra':
+                newFont = `'Chakra Petch', sans-serif`;
                 break;
             case 'Roboto':
             default:
@@ -102,12 +109,12 @@ const Customization = () => {
                         borderRadius: 0,
                         borderTopLeftRadius: '50%',
                         borderBottomLeftRadius: '50%',
-                        borderTopRightRadius: '50%',
-                        borderBottomRightRadius: '4px',
-                        top: '25%',
+                        borderTopRightRadius: '0px',
+                        borderBottomRightRadius: '50%',
+                        top: '10px',
                         position: 'fixed',
-                        right: 10,
-                        zIndex: theme.zIndex.speedDial
+                        right: '10px',
+                        zIndex: 1199,
                     }}
                 >
                     <AnimateButton type="rotate">
@@ -124,6 +131,7 @@ const Customization = () => {
                 open={open}
                 PaperProps={{
                     sx: {
+
                         width: 280
                     }
                 }}
@@ -140,6 +148,15 @@ const Customization = () => {
                                         onChange={(e) => setFontFamily(e.target.value)}
                                         name="row-radio-buttons-group"
                                     >
+                                         <FormControlLabel
+                                            value="Chakra"
+                                            control={<Radio />}
+                                            label="Chakra"
+                                            sx={{
+                                                '& .MuiSvgIcon-root': { fontSize: 28 },
+                                                '& .MuiFormControlLabel-label': { color: theme.palette.grey[900] }
+                                            }}
+                                        />
                                         <FormControlLabel
                                             value="Roboto"
                                             control={<Radio />}
@@ -167,6 +184,7 @@ const Customization = () => {
                                                 '& .MuiFormControlLabel-label': { color: theme.palette.grey[900] }
                                             }}
                                         />
+                                       
                                     </RadioGroup>
                                 </FormControl>
                             </SubCard>

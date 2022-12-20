@@ -4,12 +4,13 @@ import ConfirmBox from "react-dialog-confirm";
 import '../../../node_modules/react-dialog-confirm/build/index.css';
 import LOGOIMG from "../../assets/images/orion_logo.png"
 import {useDispatch } from 'react-redux'
-
 import styled from "styled-components";
 import { blue } from '@mui/material/colors';
 import { SET_MENU } from '../../store/actions';
 import {useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import '../../../node_modules/react-confirm-alert/src/react-confirm-alert.css';
 
 const ConfirmDialog = () => {
     let navigate = useNavigate();

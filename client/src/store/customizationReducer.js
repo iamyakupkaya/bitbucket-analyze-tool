@@ -15,7 +15,6 @@ export const initialState = {
 
 const customizationReducer = (state = initialState, action) => {
     let id;
-    console.log("Gelen action type", action)
     switch (action.type) {
         case actionTypes.MENU_OPEN:
             id = action.id;

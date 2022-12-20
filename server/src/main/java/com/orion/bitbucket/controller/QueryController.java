@@ -45,6 +45,14 @@ public class QueryController {
         System.out.println("Total duration of finding of user prs is: " + differenceTime.toMillis() + " millis.!");
         return ResponseEntity.status(HttpStatus.OK).body(resultAPI);
     }
-
+    @CrossOrigin
+    @PutMapping("/update-data/{teamText}")
+    public String updateTeamName(@RequestBody String[] IDs, @PathVariable String teamText) {
+        String result = queryService.updateTeamNames(IDs, teamText,DatabaseHelper.ALL_COLLECTIONS_ARRAY);
+        for (String i : IDs) {
+            System.out.println("gelen deper: "+ i);
+        }
+        return result;
+    }
 
 }

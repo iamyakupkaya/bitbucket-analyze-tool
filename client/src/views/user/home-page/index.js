@@ -18,7 +18,17 @@ import Grid from '@mui/material/Grid';
 import EarningCard from '../../../views/dashboard/Default/EarningCard';
 import TotalIncomeDarkCard from '../../../views/dashboard/Default/TotalIncomeDarkCard';
 // ==============================|| SAMPLE PAGE ||============================== //
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+import { Link } from '@mui/material';
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 
 const HomePage = () => {
@@ -52,8 +62,18 @@ useEffect(() => {
   dispatch(getLastPage("home")) 
 }, [])
 
+const getMostReviewer = (id)=>{
+  console.log("Gelen id ", id)
+  let newID = id.startsWith("bar") ? id : "0" 
+  let index = parseInt(newID.slice(-1));
+  const myarr = totalUsers.filter((author)=> {
+    return author.user.name == repoMostReviewingUser[index].name
+  })
+  console.log("My arr", myarr)
+  return myarr;
+}
 
-    if(totalPullRequests.length <= 0 || !totalPullRequests){
+if(totalPullRequests.length <= 0 || !totalPullRequests){
       return (
         <ConfirmDialog/>
       );
@@ -179,91 +199,8 @@ useEffect(() => {
 
     
       };
-      const chartData = [
-        ["General İnfo",  "Total Counts" ],
-        ["Active", reposActiveUsers.length],
-        ["Inactive", reposInactiveUsers.length],
-      ];
 
-      if(showPie =="slice#0" && open){
-        return <UserProfile data={{open, setOpen, arr:reposActiveUsers}}/>
-      } 
-      else if(showPie =="slice#1" && open){
-        return <UserProfile data={{open, setOpen, arr:reposInactiveUsers }}/>
 
-      }
-      else if(showPie =="bar#0#0" && open){
-        const myarr = totalUsers.filter((author)=> {
-          return author.user.name == repoMostReviewingUser[0].name
-        })
-        return <UserProfile data={{open, setOpen, arr:myarr }}/>
-
-      }
-      else if(showPie =="bar#0#1" && open){
-        const myarr = totalUsers.filter((author)=> {
-          return author.user.name == repoMostReviewingUser[1].name
-        })
-        return <UserProfile data={{open, setOpen, arr:myarr }}/>
-
-      }
-      else if(showPie =="bar#0#2" && open){
-        const myarr = totalUsers.filter((author)=> {
-          return author.user.name == repoMostReviewingUser[2].name
-        })
-        return <UserProfile data={{open, setOpen, arr:myarr }}/>
-
-      }
-      else if(showPie =="bar#0#3" && open){
-        const myarr = totalUsers.filter((author)=> {
-          return author.user.name == repoMostReviewingUser[3].name
-        })
-        return <UserProfile data={{open, setOpen, arr:myarr }}/>
-
-      }
-      else if(showPie =="bar#0#4" && open){
-        const myarr = totalUsers.filter((author)=> {
-          return author.user.name == repoMostReviewingUser[4].name
-        })
-        return <UserProfile data={{open, setOpen, arr:myarr }}/>
-
-      }
-      else if(showPie =="bar#0#5" && open){
-        const myarr = totalUsers.filter((author)=> {
-          return author.user.name == repoMostReviewingUser[5].name
-        })
-        return <UserProfile data={{open, setOpen, arr:myarr }}/>
-
-      }
-      else if(showPie =="bar#0#6" && open){
-        const myarr = totalUsers.filter((author)=> {
-          return author.user.name == repoMostReviewingUser[6].name
-        })
-        return <UserProfile data={{open, setOpen, arr:myarr }}/>
-
-      }
-      else if(showPie =="bar#0#7" && open){
-        const myarr = totalUsers.filter((author)=> {
-          return author.user.name == repoMostReviewingUser[7].name
-        })
-        return <UserProfile data={{open, setOpen, arr:myarr }}/>
-
-      }
-      else if(showPie =="bar#0#8" && open){
-        const myarr = totalUsers.filter((author)=> {
-          return author.user.name == repoMostReviewingUser[8].name
-        })
-        return <UserProfile data={{open, setOpen, arr:myarr }}/>
-
-      }
-      else if(showPie =="bar#0#9" && open){
-        const myarr = totalUsers.filter((author)=> {
-          return author.user.name == repoMostReviewingUser[9].name
-        })
-        return <UserProfile data={{open, setOpen, arr:myarr }}/>
-
-      }
-      
- 
     return (
     
   <>
@@ -370,6 +307,27 @@ useEffect(() => {
     }
   }
 ]} />
+
+<Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={()=> setOpen(false)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{getMostReviewer(showPie)[0].user.displayName} || {getMostReviewer(showPie)[0].user.slug}</DialogTitle>
+        <DialogContent sx={{color:"black", fontSize:"25px"}}>
+          <DialogContentText id="alert-dialog-slide-description">
+            E-mail Address: {getMostReviewer(showPie)[0].user.emailAddress}
+          </DialogContentText>
+          <DialogContentText id="alert-dialog-slide-description">
+            Team Name: {getMostReviewer(showPie)[0].teamName}
+          </DialogContentText>
+          <DialogContentText id="alert-dialog-slide-description">
+            Link: <Link underline="hover" target="_blank" rel="noreferrer" href={getMostReviewer(showPie)[0].user.links.self[0].href}>{getMostReviewer(showPie)[0].user.links.self[0].href}</Link>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
 
     </>
        

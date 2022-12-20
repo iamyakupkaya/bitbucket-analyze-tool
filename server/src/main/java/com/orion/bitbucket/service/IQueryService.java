@@ -12,4 +12,6 @@ public interface IQueryService {
 
     public abstract List<PREntity> getAllPullRequests (String query, String condition, String [] collectionNames);
     public abstract BasicDBObject getQuery(String query, String condition);
+
+    String updateTeamNames(String[] userID, String teamNameText, String[] collectionNames);
 }

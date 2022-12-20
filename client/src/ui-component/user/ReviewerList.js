@@ -268,8 +268,8 @@ const [showInfo, setShowInfo] = useState(false)
           :
           getJiraID(currentData.values.title).map((ID) => {
             return <Box key={ID}>
-              <Link target="_blank"  href={"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID} underline="hover">
-            {"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID}
+              <Link target="_blank"  href={"https://jira.rbbn.com/browse/"+ID} underline="hover">
+            {"https://jira.rbbn.com/browse/"+ID}
             </Link>
             </Box>
           })}
@@ -285,8 +285,8 @@ const [showInfo, setShowInfo] = useState(false)
           :
           getJiraID(currentData.values.description).map((ID) => {
             return <Box key={ID}>
-              <Link target="_blank"  href={"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID} underline="hover">
-            {"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID}
+              <Link target="_blank"  href={"https://jira.rbbn.com/browse/"+ID} underline="hover">
+            {"https://jira.rbbn.com/browse/"+ID}
             </Link>
             </Box>
           })}

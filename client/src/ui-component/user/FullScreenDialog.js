@@ -14,10 +14,11 @@ import ReviewerCard from './ReviewerCard';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
-import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ReactMarkdown from 'react-markdown'
 import Link from '@mui/material/Link';
-
+import TotalIncomeDarkCard from '../../views/dashboard/Default/TotalIncomeDarkCard';
+import TotalIncomeLightCard from '../../views/dashboard/Default/TotalIncomeLightCard';
 
 
 
@@ -114,7 +115,7 @@ export default function FullScreenDialog(props) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative', backgroundColor:"#e0e0e0" }}>
+        <AppBar sx={{ position: 'relative', backgroundColor:"#fff7dc" }}>
           <Toolbar sx={{ display:"flex", justifyContent:"space-between"}}>
           <Stack direction="row" spacing={2}>
           <StyledBadge
@@ -132,33 +133,49 @@ export default function FullScreenDialog(props) {
             </Typography>
           </Stack>
             
-          <IconButton aria-label="delete" color="error" size="medium" onClick={handleClose}>
-  <CancelPresentationIcon  fontSize="inherit" />
+          <IconButton  aria-label="delete" color="error" size="medium" onClick={handleClose}>
+  <HighlightOffIcon  fontSize="medium" />
 </IconButton>
           </Toolbar>
         </AppBar>
         <Box sx={{flexGrow:1}}>
           <Box sx={{mt:1.5}} >
-          <Divider sx={{mb:5}}>
-            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"STATE: " + selectedPR.values.state} />
-            <Chip sx={{marginRight:"10vw", marginLeft:"10vw",  backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"PROJECT: "+selectedPR.values.fromRef.repository.project.name} />
-            <Chip sx={{backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"REPOSITORY: "+selectedPR.values.fromRef.repository.slug} />
-          </Divider>
-          <Divider sx={{mb:5}}>
-            <Chip sx={{marginRight:"10vw", backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"CREATED: " + new Date(selectedPR.values.createdDate).toISOString().split("T")[0]} />
-            <Chip sx={{backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"UPDATED: "+new Date(selectedPR.values.updatedDate).toISOString().split("T")[0]} />
-          </Divider>
+
+          <Box sx={{display:"flex", justifyContent:"space-between"}}>
+          <Grid container spacing={2} sx={{mt:0, mb:5}}>
+      <Grid item xs={6} md={4}>
+      <TotalIncomeLightCard data={{isLoading:false, count:selectedPR.values.state, name:"State"}} />
+      </Grid>
+      <Grid item xs={6} md={4}>
+      <TotalIncomeLightCard data={{isLoading:false, count:selectedPR.values.fromRef.repository.project.name, name:"Project"}} />
+
+      </Grid>
+      <Grid item xs={6} md={4}>
+      <TotalIncomeLightCard data={{isLoading:false, count:selectedPR.values.fromRef.repository.slug, name:"Repository"}} />
+      </Grid>
+      <Grid item xs={6} md={4}>
+      <TotalIncomeLightCard data={{isLoading:false, count:selectedPR.values.author.teamName, name:"Team"}} />
+      </Grid>
+      <Grid item xs={6} md={4}>
+      <TotalIncomeLightCard data={{isLoading:false, count:new Date(selectedPR.values.createdDate).toLocaleDateString('tr-TR'), name:"Created"}} />
+      </Grid> 
+      <Grid item xs={6} md={4}>
+      <TotalIncomeLightCard data={{isLoading:false, count:new Date(selectedPR.values.updatedDate).toLocaleDateString('tr-TR'), name:"Updated"}} />
+      </Grid>
+
+</Grid>
+
+          </Box>
           <Divider textAlign="left" sx={{fontWeight:"bold"}}>TITLE</Divider>
           <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
           <ReactMarkdown>{selectedPR.values.title}</ReactMarkdown>
-          <ReactMarkdown>Links:</ReactMarkdown>
           {getJiraID(selectedPR.values.title).length <=0
-          ? <ReactMarkdown>There is no Link</ReactMarkdown>
+          ? <ReactMarkdown></ReactMarkdown>
           :
           getJiraID(selectedPR.values.title).map((ID) => {
             return <Box key={ID}>
-              <Link target="_blank"  href={"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID} underline="hover">
-            {"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID}
+              <Link target="_blank"  href={"https://jira.rbbn.com/browse/"+ID} underline="hover">
+            {"https://jira.rbbn.com/browse/"+ID}
             </Link>
             </Box>
           })}
@@ -166,14 +183,13 @@ export default function FullScreenDialog(props) {
           </Box>
           <Divider textAlign="left" sx={{fontWeight:"bold", mt:2}}>DESCRIPTION</Divider>
           <Box sx={{ marginRight:"10px", marginLeft:"10px", mt:1}} spacing={5}>
-          <ReactMarkdown>Links:</ReactMarkdown>
           {getJiraID(selectedPR.values.description).length <=0
-          ? <ReactMarkdown>There is no Link</ReactMarkdown>
+          ? <ReactMarkdown></ReactMarkdown>
           :
           getJiraID(selectedPR.values.description).map((ID) => {
             return <Box key={ID}>
-              <Link target="_blank"  href={"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID} underline="hover">
-            {"https://jira.rbbn.com/rest/agile/1.0/issue/"+ID}
+              <Link target="_blank"  href={"https://jira.rbbn.com/browse/"+ID} underline="hover">
+            {"https://jira.rbbn.com/browse/"+ID}
             </Link>
             </Box>
           })}

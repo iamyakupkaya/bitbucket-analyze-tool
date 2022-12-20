@@ -18,7 +18,7 @@ import java.time.Instant;
 @Data
 @Log4j2
 @NoArgsConstructor
-@RequestMapping(path = "/data")
+@RequestMapping(path = "/api/v1")
 public class PageController {
     //FIELDS
     @Autowired
