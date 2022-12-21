@@ -20,7 +20,7 @@ import Box from "@mui/material/Box";
 import axios from "axios";
 import ConfirmDialog from "ui-component/user/ConfirmDialog";
 import {getLastPage} from "../../../redux/pull_request/PullRequestSlice"
-
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 // Helper functions
 function createData(
   pr,
@@ -47,7 +47,7 @@ const PullRequestPage = () => {
 
   const dispatch = useDispatch();
   const pullRequest = useSelector(state => state.data.pullRequest);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
   const [open, setOpen] = useState(false);
   const [selectedPR, setSelectedPR] = useState({});
@@ -99,27 +99,13 @@ if(pullRequest.length <= 0 || !pullRequest){
 
   const columns = [
     {
-      field: "info",
-      headerName: "INFO",
+      field: "Arrow",
+      headerName: "",
       filterable: false,
-      description: "This column clickable for more information of user's pull requests",
-      disableClickEventBubbling: true,
+      disableClickEventBubbling: false,
       sortable: false,
 
-      renderCell: (params) => {
-        const onClick = (e) => {
-          setSelectedPR({ ...params.row.pr });
-          setOpen(true);
-        };
-
-        return (
-          <Stack direction="row" spacing={2}>
-            <IconButton onClick={onClick} sx={{ borderRadius: 25, color: "#21a2f6" }} aria-label="info">
-  <InfoIcon />
-</IconButton>
-          </Stack>
-        );
-      },
+      renderCell: (params) => <ArrowRightIcon/>,
       flex: 0.25,
     },
     {
@@ -175,6 +161,30 @@ if(pullRequest.length <= 0 || !pullRequest){
       description: "This column shows title of the pull request",
       headerName: "Title",
       flex: 1.5,
+    },
+    {
+      field: "info",
+      headerName: "INFO",
+      filterable: false,
+      description: "This column clickable for more information of user's pull requests",
+      disableClickEventBubbling: true,
+      sortable: false,
+
+      renderCell: (params) => {
+        const onClick = (e) => {
+          setSelectedPR({ ...params.row.pr });
+          setOpen(true);
+        };
+
+        return (
+          <Stack direction="row" spacing={2}>
+            <IconButton onClick={onClick} sx={{ borderRadius: 25, color: "#21a2f6" }} aria-label="info">
+  <InfoIcon />
+</IconButton>
+          </Stack>
+        );
+      },
+      flex: 0.25,
     },
   ];
 

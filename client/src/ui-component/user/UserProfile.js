@@ -98,7 +98,7 @@ export default function UserProfile(props) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative', backgroundColor:"#e0e0e0", mb:5}}>
+        <AppBar sx={{ position: 'relative',  background:"green", background: "linear-gradient(90deg, rgba(255,221,116,1) 0%, rgba(255,237,182,1) 100%)", mb:5}}>
           <Toolbar sx={{ display:"flex", justifyContent:"space-between"}}>
           <Stack direction="row" spacing={2}>
           <Divider>

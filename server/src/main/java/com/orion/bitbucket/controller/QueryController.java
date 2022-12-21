@@ -49,9 +49,6 @@ public class QueryController {
     @PutMapping("/update-data/{teamText}")
     public String updateTeamName(@RequestBody String[] IDs, @PathVariable String teamText) {
         String result = queryService.updateTeamNames(IDs, teamText,DatabaseHelper.ALL_COLLECTIONS_ARRAY);
-        for (String i : IDs) {
-            System.out.println("gelen deper: "+ i);
-        }
         return result;
     }
 

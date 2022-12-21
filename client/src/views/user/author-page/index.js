@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import InfoIcon from "@mui/icons-material/Info";
 import Stack from "@mui/material/Stack";
@@ -28,6 +28,15 @@ import NativeSelect from '@mui/material/NativeSelect';
 import InputBase from '@mui/material/InputBase';
 import axios from "axios";
 import { getPullRequests } from "../../../redux/pull_request/PullRequestSlice";
+import Slide from '@mui/material/Slide';
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction={props.in == true ? "up" : "down"} ref={ref} {...props} />;
+});
+const TransitionSubmit =React.forwardRef(function Transition(props, ref) {
+  return <Slide direction={props.in == true ? "left" : "right"}  ref={ref} {...props} />;
+});
 
 // Helper functions
 function createData(
@@ -37,6 +46,7 @@ function createData(
   displayName,
   teamName,
   emailAddress,
+
  
 ) {
   return { pr, id, name, displayName,  teamName, emailAddress };
@@ -96,7 +106,7 @@ const AuthorPage = () => {
   const dispatch = useDispatch();
     const totalUsers = useSelector(state => state.data.allUser)
     const pullRequest = useSelector(state => state.data.pullRequest)
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
   const [buttonText, setButtonText] = useState("Show Inactive Users")
 const [showActive, setShowActive] = useState(false)
@@ -120,6 +130,7 @@ const [filterInfo, setFilterInfo] = useState({
   operatorValue: '',
   value: '',
 })
+
 
 const updateDataWithTeam = (arr) => {
 
@@ -186,6 +197,18 @@ if(pullRequest.length <= 0 || !pullRequest){
       headerName: "E-mail",
       flex: 1,
     },
+    /*{
+      field: "userPullRequest",
+      description: "This column shows total pull request of user",
+      headerName: "Pull Request",
+      flex: 0.35,
+    },
+    {
+      field: "userReviewing",
+      description: "This column shows total reviewing of user",
+      headerName: "Reviewing",
+      flex: 0.35,
+    },*/
     {
       field: "info",
       description: "This column clickable for more information of user",
@@ -233,10 +256,8 @@ if(pullRequest.length <= 0 || !pullRequest){
       pr.user.displayName,
       pr.teamName,
       pr.user.emailAddress,
-
-
-
-    );
+      
+      );
   });
 
   const handleClickOpen = () => {
@@ -310,8 +331,72 @@ if(pullRequest.length <= 0 || !pullRequest){
       );
     
   }
-  if(teamButton){
-    return <Dialog
+
+
+  if(showMore){
+    return <PullRequestList data={{ open: showMore, setOpen: setShowMore, selectedPR: userPullRequest }}/>
+  }
+
+  if(showMoreReviewer){
+    return <ReviewerList data={{ open: showMoreReviewer, setOpen: setShowMoreReviewer, selectedPR: userReviewer, selectedUser:currentData }}/>
+  }
+
+  return (
+    <>
+    <Dialog
+        TransitionComponent={Transition}
+        open={open}
+        keepMounted
+        onClose={handleClose}
+        PaperComponent={PaperComponent}
+        aria-labelledby="draggable-dialog-title"
+      >
+        <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
+          {Object.keys(currentData).length <=0 ? "Unknown" : currentData.user.displayName }
+          <Typography  variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>
+            {Object.keys(currentData).length <=0 ? "Unknown" : currentData.user.name }
+          </Typography>
+          <Typography  variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>
+            {Object.keys(currentData).length <=0 ? "Unknown" : currentData.user.emailAddress}
+          </Typography>
+        </DialogTitle>
+       
+        <DialogContent>
+          <DialogContentText style={{fontWeight:"bolder", fontSize:"15px"}}>
+          <DialogTitle style={{fontWeight:"bold", marginLeft:"0px", display:"inline-block", fontSize:"15px" }} id="draggable-dialog-title">
+          Total Pull Request Count:
+        </DialogTitle>
+            {userPullRequest.length}
+          </DialogContentText>
+          <DialogContentText style={{fontWeight:"bolder", fontSize:"15px"}}>
+          <DialogTitle style={{fontWeight:"bold", marginLeft:"0px", display:"inline-block", fontSize:"15px" }} id="draggable-dialog-title">
+          Total Reviewing Count:
+        </DialogTitle>
+            {userReviewer.length}
+          </DialogContentText>
+          <DialogContentText>
+            To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">pull requests</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{Object.keys(currentData).length <=0 ? "Unknown" : currentData.user.name}</Typography> user click more button.
+            <Button disabled={userPullRequest.length <=0 ? true : false} onClick={handleMore}>
+            More
+          </Button>
+          </DialogContentText>
+          <DialogContentText>
+            To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">reviewing</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{Object.keys(currentData).length <=0 ? "Unknown" : currentData.user.name }</Typography> user click more button.
+            <Button disabled={userReviewer.length <=0 ? true : false} onClick={handleMoreReviewers}>
+            More
+          </Button>
+          </DialogContentText>
+          
+        </DialogContent>
+        <DialogActions style={{display:"flex", justifyContent:"flex-start", alignContent:"center"}}>
+          <Button onClick={handleClose}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    <Dialog
+    TransitionComponent={TransitionSubmit}
+    keepMounted
     open={teamButton}
     onClose={handleSelectClose}
     aria-labelledby="alert-dialog-title"
@@ -336,73 +421,7 @@ if(pullRequest.length <= 0 || !pullRequest){
         Submit
       </Button>
     </DialogActions>
-  </Dialog>
-  }
-
-  if(showMore){
-    return <PullRequestList data={{ open: showMore, setOpen: setShowMore, selectedPR: userPullRequest }}/>
-  }
-
-  if(showMoreReviewer){
-    return <ReviewerList data={{ open: showMoreReviewer, setOpen: setShowMoreReviewer, selectedPR: userReviewer, selectedUser:currentData }}/>
-  }
-
-  if (open) {
-    return (
-        <Dialog
-        open={open}
-        onClose={handleClose}
-        PaperComponent={PaperComponent}
-        aria-labelledby="draggable-dialog-title"
-      >
-        <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
-          {currentData.user.displayName || "Unknown"}
-          <Typography  variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>          {currentData.user.name || "Unknown"}
-</Typography>
-<Typography  variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>          {currentData.user.emailAddress || "Unknown"}
-</Typography>
-        </DialogTitle>
-       
-        <DialogContent>
-          <DialogContentText style={{fontWeight:"bolder", fontSize:"15px"}}>
-          <DialogTitle style={{fontWeight:"bold", marginLeft:"0px", display:"inline-block", fontSize:"15px" }} id="draggable-dialog-title">
-          Total Pull Request Count:
-        </DialogTitle>
-            {userPullRequest.length}
-          </DialogContentText>
-          <DialogContentText style={{fontWeight:"bolder", fontSize:"15px"}}>
-          <DialogTitle style={{fontWeight:"bold", marginLeft:"0px", display:"inline-block", fontSize:"15px" }} id="draggable-dialog-title">
-          Total Reviewing Count:
-        </DialogTitle>
-            {userReviewer.length}
-          </DialogContentText>
-          <DialogContentText>
-            To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">pull requests</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{currentData.user.name}</Typography> user click more button.
-            <Button disabled={userPullRequest.length <=0 ? true : false} onClick={handleMore}>
-            More
-          </Button>
-          </DialogContentText>
-          <DialogContentText>
-            To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">reviewing</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{currentData.user.name}</Typography> user click more button.
-            <Button disabled={userReviewer.length <=0 ? true : false} onClick={handleMoreReviewers}>
-            More
-          </Button>
-          </DialogContentText>
-          
-        </DialogContent>
-        <DialogActions style={{display:"flex", justifyContent:"flex-start", alignContent:"center"}}>
-          <Button onClick={handleClose}>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-
- 
-
-  return (
-    <>   
+  </Dialog>  
     <Box sx={{display:"flex", justifyContent:"space-between"}}>
     <Button onClick={handleActiveButton} sx={{borderRadius:"4px"}} variant="contained" endIcon={<VisibilityIcon />}>
   {buttonText}
@@ -416,7 +435,12 @@ if(pullRequest.length <= 0 || !pullRequest){
         disableSelectionOnClick
 
         checkboxSelection={checkboxSelection}
-        sx={{backgroundColor:"white", borderRadius:"4px", border:"0px solid black !important"}}
+        sx={{backgroundColor:"white", borderRadius:"4px",
+        border:"0px solid black !important",
+        "& .MuiDataGrid-virtualScroller::-webkit-scrollbar": {             
+            display: "none"
+        
+        },}}
           rows={rows}
           getRowId={rows.id}
           columns={columns}

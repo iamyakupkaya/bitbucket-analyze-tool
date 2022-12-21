@@ -59,7 +59,9 @@ const TotalIncomeLightCard = (props) => {
                                             ...theme.typography.commonAvatar,
                                             ...theme.typography.largeAvatar,
                                             backgroundColor: theme.palette.warning.light,
-                                            color: theme.palette.warning.dark
+                                            color: theme.palette.warning.dark,
+                                            cursor:"default"
+
                                         }}
                                     >
                                         <StorefrontTwoToneIcon fontSize="inherit" />

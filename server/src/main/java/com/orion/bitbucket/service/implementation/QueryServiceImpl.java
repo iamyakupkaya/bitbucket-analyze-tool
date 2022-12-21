@@ -1,4 +1,5 @@
 package com.orion.bitbucket.service.implementation;
+
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
@@ -27,13 +28,16 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gt;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import com.mongodb.MongoException;
@@ -67,9 +71,9 @@ public class QueryServiceImpl implements IQueryService {
         List<PREntity> resutlAPI = new ArrayList<PREntity>();
         Gson gson = utilConfig.getGson();
 
-        for (String collectionName : collectionNames){
+        for (String collectionName : collectionNames) {
             try (MongoClient mongoClient = MongoClients.create(DatabaseHelper.DATABASE_URL)) {
-                if (LogHelper.IS_BASE_LOGGING){
+                if (LogHelper.IS_BASE_LOGGING) {
                     log.info("getAllPullRequests method in QueryServiceImpl class was invoked for " + collectionName);
                 }
                 BasicDBObject basicQuery = getQuery(query, condition);
@@ -94,11 +98,11 @@ public class QueryServiceImpl implements IQueryService {
 
 
             } catch (Exception err) {
-                if(LogHelper.IS_BASE_LOGGING){
+                if (LogHelper.IS_BASE_LOGGING) {
                     log.error("There is a error in findPRSByEmail method in QueryServiceImpl class. Error: {}", err);
                 }
             } finally {
-                if (LogHelper.IS_BASE_LOGGING){
+                if (LogHelper.IS_BASE_LOGGING) {
                     log.info("findPRSByEmail method in QueryServiseImpl class executing has finished");
                 }
             }
@@ -106,14 +110,13 @@ public class QueryServiceImpl implements IQueryService {
         return resutlAPI;
     }
 
-    public BasicDBObject getQuery(String query, String condition){
+    public BasicDBObject getQuery(String query, String condition) {
         BasicDBObject basicQuery = new BasicDBObject();
-        if(!query.isEmpty() && !condition.isEmpty()){
-            if(condition.toLowerCase().equals("true")  || condition.toLowerCase().equals("false") ){
-                boolean boolCondition= Boolean.parseBoolean(condition);
+        if (!query.isEmpty() && !condition.isEmpty()) {
+            if (condition.toLowerCase().equals("true") || condition.toLowerCase().equals("false")) {
+                boolean boolCondition = Boolean.parseBoolean(condition);
                 basicQuery.put(query, boolCondition);
-            }
-            else {
+            } else {
                 basicQuery.put(query, condition);
 
             }
@@ -123,33 +126,33 @@ public class QueryServiceImpl implements IQueryService {
 
     @Override
     public String updateTeamNames(String[] userName, String teamNameText, String[] collectionNames) {
-        System.out.println("UpdateNames çalışıyor");
-        Gson gson = utilConfig.getGson();
-        String resultText="";
-
-        for (int i=0; i< userName.length; i++){
-            System.out.println("For içi çalışıyor");
-            for (String collectionName : collectionNames){
-                try (MongoClient mongoClient = MongoClients.create(DatabaseHelper.DATABASE_URL)) {
-                    if (LogHelper.IS_BASE_LOGGING) {
-                        log.info("updateTeamNames method in QueryServiceImpl class was invoked for " + collectionName);
-                    }
-                    MongoDatabase database = mongoClient.getDatabase(DatabaseHelper.DATABASE_NAME);
-                    MongoCollection<Document> collection = database.getCollection(collectionName);
-                    BasicDBObject basicQuery = getQuery("values.author.user.name", userName[i]);
-                    MongoCursor<Document> cursor = collection.find(basicQuery).iterator();
-                    Bson query = eq("values.author.user.name", userName[i]);
-                    Bson updates = Updates.set("values.author.teamName", teamNameText);
-                        try {
-                            UpdateResult result = collection.updateMany(query, updates);
-                            resultText = "Updates are successful";
-                        } catch (MongoException me) {
-                            resultText = "Updates are unsuccessful." ;
-
-                        }
-
+        String resultText = "";
+        try (MongoClient mongoClient = MongoClients.create(DatabaseHelper.DATABASE_URL)) {
+            for (String collectionName : collectionNames) {
+                if (LogHelper.IS_BASE_LOGGING) {
+                    log.info("updateTeamNames method in QueryServiceImpl class was invoked for " + collectionName);
+                }
+                MongoDatabase database = mongoClient.getDatabase(DatabaseHelper.DATABASE_NAME);
+                MongoCollection<Document> collection = database.getCollection(collectionName);
+                for (int i = 0; i < userName.length; i++) {
+                    Bson query = eq(QueryHelper.VALUES_AUTHOR_USER_NAME, userName[i]);
+                    Bson updates = Updates.set(QueryHelper.VALUES_AUTHOR_TEAMNAME, teamNameText);
+                    collection.updateMany(query, updates);
                 }
             }
+            resultText = "Team name updates are successful";
+
+
+        } catch (Exception err) {
+            if (LogHelper.IS_BASE_LOGGING) {
+                log.error("updateTeamNames method in QueryServiceImpl class. Error: {}", err);
+            }
+            resultText = "Team name updates are unsuccessful.";
+        } finally {
+            if (LogHelper.IS_BASE_LOGGING) {
+                log.info("updateTeamNames method in QueryServiseImpl class executing has finished");
+            }
+            System.out.println("BİTTİ");
 
         }
         return resultText;

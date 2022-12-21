@@ -1,18 +1,54 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Badge from '@mui/material/Badge';
 import Stack from '@mui/material/Stack';
+//----------------------------------------
+import PropTypes from 'prop-types';
+
+// material-ui
+import { useTheme, styled } from '@mui/material/styles';
+import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+
+// project imports
+import MainCard from '../../ui-component/cards/MainCard';
+import TotalIncomeCard from '../../ui-component/cards/Skeleton/TotalIncomeCard';
+
+// assets
+import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
+
+// styles
+const CardWrapper = styled(MainCard)(({ theme }) => ({
+    overflow: 'hidden',
+    position: 'relative',
+    '&:after': {
+        content: '""',
+        position: 'absolute',
+        width: 350,
+        height: 350,
+        background: `linear-gradient(210.04deg, ${theme.palette.warning.dark} -50.94%, rgba(144, 202, 249, 0) 83.49%)`,
+        borderRadius: '50%',
+        top: -30,
+        right: -180
+    },
+    '&:before': {
+        content: '""',
+        position: 'absolute',
+        width: 250,
+        height: 250,
+        background: `linear-gradient(140.9deg, ${theme.palette.warning.dark} -14.02%, rgba(144, 202, 249, 0) 70.50%)`,
+        borderRadius: '50%',
+        top: -160,
+        right: -130
+    }
+}));
 
 
 
@@ -20,8 +56,8 @@ import Stack from '@mui/material/Stack';
 const StyledBadge = styled(Badge)((props) => ({
   
   '& .MuiBadge-badge': {
-    backgroundColor: `${props.active ? "#44b700" : "red" }`,
-    color: `${props.active ? "#44b700" : "red" }`,
+    backgroundColor: `${props.active == true ? "#44b700" : "red" }`,
+    color: `${props.active == true ? "#44b700" : "red" }`,
     boxShadow: `0 0 0 2px ${props.theme.palette.background.paper}`,
     '&::after': {
       position: 'absolute',
@@ -79,6 +115,67 @@ function stringAvatar(name = "Unknown Unknown") {
 }
 
 
+const ReviewerCard = ({data}) => {
+
+  const isLoading = false;
+  const theme = useTheme();
+
+  return (
+      <>
+          {isLoading ? (
+              <TotalIncomeCard />
+          ) : (
+              <CardWrapper sx={{minWidth:"375px", borderColor:theme.palette.warning.dark}} border={true} content={false}>
+                  <Box sx={{ p: 2 }}>
+                      <List sx={{ py: 0 }}>
+                          <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
+                              <ListItemAvatar>
+                              <StyledBadge
+  overlap="circular"
+  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+  variant="dot"
+  active={data.user.active}
+>
+<Avatar {...stringAvatar(data.user.displayName)} />
+</StyledBadge>
+                              </ListItemAvatar>
+                              <ListItemText
+                                  sx={{
+                                      py: 0,
+                                      mt: 0.45,
+                                      mb: 0.45
+                                  }}
+                                  primary={<Typography variant="h4">{data.user.displayName}</Typography>}
+                                  secondary={
+                                      <Typography
+                                          variant="subtitle3"
+                                          sx={{
+                                              color: "black",
+                                              mt: 0.5
+                                          }}
+                                      >{data.user.emailAddress}
+                                          
+                                      </Typography>
+                                  }
+                              />
+                          </ListItem>
+                      </List>
+                  </Box>
+              </CardWrapper>
+          )}
+      </>
+  );
+};
+
+ReviewerCard.propTypes = {
+  isLoading: PropTypes.bool
+};
+
+export default ReviewerCard;
+
+
+/*
+
 export default function ReviewerCard({data}) {
   const [expanded, setExpanded] = React.useState(false);
 
@@ -107,3 +204,5 @@ export default function ReviewerCard({data}) {
     </Card>
   );
 }
+
+*/

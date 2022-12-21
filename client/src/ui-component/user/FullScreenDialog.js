@@ -30,8 +30,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const StyledBadge = styled(Badge)((props) => ({
   
   '& .MuiBadge-badge': {
-    backgroundColor: `${props.active ? "#44b700" : "red" }`,
-    color: `${props.active ? "#44b700" : "red" }`,
+    backgroundColor: `${props.active == true ? "#44b700" : "red" }`,
+    color: `${props.active == true ? "#44b700" : "red" }`,
     boxShadow: `0 0 0 2px ${props.theme.palette.background.paper}`,
     '&::after': {
       position: 'absolute',
@@ -115,7 +115,7 @@ export default function FullScreenDialog(props) {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative', backgroundColor:"#fff7dc" }}>
+        <AppBar sx={{ position: 'relative', background: "rgb(255,233,166)", background:"linear-gradient(90deg, rgba(255,233,166,1) 0%, rgba(255,245,217,1) 100%)"  }}>
           <Toolbar sx={{ display:"flex", justifyContent:"space-between"}}>
           <Stack direction="row" spacing={2}>
           <StyledBadge

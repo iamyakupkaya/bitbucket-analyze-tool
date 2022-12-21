@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Button from '@mui/material/Button';
 import InfoIcon from "@mui/icons-material/Info";
 import DialogActions from '@mui/material/DialogActions';
@@ -28,7 +28,7 @@ import Link from '@mui/material/Link';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction="down" ref={ref} {...props} />;
 });
 
 
@@ -36,7 +36,7 @@ const StyledBadge = styled(Badge)((props) => ({
   
   '& .MuiBadge-badge': {
     backgroundColor: `${props.active == true ? "#44b700" : "red" }`,
-    color: `${props.active ? "#44b700" : "red" }`,
+    color: `${props.active == true ? "#44b700" : "red" }`,
     boxShadow: `0 0 0 2px ${props.theme.palette.background.paper}`,
     '&::after': {
       position: 'absolute',
@@ -137,7 +137,13 @@ export default function ReviewerList(props) {
   const [pageSize, setPageSize] = useState(10);
   const [pageNum, setPageNum] = React.useState(0);
   const [currentData, setCurrentData] = useState({});
-const [showInfo, setShowInfo] = useState(false)
+const [showInfo, setShowInfo] = useState(false);
+const [filterInfo, setFilterInfo] = useState({
+  id: 1,
+  columnField: '',
+  operatorValue: '',
+  value: '',
+});
   const handleClose = () => {
     setOpen(false)
   };
@@ -171,6 +177,7 @@ const [showInfo, setShowInfo] = useState(false)
         field: "info",
         headerName: "INFO",
         filterable: false,
+        description: "This column clickable for more information of reviewering of the user",
         disableClickEventBubbling: true,
         sortable: false,
   
@@ -193,47 +200,60 @@ const [showInfo, setShowInfo] = useState(false)
       },
     {
       field: "name",
+      description: "This column shows the nickname of the pull request owner",
       headerName: "Name",
       flex: 0.5,
     },
     {
         field: "displayName",
         headerName: "Display Name",
+        description: "This column shows the display name of the pull request owner",
         flex: 0.5,
       },
       {
         field: "emailAddress",
         headerName: "E-mail Address",
+        description: "This column shows the e-mail address of the pull request owner",
         flex: 0.5,
       },
       {
         field: "state",
+        description: "This column shows the pull request's state",
         headerName: "State",
         flex: 0.5,
       },
       {
         field: "slug",
+        description: "This column shows the repository of the pull request owner is working on",
         headerName: "Repository",
         flex: 0.5,
       },
     {
         field: "createdDate",
         headerName: "Created Date",
+        description: "This column shows the pull request time was created",
+        type: 'date',
+        valueGetter: ({ value }) => value && new Date(value),
         flex: 0.5,
     },
     {
       field: "updatedDate",
       headerName: "Updated Date",
+      description: "This column shows the pull request time was updated",
+      type: 'date',
+      valueGetter: ({ value }) => value && new Date(value),
       flex: 0.5,
     },
     
     {
       field: "title",
       headerName: "Title",
+      description: "This column shows title of the pull request",
       flex: 1,
     },
     {
         field: "description",
+        description: "This column shows description of the pull request",
         headerName: "Description",
         flex: 2,
       },
@@ -245,12 +265,22 @@ const [showInfo, setShowInfo] = useState(false)
   if (showInfo) {
     return (
         <Dialog
+        keepMounted
         open={open}
-        onClose={(event, reason)=> handleCloseInfo(reason)}
+        onClose={(event, reason)=> handleCloseInfo(reason)
+        }
+        sx={{'.MuiDialog-paper::-webkit-scrollbar': {
+          display: "none"
+        }}}
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
         maxWidth={"xl"}
       >
+        <DialogActions style={{ display:"flex", justifyContent:"flex-end", alignContent:"center"}}>
+          <Button sx={{color:"red"}} onClick={handleCloseInfo}>
+            Close
+          </Button>
+        </DialogActions>
         <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
           Pull Request Owner:
             <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{currentData.values.author.user.displayName}</Typography>
@@ -259,12 +289,11 @@ const [showInfo, setShowInfo] = useState(false)
         </DialogTitle>
         <Divider sx={{mt:2, mb:2}}>
             <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Title of Pull Request"} />
-          </Divider>
+        </Divider>
         <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
           {currentData.values.title || "Unknown"}
-          <ReactMarkdown>Links:</ReactMarkdown>
           {getJiraID(currentData.values.title).length <=0
-          ? <ReactMarkdown>There is no Link</ReactMarkdown>
+          ? <ReactMarkdown></ReactMarkdown>
           :
           getJiraID(currentData.values.title).map((ID) => {
             return <Box key={ID}>
@@ -279,9 +308,8 @@ const [showInfo, setShowInfo] = useState(false)
           </Divider>
         <Box sx={{display:"flex", flexDirection:"column"}}>
         <DialogContent sx={{wordWrap: "break-word"}}>
-        <ReactMarkdown>Links:</ReactMarkdown>
           {getJiraID(currentData.values.description).length <=0
-          ? <ReactMarkdown>There is no Link</ReactMarkdown>
+          ? <ReactMarkdown></ReactMarkdown>
           :
           getJiraID(currentData.values.description).map((ID) => {
             return <Box key={ID}>
@@ -309,7 +337,7 @@ const [showInfo, setShowInfo] = useState(false)
         </DialogContent>
         </Box>
         <DialogActions style={{display:"flex", justifyContent:"flex-start", alignContent:"center"}}>
-          <Button onClick={handleCloseInfo}>
+          <Button sx={{color:"red"}} onClick={handleCloseInfo}>
             Close
           </Button>
         </DialogActions>
@@ -324,6 +352,7 @@ const [showInfo, setShowInfo] = useState(false)
         fullScreen
         open={open}
         onClose={handleClose}
+        keepMounted
         TransitionComponent={Transition}
       >
         <AppBar sx={{ position: 'relative', backgroundColor:"#e0e0e0" }}>
@@ -345,7 +374,7 @@ const [showInfo, setShowInfo] = useState(false)
           </Stack>
             
           <IconButton aria-label="delete" color="error" size="medium" onClick={handleClose}>
-  <CancelPresentationIcon  fontSize="inherit" />
+  <HighlightOffIcon  fontSize="inherit" />
 </IconButton>
           </Toolbar>
         </AppBar>
@@ -357,11 +386,20 @@ const [showInfo, setShowInfo] = useState(false)
       <Box m="20px 0 0 0" height="75vh" sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}>
       
         <DataGrid
-        sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}
+        disableSelectionOnClick
+        sx={{backgroundColor:"white", borderRadius:"20px", 
+        border:"0px solid black !important", 
+        "& .MuiDataGrid-virtualScroller::-webkit-scrollbar": {             
+          display: "none"
+      
+      }}}
           rows={rows}
           getRowId={rows.id}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
+          onFilterModelChange={(props)=>{
+            setFilterInfo({...filterInfo, ...props.items[0]})
+           }}
           rowsPerPageOptions={[10, 25, 50, 75, 100]}
           pageSize={pageSize}
           onPageChange={(newPage) => setPageNum(newPage)}
@@ -372,7 +410,7 @@ const [showInfo, setShowInfo] = useState(false)
             },
             filter: {
       filterModel: {
-        items: [{ columnField: 'rating', operatorValue: '>', value: '2.5' }],
+        items: [filterInfo],
       },
     },
           }}

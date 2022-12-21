@@ -27,9 +27,8 @@ import Slide from '@mui/material/Slide';
 import { Link } from '@mui/material';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction={props.in == true ? "right" : "left"} ref={ref} {...props} />;
 });
-
 
 const HomePage = () => {
     const dispatch = useDispatch();
@@ -56,7 +55,8 @@ const HomePage = () => {
     const [reposInactiveUsers, setReposInactiveUsers] = useState(inactiveUsers)
     const [repoMostReviewingUser, setRepoMostReviewingUser] = useState(mostReviewingUser)
     
-    
+    const el = document.getElementById('chart_div');
+    console.log("gelen el: ", el)
     
 useEffect(() => {
   dispatch(getLastPage("home")) 
@@ -159,17 +159,17 @@ if(totalPullRequests.length <= 0 || !totalPullRequests){
 
     // COLUMN CHART
     const dataColumn = [
-        ["Reviewers", "Total Reviews", { role: "style" }],
-        [repoMostReviewingUser[0].name, repoMostReviewingUser[0].value, "#2196f3"], // RGB value
-        [repoMostReviewingUser[1].name, repoMostReviewingUser[1].value, "#2196f3"], // English color name
-        [repoMostReviewingUser[2].name, repoMostReviewingUser[2].value, "#2196f3"],
-        [repoMostReviewingUser[3].name, repoMostReviewingUser[3].value, "#2196f3"], // CSS-style declaration
-        [repoMostReviewingUser[4].name, repoMostReviewingUser[4].value, "#2196f3"], // CSS-style declaration
-        [repoMostReviewingUser[5].name, repoMostReviewingUser[5].value, "#2196f3"],
-        [repoMostReviewingUser[6].name, repoMostReviewingUser[6].value, "#2196f3"],
-        [repoMostReviewingUser[7].name, repoMostReviewingUser[7].value, "#2196f3"],
-        [repoMostReviewingUser[8].name, repoMostReviewingUser[8].value, "#2196f3"],
-        [repoMostReviewingUser[9].name, repoMostReviewingUser[9].value, "#2196f3"],
+        ["Reviewers", "Total Reviews", { role: 'style' }, { role: 'annotation' }],
+        [repoMostReviewingUser[0].name, repoMostReviewingUser[0].value, "#2196f3", repoMostReviewingUser[0].value], // RGB value
+        [repoMostReviewingUser[1].name, repoMostReviewingUser[1].value, "#2196f3", repoMostReviewingUser[1].value],
+        [repoMostReviewingUser[2].name, repoMostReviewingUser[2].value, "#2196f3", repoMostReviewingUser[2].value], // CSS-style declaration
+        [repoMostReviewingUser[3].name, repoMostReviewingUser[3].value, "#2196f3", repoMostReviewingUser[3].value], // English color name
+        [repoMostReviewingUser[4].name, repoMostReviewingUser[4].value, "#2196f3", repoMostReviewingUser[4].value], // CSS-style declaration
+        [repoMostReviewingUser[5].name, repoMostReviewingUser[5].value, "#2196f3", repoMostReviewingUser[5].value],
+        [repoMostReviewingUser[6].name, repoMostReviewingUser[6].value, "#2196f3", repoMostReviewingUser[6].value],
+        [repoMostReviewingUser[7].name, repoMostReviewingUser[7].value, "#2196f3", repoMostReviewingUser[7].value],
+        [repoMostReviewingUser[8].name, repoMostReviewingUser[8].value, "#2196f3", repoMostReviewingUser[8].value],
+        [repoMostReviewingUser[9].name, repoMostReviewingUser[9].value, "#2196f3", repoMostReviewingUser[9].value],
       ];
 
       // PIE
@@ -180,6 +180,7 @@ if(totalPullRequests.length <= 0 || !totalPullRequests){
         titleTextStyle: {
           color: '#616161'
       },
+      cursor:"pointer",
         backgroundColor: "#e0e0e0",
         colors: ["#2196f3", "#90CAF9"],
         fontSize:18,
@@ -192,6 +193,7 @@ if(totalPullRequests.length <= 0 || !totalPullRequests){
         titleTextStyle: {
           color: '#616161'
       },
+      
         backgroundColor: "#e0e0e0",
         colors: ["#2196f3", "#870000"],
         fontSize:20,
@@ -289,15 +291,17 @@ if(totalPullRequests.length <= 0 || !totalPullRequests){
 </Grid>
 
 
-<Chart chartType="ColumnChart"            options={optionsColumn}
+<Chart chartType="ColumnChart" options={optionsColumn}
  width="100%" height="500px" data={dataColumn}  chartEvents={[
   {
     eventName: "ready",
     callback: ({ chartWrapper, google }) => {
       const chart = chartWrapper.getChart();
+      console.log("gelen chart ", chart)
       google.visualization.events.addListener(chart, "click", e => {
         setOpen(true)
       });
+      
       google.visualization.events.addListener(chart, "click", e => {
 
           setShowPie(e.targetID)
