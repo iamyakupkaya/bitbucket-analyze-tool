@@ -126,7 +126,10 @@ const ReviewerCard = ({data}) => {
               <TotalIncomeCard />
           ) : (
               <CardWrapper sx={{minWidth:"375px", borderColor:theme.palette.warning.dark}} border={true} content={false}>
-                  <Box sx={{ p: 2 }}>
+                                    <Box sx={{color:"black", textAlign:"end", position:"absolute", right:"5px"}}>{data.teamName}</Box>
+
+                  <Box sx={{ pt: 2, pb:2, pl:1, pr:1 }}>
+
                       <List sx={{ py: 0 }}>
                           <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
                               <ListItemAvatar>
@@ -157,6 +160,7 @@ const ReviewerCard = ({data}) => {
                                           
                                       </Typography>
                                   }
+                                
                               />
                           </ListItem>
                       </List>

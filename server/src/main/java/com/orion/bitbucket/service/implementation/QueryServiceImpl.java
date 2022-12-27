@@ -35,9 +35,6 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.gt;
-
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import com.mongodb.MongoException;
@@ -47,6 +44,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
+
+import static com.mongodb.client.model.Filters.*;
 
 @Data
 @Log4j2 // for logging
@@ -135,10 +134,21 @@ public class QueryServiceImpl implements IQueryService {
                 MongoDatabase database = mongoClient.getDatabase(DatabaseHelper.DATABASE_NAME);
                 MongoCollection<Document> collection = database.getCollection(collectionName);
                 for (int i = 0; i < userName.length; i++) {
-                    Bson query = eq(QueryHelper.VALUES_AUTHOR_USER_NAME, userName[i]);
+                    // ---------- authors-------------
+                   /* Bson query = eq(QueryHelper.VALUES_AUTHOR_USER_NAME, userName[i]);
                     Bson updates = Updates.set(QueryHelper.VALUES_AUTHOR_TEAMNAME, teamNameText);
-                    collection.updateMany(query, updates);
+                    collection.updateMany(query, updates); */
+                    //------ reviewers-------------
+                    Bson query1 = elemMatch("values.reviewers", eq("user.name", userName[i]));
+                    BasicDBObject query12 = new BasicDBObject("values.reviewers.user.name", userName[i]);
+
+                    Bson update1 = Updates.set("values.reviewers.$[ele].teamName", teamNameText);
+                    collection.updateMany(query12, update1);
+
+
                 }
+
+
             }
             resultText = "Team name updates are successful";
 

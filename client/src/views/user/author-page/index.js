@@ -46,10 +46,12 @@ function createData(
   displayName,
   teamName,
   emailAddress,
+  userPullRequest,
+  userReviewing,
 
  
 ) {
-  return { pr, id, name, displayName,  teamName, emailAddress };
+  return { pr, id, name, displayName,  teamName, emailAddress, userPullRequest, userReviewing };
 }
 
 function PaperComponent(props) {
@@ -106,6 +108,11 @@ const AuthorPage = () => {
   const dispatch = useDispatch();
     const totalUsers = useSelector(state => state.data.allUser)
     const pullRequest = useSelector(state => state.data.pullRequest)
+    const activeUserPullRequests = useSelector(state => state.data.activeUserPullRequest)
+    const inactiveUserPullRequests = useSelector(state => state.data.inactiveUserPullRequest)
+    const activeUserReviewing = useSelector(state => state.data.activeUserReviewing)
+    const inactiveUserReviewing = useSelector(state => state.data.inactiveUserReviewing)
+
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
   const [buttonText, setButtonText] = useState("Show Inactive Users")
@@ -160,7 +167,6 @@ useEffect(() => {
 
 
 
-console.log("Tekrar render ediliyor.")
 
 if(pullRequest.length <= 0 || !pullRequest){
   return (
@@ -182,14 +188,14 @@ if(pullRequest.length <= 0 || !pullRequest){
         field: "displayName",
         description: "This column shows user display name",
         headerName: "Display Name",
-        flex: 0.5,
+        flex: 0.75,
       },
     
     {
       field: "teamName",
       description: "This column shows user team name",
       headerName: "Team Name",
-      flex: 0.5,
+      flex: 0.35,
     },
     {
       field: "emailAddress",
@@ -197,7 +203,7 @@ if(pullRequest.length <= 0 || !pullRequest){
       headerName: "E-mail",
       flex: 1,
     },
-    /*{
+    {
       field: "userPullRequest",
       description: "This column shows total pull request of user",
       headerName: "Pull Request",
@@ -208,7 +214,7 @@ if(pullRequest.length <= 0 || !pullRequest){
       description: "This column shows total reviewing of user",
       headerName: "Reviewing",
       flex: 0.35,
-    },*/
+    },
     {
       field: "info",
       description: "This column clickable for more information of user",
@@ -248,7 +254,7 @@ if(pullRequest.length <= 0 || !pullRequest){
   ];
 
 
-  const rows = data.map((pr) => {
+  const rows = data.map((pr, index) => {
     return createData(
       pr,
       pr.user.id,
@@ -256,7 +262,9 @@ if(pullRequest.length <= 0 || !pullRequest){
       pr.user.displayName,
       pr.teamName,
       pr.user.emailAddress,
-      
+      pr.user.active == true ? activeUserPullRequests[index].length : inactiveUserPullRequests[index].length,
+      pr.user.active == true ? activeUserReviewing[index].length : inactiveUserReviewing[index].length,
+
       );
   });
 
@@ -298,7 +306,6 @@ if(pullRequest.length <= 0 || !pullRequest){
     const IDs = selectedUser.map((element) => {
       return element.user.name
     })
-    console.log("IDLER: ", IDs)
     const uniqueIDs = Array.from(new Set(IDs));
     const sendData = async () => {
       const dataResponse = await axios({
@@ -308,8 +315,6 @@ if(pullRequest.length <= 0 || !pullRequest){
         url: `http://localhost:8989/api/v1/update-data/${teamText}`,
         data: uniqueIDs,
       })
-      console.log(dataResponse.data)
-
     }
     sendData();
    }
@@ -381,7 +386,7 @@ if(pullRequest.length <= 0 || !pullRequest){
           </Button>
           </DialogContentText>
           <DialogContentText>
-            To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">reviewing</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{Object.keys(currentData).length <=0 ? "Unknown" : currentData.user.name }</Typography> user click more button.
+            To check all <Typography variant="h6" sx={{display:"inline"}} color="initial">reviewing</Typography> for <Typography variant="h5" sx={{display:"inline"}} color="initial">{Object.keys(currentData).length <=0 ? "Unknown" : currentData.user.name}</Typography> user click more button.
             <Button disabled={userReviewer.length <=0 ? true : false} onClick={handleMoreReviewers}>
             More
           </Button>
@@ -529,25 +534,3 @@ if(pullRequest.length <= 0 || !pullRequest){
 
 export default AuthorPage;
 
-
-/*
-useEffect(() => {
-  console.log("UseEffect çalıştı")
-  console.log(updateData)
-  if(updateData.length > 0 && updateDatabase){
-    const sendData = async () => {
-      const dataResponse = await axios.put("http://localhost:8989/api/v1/set-data", updateData)
-      
-      console.log("Update result", dataResponse)
-      setUpdateData({});
-      setUpdateDatabase(false)
-
-    }
-    sendData();
-  }
-  else{
-    console.log("HATA")
-    setUpdateDatabase(false)
-  }
-}, [updateDatabase])
-*/

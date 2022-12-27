@@ -27,7 +27,8 @@ const MainRoutes = {
         {
             path: 'authors',
             element: <AuthorPage />
-        }
+        },
+    
     ]
 };
 

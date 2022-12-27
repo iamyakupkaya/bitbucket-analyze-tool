@@ -1,10 +1,9 @@
 // assets
 import HomeIcon from '@mui/icons-material/Home';
 import ApiIcon from '@mui/icons-material/Api';
-import ContactsIcon from '@mui/icons-material/Contacts';
-import Diversity2Icon from '@mui/icons-material/Diversity2';
-// constant
-// ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
+import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';// ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
 const other = {
     id: 'sample-docs-roadmap',
@@ -20,7 +19,7 @@ const other = {
         },
         {
             id: 'pull-requests',
-            title: 'Pull Request',
+            title: 'Pull Requests',
             type: 'item',
             url: '/user/pull-requests',
             icon: ApiIcon,
@@ -31,9 +30,10 @@ const other = {
             title: 'Authors',
             type: 'item',
             url: '/user/authors',
-            icon: ContactsIcon,
+            icon: SwitchAccountIcon,
             breadcrumbs: false
-        }
+        },
+        
 
     ]
 };

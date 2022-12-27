@@ -1,26 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 
-const splitUsers=(arr)=>{
+const splitAuthors=(arr)=>{
   const mySet1 = new Set(); 
   for (let index = 0; index < arr.length; index++) {
     mySet1.add(arr[index].values.author.user.name)
+    for(let j =0; j< arr[index].values.reviewers.length; j++){
+      mySet1.add(arr[index].values.reviewers[j].user.name)
+
+    }
     
   }
+  
   const userNames = [...mySet1]
+  console.log("userNames: ",userNames)
   return userNames;
 }
 
 const getAllUsers=(userNameArr, allUsers)=>{
-  const user = allUsers.map((element) =>{
+  let userAuthor = allUsers.map((element) =>{
     return element.values.author
   })
+  let userRevi = [].concat(...allUsers.map(ap => ap.values.reviewers))
+  const allUserInfo = userRevi.concat(userAuthor)
   const newArr = userNameArr.map((name)=> {
-    return user.find((element)=> {
+    return allUserInfo.find((element)=> {
         return element.user.name === name;
     })
   })
-
+  console.log("new arr ",newArr)
   return newArr;
 }
 
@@ -85,7 +93,25 @@ const getInactiveUsers = (allusers) => {
   })
 }
 
+const getUserPullRequest = (pullRequest, users)=>{
+  const arr = users.map((pr) => {
+    return pullRequest.filter((filteredPull) => {
+      return filteredPull.values.author.user.name == pr.user.name
+  })
+  })
+  return arr;
+}
 
+const getUserReviewing = (pullRequest, users)=>{
+  const arr = users.map((pr) => {
+    return pullRequest.filter((element)=>{
+      return (element.values.reviewers.find((insideMap) => {
+         return insideMap.user.name == pr.user.name
+      }))
+ })
+  })
+  return arr;
+}
 
 
 const initialState = {
@@ -99,6 +125,12 @@ const initialState = {
   declinedPR:[],
   mostReviewingUser:[],
   collections:[],
+  activeUserPullRequest:[],
+  inactiveUserPullRequest:[],
+  activeUserReviewing:[],
+  inactiveUserReviewing:[],
+  reviewersName:[],
+  reviewerUsers:[],
   lastPage:"home"
 };
 
@@ -111,7 +143,7 @@ const PullRequestSlice = createSlice({
     getPullRequests: (state, action) => {
       console.log("gelen data: ", action.payload);
       state.pullRequest = action.payload;
-      state.userNames = splitUsers(action.payload);
+      state.userNames = splitAuthors(action.payload);
       state.allUser = getAllUsers(state.userNames, action.payload)
       state.activeUser = getActiveUsers(state.allUser)
       state.inactiveUser = getInactiveUsers(state.allUser)
@@ -120,7 +152,10 @@ const PullRequestSlice = createSlice({
       state.declinedPR = getDeclinedPR(state.pullRequest)
       state.mostReviewingUser = getMostReviewers(state.userNames, state.pullRequest)
       state.collections = getCollections(state.pullRequest);
-
+      state.activeUserPullRequest = getUserPullRequest(action.payload, state.activeUser)
+      state.inactiveUserPullRequest = getUserPullRequest(action.payload, state.inactiveUser)
+      state.activeUserReviewing = getUserReviewing(action.payload, state.activeUser)
+      state.inactiveUserReviewing = getUserReviewing(action.payload, state.inactiveUser)
 
     },
     getLastPage:(state, action) =>{
@@ -130,4 +165,4 @@ const PullRequestSlice = createSlice({
 });
 
 export const PullRequestReducer =  PullRequestSlice.reducer;
-export const { getPullRequests, getLastPage } = PullRequestSlice.actions;
+export const { getPullRequests, getLastPage, getReviewers } = PullRequestSlice.actions;

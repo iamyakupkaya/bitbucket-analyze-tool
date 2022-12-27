@@ -1,8 +1,5 @@
 package com.orion.bitbucket.entity.pull_request.common;
-
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
-
 // this common class is used in values/author/user and values/reviewers/user
 public class PRUserEntity {
     @Field("id")

@@ -10,10 +10,8 @@ public abstract class CommonBaseEntity {
     private boolean isLastPage=false;
     private int start=-1;
     private int nextPageStart=-1;
-
     public CommonBaseEntity() {
     }
-
     public CommonBaseEntity(int size, int limit, boolean isLastPage, int start, int nextPageStart) {
         this.size = size;
         this.limit = limit;

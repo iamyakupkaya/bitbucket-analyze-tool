@@ -235,80 +235,8 @@ const [filterInfo, setFilterInfo] = useState({
     
   }
 
-  if (showInfo) {
-    return (
-        <Dialog
-        open={open}
-        onClose={(event, reason)=> handleCloseInfo(reason)}
-        PaperComponent={PaperComponent}
-        aria-labelledby="draggable-dialog-title"
-        maxWidth={"xl"}
-        sx={{'.MuiDialog-paper::-webkit-scrollbar': {
-          display: "none"
-        }}}
-      >
-        <DialogActions style={{display:"flex", justifyContent:"flex-end", alignContent:"center"}}>
-          <Button sx={{color:"red"}} onClick={handleCloseInfo}>
-            Close
-          </Button>
-        </DialogActions>
-        <Divider sx={{mt:2, mb:2}}>
-            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Title of Pull Request"} />
-        </Divider>
-        <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
-        <ReactMarkdown>{currentData.values.title || "Unknown"}</ReactMarkdown>
-          {getJiraID(currentData.values.title).length <=0
-          ? <ReactMarkdown></ReactMarkdown>
-          :
-          getJiraID(currentData.values.title).map((ID) => {
-            return <Box key={ID}>
-              <Link target="_blank"  href={"https://jira.rbbn.com/browse/"+ID} underline="hover">
-            {"https://jira.rbbn.com/browse/"+ID}
-            </Link>
-            </Box>
-          })}
-        </DialogTitle>
-        <Divider sx={{mt:2, mb:2}}>
-            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Description of Pull Request"} />
-          </Divider>
-        <Box sx={{display:"flex", flexDirection:"column"}}>
-        <DialogContent sx={{wordWrap: "break-word"}}>
-          {getJiraID(currentData.values.description).length <=0
-          ? <ReactMarkdown></ReactMarkdown>
-          :
-          getJiraID(currentData.values.description).map((ID) => {
-            return <Box key={ID}>
-              <Link target="_blank"  href={"https://jira.rbbn.com/browse/"+ID} underline="hover">
-            {"https://jira.rbbn.com/browse/"+ID}
-            </Link>
-            </Box>
-          })}
-        <ReactMarkdown>{currentData.values.description || "Unknown"}</ReactMarkdown>
-        </DialogContent>
-        <DialogContent sx={{wordWrap: "break-word"}}>
-        <Divider sx={{mt:2, mb:2}}>
-            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Reviewers of this Pull Request"} />
-          </Divider>
-        {currentData.values.reviewers.map((mappingReviewer) => {
-            return (<DialogContent key={mappingReviewer.user.id} sx={{wordWrap: "break-word"}}> 
-                      <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.displayName}</Typography>
-                      <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.emailAddress}</Typography>
-                      <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.name}</Typography>
-
-            </DialogContent>)
-            
-        })}
-        </DialogContent>
-        </Box>
-        <DialogActions style={{display:"flex", justifyContent:"flex-start", alignContent:"center"}}>
-          <Button sx={{color:"red"}} onClick={handleCloseInfo}>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-
+  
+console.log("Gelen current data: ", currentData)
 
   return (
     <div>
@@ -381,9 +309,79 @@ const [filterInfo, setFilterInfo] = useState({
         ></DataGrid>
       </Box>                  
         </Box>
+        
       </Dialog>
       
+      <Dialog
+        keepMounted
+        open={showInfo}
+        onClose={(event, reason)=> handleCloseInfo(reason)}
+        PaperComponent={PaperComponent}
+        aria-labelledby="draggable-dialog-title"
+        maxWidth={"xl"}
+        sx={{'.MuiDialog-paper::-webkit-scrollbar': {
+          display: "none"
+        }}}
+      >
+        <DialogActions style={{display:"flex", justifyContent:"flex-end", alignContent:"center"}}>
+          <Button sx={{color:"red"}} onClick={handleCloseInfo}>
+            Close
+          </Button>
+        </DialogActions>
+        <Divider sx={{mt:2, mb:2}}>
+            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Title of Pull Request"} />
+        </Divider>
+        <DialogTitle style={{ cursor: 'move', fontWeight:"bold", fontSize:"20px" }} id="draggable-dialog-title">
+        <ReactMarkdown>{Object.keys(currentData).length <=0 ? "Unknown" : currentData.values.title}</ReactMarkdown>
+          {getJiraID(Object.keys(currentData).length <=0 ? "Unknown" : currentData.values.title).length <=0
+          ? <ReactMarkdown></ReactMarkdown>
+          :
+          getJiraID(Object.keys(currentData).length <=0 ? "Unknown" : currentData.values.title).map((ID) => {
+            return <Box key={ID}>
+              <Link target="_blank"  href={"https://jira.rbbn.com/browse/"+ID} underline="hover">
+            {"https://jira.rbbn.com/browse/"+ID}
+            </Link>
+            </Box>
+          })}
+        </DialogTitle>
+        <Divider sx={{mt:2, mb:2}}>
+            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Description of Pull Request"} />
+          </Divider>
+        <Box sx={{display:"flex", flexDirection:"column"}}>
+        <DialogContent sx={{wordWrap: "break-word"}}>
+          {getJiraID(Object.keys(currentData).length <=0 ? "Unknown" : currentData.values.description).length <=0
+          ? <ReactMarkdown></ReactMarkdown>
+          :
+          getJiraID(Object.keys(currentData).length <=0 ? "Unknown" : currentData.values.description).map((ID) => {
+            return <Box key={ID}>
+              <Link target="_blank"  href={"https://jira.rbbn.com/browse/"+ID} underline="hover">
+            {"https://jira.rbbn.com/browse/"+ID}
+            </Link>
+            </Box>
+          })}
+        <ReactMarkdown>{Object.keys(currentData).length <=0 ? "Unknown" : currentData.values.description}</ReactMarkdown>
+        </DialogContent>
+        <DialogContent sx={{wordWrap: "break-word"}}>
+        <Divider sx={{mt:2, mb:2}}>
+            <Chip sx={{ backgroundColor:"#2196f3", color:"white", fontWeight:"bold"}} label={"Reviewers of this Pull Request"} />
+          </Divider>
+        {Object.keys(currentData).length <=0 ? "Unkown" : currentData.values.reviewers.map((mappingReviewer) => {
+            return (<DialogContent key={mappingReviewer.user.id} sx={{wordWrap: "break-word"}}> 
+                      <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.displayName}</Typography>
+                      <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.emailAddress}</Typography>
+                      <Typography component={'p'} variant={'body2'} style={{ cursor: 'move', fontSize:"15px", color:"grey", fontWeight:"normal",  }}>{mappingReviewer.user.name}</Typography>
 
+            </DialogContent>)
+            
+        })}
+        </DialogContent>
+        </Box>
+        <DialogActions style={{display:"flex", justifyContent:"flex-start", alignContent:"center"}}>
+          <Button sx={{color:"red"}} onClick={handleCloseInfo}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

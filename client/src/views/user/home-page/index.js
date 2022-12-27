@@ -31,6 +31,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const HomePage = () => {
+  const totalReviewers = useSelector(state => state.data.reviewerUsers);
+
     const dispatch = useDispatch();
     const totalUsers = useSelector(state => state.data.allUser)
     const totalPullRequests = useSelector(state => state.data.pullRequest)
@@ -56,7 +58,7 @@ const HomePage = () => {
     const [repoMostReviewingUser, setRepoMostReviewingUser] = useState(mostReviewingUser)
     
     const el = document.getElementById('chart_div');
-    console.log("gelen el: ", el)
+    console.log("gelen el: ", totalReviewers)
     
 useEffect(() => {
   dispatch(getLastPage("home")) 
