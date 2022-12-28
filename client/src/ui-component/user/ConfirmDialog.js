@@ -22,7 +22,7 @@ const ConfirmDialog = () => {
       return navigate("/."); }
     const handleCancel = () => { alert('Please click YES to load data!'); }
 useEffect(() => {
-  dispatch({ type: SET_MENU, opened: false });
+  dispatch({ type: SET_MENU, opened: true });
 
 
 }, [])

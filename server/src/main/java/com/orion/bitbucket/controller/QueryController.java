@@ -33,16 +33,15 @@ public class QueryController {
     @Autowired
     private QueryServiceImpl queryService;
 
+    @Autowired
+    private PageController pageController;
+
     // METHODS
     @CrossOrigin
     @GetMapping(path = ControllerHelper.URL_GET_DATA_FROM_DB) // url --> /get-data
     public ResponseEntity<List<PREntity>> getAllPullRequests(@RequestParam(name = "query", required = false, defaultValue = "") String query, @RequestParam(name = "condition", required = false, defaultValue = "") String condition) {
-        Instant start = Instant.now();
         List<PREntity> resultAPI = new ArrayList<PREntity>();
         resultAPI=queryService.getAllPullRequests(query, condition, DatabaseHelper.ALL_COLLECTIONS_ARRAY);
-        Instant finish = Instant.now();
-        Duration differenceTime = Duration.between(start, finish);
-        System.out.println("Total duration of finding of user prs is: " + differenceTime.toMillis() + " millis.!");
         return ResponseEntity.status(HttpStatus.OK).body(resultAPI);
     }
     @CrossOrigin

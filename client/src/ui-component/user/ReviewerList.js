@@ -111,14 +111,14 @@ function createData(
     name,
     displayName,
     emailAddress,
+    teamName,
     state,
     slug,
     createdDate,
     updatedDate,
     title,
-    description,
   ) {
-    return { pr, id, name, displayName, emailAddress,  state, slug, createdDate, updatedDate, title, description };
+    return { pr, id, name, displayName, emailAddress, teamName, state, slug, createdDate, updatedDate, title };
   }
 
   function PaperComponent(props) {
@@ -160,13 +160,12 @@ const [filterInfo, setFilterInfo] = useState({
       pr.values.author.user.name,
       pr.values.author.user.displayName,
       pr.values.author.user.emailAddress,
+      pr.values.author.teamName,
       pr.values.state,
       pr.values.fromRef.repository.slug,
       new Date(pr.values.createdDate).toISOString().split("T")[0],
       new Date(pr.values.updatedDate).toISOString().split("T")[0],
       pr.values.title,
-      pr.values.description,
-
 
     );
   });
@@ -214,6 +213,12 @@ const [filterInfo, setFilterInfo] = useState({
         field: "emailAddress",
         headerName: "E-mail Address",
         description: "This column shows the e-mail address of the pull request owner",
+        flex: 0.75,
+      },
+      {
+        field: "teamName",
+        headerName: "Team Name",
+        description: "This column shows the team name of the pull request owner",
         flex: 0.5,
       },
       {
@@ -251,12 +256,6 @@ const [filterInfo, setFilterInfo] = useState({
       description: "This column shows title of the pull request",
       flex: 1,
     },
-    {
-        field: "description",
-        description: "This column shows description of the pull request",
-        headerName: "Description",
-        flex: 2,
-      },
     
 
  

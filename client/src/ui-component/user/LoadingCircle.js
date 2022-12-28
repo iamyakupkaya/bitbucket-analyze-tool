@@ -2,9 +2,11 @@ import React from 'react'
 import { RotatingLines } from "react-loader-spinner";
 import Box from "@mui/material/Box";
 import Typewriter from 'typewriter-effect';
+import {useSelector } from 'react-redux'
 
 
 const LoadingCircle = () => {
+  const loadingText = useSelector(state => state.data.loadingText);
 
   
 
@@ -35,8 +37,9 @@ const LoadingCircle = () => {
     autoStart:true,
     loop:true,
     delay:50,
+    color:"red",
     cursor:"<strong>|</strong>",
-    strings:["<strong>Please wait, data is loading...</strong>"]
+    strings:[`<strong><span style=${loadingText.includes("database") ? "color:red;" :"color:orange;"}>&#9888;</span> ${loadingText}</strong>`]
   }}
 />
   </Box>

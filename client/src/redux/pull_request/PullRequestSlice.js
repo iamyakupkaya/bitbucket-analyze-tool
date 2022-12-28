@@ -131,7 +131,8 @@ const initialState = {
   inactiveUserReviewing:[],
   reviewersName:[],
   reviewerUsers:[],
-  lastPage:"home"
+  lastPage:"home",
+  loadingText:"Please wait, data is loading..."
 };
 
 
@@ -160,9 +161,12 @@ const PullRequestSlice = createSlice({
     },
     getLastPage:(state, action) =>{
       state.lastPage = action.payload;
+    },
+    setLoadingText:(state, action) => {
+      state.loadingText = action.payload;
     }
   },
 });
 
 export const PullRequestReducer =  PullRequestSlice.reducer;
-export const { getPullRequests, getLastPage, getReviewers } = PullRequestSlice.actions;
+export const { getPullRequests, getLastPage, getReviewers, setLoadingText } = PullRequestSlice.actions;

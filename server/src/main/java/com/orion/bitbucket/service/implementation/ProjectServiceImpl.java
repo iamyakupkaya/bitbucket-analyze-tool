@@ -10,7 +10,7 @@ import com.orion.bitbucket.entity.project.ProjectValuesEntity;
 import com.orion.bitbucket.helper.EndPointsHelper;
 import com.orion.bitbucket.helper.LogHelper;
 import com.orion.bitbucket.repository.ProjectRepository;
-import com.orion.bitbucket.service.IProjectsService;
+import com.orion.bitbucket.service.IProjectService;
 import com.orion.bitbucket.util.JsonResponseServiceImpl;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @Data
 @Log4j2
 @NoArgsConstructor
-public class ProjectsServiceImpl implements IProjectsService {
+public class ProjectServiceImpl implements IProjectService {
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired

@@ -2,10 +2,9 @@ package com.orion.bitbucket.service.implementation;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
+import com.mongodb.WriteResult;
 import com.mongodb.client.*;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.*;
 import com.orion.bitbucket.config.EntityConfig;
 import com.orion.bitbucket.config.UtilConfig;
 import com.orion.bitbucket.entity.pull_request.PRAuthorEntity;
@@ -22,6 +21,7 @@ import lombok.extern.log4j.Log4j2;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -29,6 +29,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.json.JSONObject;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -135,21 +137,19 @@ public class QueryServiceImpl implements IQueryService {
                 MongoCollection<Document> collection = database.getCollection(collectionName);
                 for (int i = 0; i < userName.length; i++) {
                     // ---------- authors-------------
-                   /* Bson query = eq(QueryHelper.VALUES_AUTHOR_USER_NAME, userName[i]);
+                    Bson query = Filters.eq(QueryHelper.VALUES_AUTHOR_USER_NAME, userName[i]);
                     Bson updates = Updates.set(QueryHelper.VALUES_AUTHOR_TEAMNAME, teamNameText);
-                    collection.updateMany(query, updates); */
+                    collection.updateMany(query, updates);
                     //------ reviewers-------------
-                    Bson query1 = elemMatch("values.reviewers", eq("user.name", userName[i]));
-                    BasicDBObject query12 = new BasicDBObject("values.reviewers.user.name", userName[i]);
-
-                    Bson update1 = Updates.set("values.reviewers.$[ele].teamName", teamNameText);
-                    collection.updateMany(query12, update1);
-
+                    Bson filter = Filters.eq(QueryHelper.VALUES_REVIEWERS_USER_NAME, userName[i]);
+                    Bson update = Updates.set(QueryHelper.VALUES_REVIEWERS_USER_TEAMNAME, teamNameText);
+                    collection.updateMany(filter, update);
 
                 }
 
 
             }
+
             resultText = "Team name updates are successful";
 
 

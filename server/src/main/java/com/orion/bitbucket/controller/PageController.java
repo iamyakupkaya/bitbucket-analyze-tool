@@ -2,7 +2,7 @@ package com.orion.bitbucket.controller;
 import com.orion.bitbucket.config.EntityConfig;
 import com.orion.bitbucket.helper.*;
 import com.orion.bitbucket.service.IPullRequestService;
-import com.orion.bitbucket.service.IProjectsService;
+import com.orion.bitbucket.service.IProjectService;
 import com.orion.bitbucket.service.implementation.QueryServiceImpl;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.Duration;
-import java.time.Instant;
 
 @RestController
 @Data
@@ -24,7 +22,7 @@ public class PageController {
     @Autowired
     private QueryServiceImpl dbQueryService;
     @Autowired
-    private IProjectsService projectsService;
+    private IProjectService projectsService;
 
     @Autowired
     private IPullRequestService pullRequestService;
@@ -35,6 +33,7 @@ public class PageController {
     // GETs METHODs
 
     // this method get all data from API and save them into MongoDB
+    @CrossOrigin
     @GetMapping(ControllerHelper.URL_GET_All_DATA_FROM_API) // url --> /setup
     public ResponseEntity<String> getAllData() {
         try {

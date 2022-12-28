@@ -259,9 +259,10 @@ console.log("Gelen current data: ", currentData)
 <Avatar {...stringAvatar(selectedPR[0].values.author.user.displayName)} />
 </StyledBadge>
           <Typography sx={{ ml: -1, flex: 1 }} variant="h5" component="div">
-            {selectedPR[0].values.author.user.displayName}
+            {selectedPR[0].values.author.user.displayName} || {selectedPR[0].values.author.teamName}
             <br/>
             {selectedPR[0].values.author.user.emailAddress}
+
             </Typography>
           </Stack>
             

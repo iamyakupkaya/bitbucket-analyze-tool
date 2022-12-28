@@ -197,7 +197,7 @@ export default function FullScreenDialog(props) {
           </Box>
           <Divider textAlign="left" sx={{fontWeight:"bold", mt:2, mb:2}}>REVIEWERS</Divider>
           </Box>
-        <Grid container spacing={3}>
+        <Grid sx={{mb:2}} container spacing={3}>
         {selectedPR.values.reviewers.map((reviewer, index, arr) => {
           if(arr.length<3){
             return(
@@ -211,8 +211,6 @@ export default function FullScreenDialog(props) {
           return(
             <Grid key={reviewer.user.id} sx={{display:"flex", justifyContent:"center", alignItems:"center"}} item xs={12} sm={6} md={6} lg={4} xl={3}>
             <ReviewerCard data={reviewer}/>
-            <br></br>
-
             </Grid> 
 
           )

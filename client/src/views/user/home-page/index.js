@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import React, {useState, useEffect } from 'react';
 import { Chart } from "react-google-charts";
 import { useSelector, useDispatch } from 'react-redux';
+
 import UserProfile from '../../../ui-component/user/UserProfile';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -32,7 +33,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const HomePage = () => {
   const totalReviewers = useSelector(state => state.data.reviewerUsers);
-
     const dispatch = useDispatch();
     const totalUsers = useSelector(state => state.data.allUser)
     const totalPullRequests = useSelector(state => state.data.pullRequest)
@@ -63,6 +63,8 @@ const HomePage = () => {
 useEffect(() => {
   dispatch(getLastPage("home")) 
 }, [])
+
+
 
 const getMostReviewer = (id)=>{
   console.log("Gelen id ", id)
