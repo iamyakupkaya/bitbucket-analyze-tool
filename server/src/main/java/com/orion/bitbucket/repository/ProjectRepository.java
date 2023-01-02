@@ -7,10 +7,4 @@ import org.springframework.stereotype.Repository;
 // @Repository is not necessary because it extented MongoRepository so MongoRepository already has that @annototaion
 @Repository
 public interface ProjectRepository extends MongoRepository<ProjectEntity, String> {
-
-
-    // custom methods..
-    // aşağıdaki şekilde finByBlaBla diyerek aramak istediğimiz değişken türüne göre metod tanımlayabiliriz.
-   // List<AuthorEntity> findBySurname(String surname);
-
 }

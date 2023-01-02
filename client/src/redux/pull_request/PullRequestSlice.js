@@ -13,8 +13,17 @@ const splitAuthors=(arr)=>{
   }
   
   const userNames = [...mySet1]
-  console.log("userNames: ",userNames)
   return userNames;
+}
+
+const getAllProjects = (prs) => {
+  const mySet1 = new Set(); 
+  for (let index = 0; index < prs.length; index++) {
+    mySet1.add(prs[index].values.fromRef.repository.project.key)
+  }
+  
+  const projectsNames = [...mySet1]
+  return projectsNames;
 }
 
 const getAllUsers=(userNameArr, allUsers)=>{
@@ -28,7 +37,6 @@ const getAllUsers=(userNameArr, allUsers)=>{
         return element.user.name === name;
     })
   })
-  console.log("new arr ",newArr)
   return newArr;
 }
 
@@ -116,6 +124,7 @@ const getUserReviewing = (pullRequest, users)=>{
 
 const initialState = {
   pullRequest:[],
+  projects:[],
   activeUser:[],
   inactiveUser:[],
   userNames:[],
@@ -142,10 +151,10 @@ const PullRequestSlice = createSlice({
   initialState, //this is initial state
   reducers: {
     getPullRequests: (state, action) => {
-      console.log("gelen data: ", action.payload);
       state.pullRequest = action.payload;
-      state.userNames = splitAuthors(action.payload);
-      state.allUser = getAllUsers(state.userNames, action.payload)
+      state.projects = getAllProjects(state.pullRequest);
+      state.userNames = splitAuthors(state.pullRequest);
+      state.allUser = getAllUsers(state.userNames, state.pullRequest)
       state.activeUser = getActiveUsers(state.allUser)
       state.inactiveUser = getInactiveUsers(state.allUser)
       state.openPR = getOpenPR(state.pullRequest)
@@ -153,10 +162,10 @@ const PullRequestSlice = createSlice({
       state.declinedPR = getDeclinedPR(state.pullRequest)
       state.mostReviewingUser = getMostReviewers(state.userNames, state.pullRequest)
       state.collections = getCollections(state.pullRequest);
-      state.activeUserPullRequest = getUserPullRequest(action.payload, state.activeUser)
-      state.inactiveUserPullRequest = getUserPullRequest(action.payload, state.inactiveUser)
-      state.activeUserReviewing = getUserReviewing(action.payload, state.activeUser)
-      state.inactiveUserReviewing = getUserReviewing(action.payload, state.inactiveUser)
+      state.activeUserPullRequest = getUserPullRequest(state.pullRequest, state.activeUser)
+      state.inactiveUserPullRequest = getUserPullRequest(state.pullRequest, state.inactiveUser)
+      state.activeUserReviewing = getUserReviewing(state.pullRequest, state.activeUser)
+      state.inactiveUserReviewing = getUserReviewing(state.pullRequest, state.inactiveUser)
 
     },
     getLastPage:(state, action) =>{

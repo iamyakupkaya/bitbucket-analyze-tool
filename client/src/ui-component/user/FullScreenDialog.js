@@ -105,7 +105,6 @@ export default function FullScreenDialog(props) {
   const handleClose = () => {
     setOpen(false)
   };
-  console.log("SELECTED", selectedPR)
 
   return (
     <div>

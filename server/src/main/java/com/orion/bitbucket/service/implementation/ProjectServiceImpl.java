@@ -9,6 +9,7 @@ import com.orion.bitbucket.entity.project.ProjectEntity;
 import com.orion.bitbucket.entity.project.ProjectValuesEntity;
 import com.orion.bitbucket.helper.EndPointsHelper;
 import com.orion.bitbucket.helper.LogHelper;
+import com.orion.bitbucket.helper.MessageHelper;
 import com.orion.bitbucket.repository.ProjectRepository;
 import com.orion.bitbucket.service.IProjectService;
 import com.orion.bitbucket.util.JsonResponseServiceImpl;
@@ -40,7 +41,7 @@ public class ProjectServiceImpl implements IProjectService {
         boolean isLastPage = false;
         try {
             if (LogHelper.IS_BASE_LOGGING) {
-                log.info("getProjectsFromAPI method in ProjectsServiceImpl class was invoked.");
+                log.info(MessageHelper.PROJECT_SERVICE_IMPL_INVOKED_INFO_MESSAGE);
             }
             ProjectEntity entity = entityConfig.getProjectsEntity();
             Gson gson = utilConfig.getGson();
@@ -78,13 +79,13 @@ public class ProjectServiceImpl implements IProjectService {
 
         } catch (Exception err) {
             if (LogHelper.IS_BASE_LOGGING) {
-                log.error("There is an error in getProjectsFromAPI method in ProjectsServiceImpl class. Error: {0}", err);
+                log.error( MessageHelper.PROJECT_SERVICE_IMPL_ERROR_MESSAGE, err);
 
             }
             return false;
         } finally {
             if (LogHelper.IS_BASE_LOGGING) {
-                log.info("getProjectsFromAPI method in ProjectsServiceImpl class executing has finished");
+                log.info(MessageHelper.PROJECT_SERVICE_IMPL_FINALLY_INFO_MESSAGE);
 
             }
         }

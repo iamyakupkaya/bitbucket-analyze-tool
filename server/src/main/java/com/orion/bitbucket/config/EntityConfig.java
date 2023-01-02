@@ -14,12 +14,17 @@ public class EntityConfig {
         PREntity entity = new PREntity();
         return entity;
     }
-
-
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public PREntity getPrototypePullRequestEntity(){
         PREntity entity = new PREntity();
+        return entity;
+    }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public ProjectEntity getPrototypeProjecttEntity(){
+        ProjectEntity entity = new ProjectEntity();
         return entity;
     }
 

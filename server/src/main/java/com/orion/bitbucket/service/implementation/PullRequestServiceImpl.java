@@ -7,6 +7,7 @@ import com.orion.bitbucket.entity.pull_request.PREntity;
 import com.orion.bitbucket.entity.pull_request.PRValuesEntity;
 import com.orion.bitbucket.helper.EndPointsHelper;
 import com.orion.bitbucket.helper.LogHelper;
+import com.orion.bitbucket.helper.MessageHelper;
 import com.orion.bitbucket.repository.PullRequestRepository;
 import com.orion.bitbucket.service.IPullRequestService;
 import com.orion.bitbucket.util.CollectionNameHolder;
@@ -24,13 +25,10 @@ import org.springframework.stereotype.Service;
 @Data // setter, getter, toString, constructorWithArgs, HashCode.. together
 @NoArgsConstructor // default constructor
 public class PullRequestServiceImpl implements IPullRequestService {
-
     @Autowired
     private UtilConfig utilConfig;
-
     @Autowired
     private PullRequestRepository pullRequestRepository;
-
     @Autowired
     private JsonResponseServiceImpl response;
 
@@ -45,7 +43,7 @@ public class PullRequestServiceImpl implements IPullRequestService {
         try {
             Gson gson = utilConfig.getGson();
             if (LogHelper.IS_BASE_LOGGING){
-                log.info("getPullRequestFromAPI method in PullRequestServiseImpl class was invoked.");
+                log.info(MessageHelper.PULL_REQUEST_SERVICE_IMPL_INVOKED_INFO_MESSAGE);
             }
             CollectionNameHolder.set(collectionName);
             while (!isLastPage) {
@@ -82,14 +80,14 @@ public class PullRequestServiceImpl implements IPullRequestService {
 
         } catch (Exception err) {
             if (LogHelper.IS_BASE_LOGGING) {
-                log.warn("There is an error in getPullRequestFromAPI method in PullRequestServiseImpl class. Error: {}", err);
+                log.warn(MessageHelper.PULL_REQUEST_SERVICE_IMPL_ERROR_MESSAGE, err);
             }
             return false;
         }
         finally {
             CollectionNameHolder.reset();
             if (LogHelper.IS_BASE_LOGGING){
-                log.info("getPullRequestFromAPI method in PullRequestServiseImpl class executing has finished");
+                log.info(MessageHelper.PULL_REQUEST_SERVICE_IMPL_FINALLY_INFO_MESSAGE);
 
             }
         }

@@ -146,7 +146,8 @@ const ReviewerCard = ({data}) => {
                                   sx={{
                                       py: 0,
                                       mt: 0.45,
-                                      mb: 0.45
+                                      mb: 0.45,
+                                      zIndex:1000,
                                   }}
                                   primary={<Typography variant="h4">{data.user.displayName}</Typography>}
                                   secondary={

@@ -58,7 +58,6 @@ const HomePage = () => {
     const [repoMostReviewingUser, setRepoMostReviewingUser] = useState(mostReviewingUser)
     
     const el = document.getElementById('chart_div');
-    console.log("gelen el: ", totalReviewers)
     
 useEffect(() => {
   dispatch(getLastPage("home")) 
@@ -67,13 +66,11 @@ useEffect(() => {
 
 
 const getMostReviewer = (id)=>{
-  console.log("Gelen id ", id)
   let newID = id.startsWith("bar") ? id : "0" 
   let index = parseInt(newID.slice(-1));
   const myarr = totalUsers.filter((author)=> {
     return author.user.name == repoMostReviewingUser[index].name
   })
-  console.log("My arr", myarr)
   return myarr;
 }
 
@@ -301,7 +298,6 @@ if(totalPullRequests.length <= 0 || !totalPullRequests){
     eventName: "ready",
     callback: ({ chartWrapper, google }) => {
       const chart = chartWrapper.getChart();
-      console.log("gelen chart ", chart)
       google.visualization.events.addListener(chart, "click", e => {
         setOpen(true)
       });

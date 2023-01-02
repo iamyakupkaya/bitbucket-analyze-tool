@@ -29,6 +29,7 @@ import InputBase from '@mui/material/InputBase';
 import axios from "axios";
 import { getPullRequests } from "../../../redux/pull_request/PullRequestSlice";
 import Slide from '@mui/material/Slide';
+import { element } from "prop-types";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -38,21 +39,7 @@ const TransitionSubmit =React.forwardRef(function Transition(props, ref) {
   return <Slide direction={props.in == true ? "left" : "right"}  ref={ref} {...props} />;
 });
 
-// Helper functions
-function createData(
-  pr,
-  id,
-  name,
-  displayName,
-  teamName,
-  emailAddress,
-  userPullRequest,
-  userReviewing,
 
- 
-) {
-  return { pr, id, name, displayName,  teamName, emailAddress, userPullRequest, userReviewing };
-}
 
 function PaperComponent(props) {
     return (
@@ -104,14 +91,93 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 
 const teamNames = ["Unknown", "NRD12", "NRD1210", "NRD1211", "NRD1212", "NRD1213", "NRD1214", "NRD1221", "NRD1222"];
 
+const getAuthorOpen = (arr) =>{
+  return arr.filter((element)=> element.values.state=="OPEN")
+}
+const getAuthorDeclined = (arr) =>{
+  return arr.filter((element)=> element.values.state=="DECLINED")
+}
+const getAuthorMerged  = (arr) =>{
+  const newArr=  arr.filter((element)=> element.values.state=="MERGED")
+  return newArr;
+}
+
+const getReviewersStatus = (arr, name, searchText) =>{
+  console.log("name: ", name)
+  const findReviewer = arr.filter((element)=> {
+    return element.values.reviewers.find((foundReviewer)=> foundReviewer.status == searchText && foundReviewer.user.name == name)
+  })
+  console.log("findReviewer: ", findReviewer)
+  return findReviewer;
+}
+const getAuthorProjects = (arr) =>{
+  const mySet1 = new Set(); 
+  for (let index = 0; index < arr.length; index++) {
+    mySet1.add(arr[index].values.fromRef.repository.project.key)
+}
+const userProjects = [...mySet1]
+return userProjects;
+}
+
+const getProjectPullRequests = (arr, projectName) => {
+return arr.filter((element) => {
+  return element.values.fromRef.repository.project.key == projectName
+})
+}
+
+const filteredProjects = (userProjects, allProjects) => {
+  const newArr =  userProjects.filter((element) => {
+    return allProjects.find((filtered) => {
+      return element == filtered.values.key
+    })
+  })
+  return newArr;
+}
+
+function createData(
+  pr,
+  id,
+  displayName,
+  teamName,
+  userPullRequest,
+  open_pr,
+  declined_pr,
+  merged_pr,
+  userReviewing,
+  open_rw,
+  declined_rw,
+  merged_rw,
+  approved_rw,
+  unapproved_rw,
+  author_projects,
+  author_projects_name,
+  ...args
+ 
+) {
+  let projectObj={};
+  for (let index = 0; index < args.length; index++) {
+    let objKey = args[index][0];
+    let objValue = args[index][1];
+    projectObj={...projectObj, [objKey]:objValue}
+  }
+  return { pr, id, displayName,  
+    teamName, userPullRequest, open_pr, 
+    declined_pr, merged_pr, userReviewing, open_rw, declined_rw, 
+    merged_rw, approved_rw, unapproved_rw, author_projects, 
+    author_projects_name, ...projectObj};
+}
+
+
 const AuthorPage = () => {
   const dispatch = useDispatch();
     const totalUsers = useSelector(state => state.data.allUser)
+    const allProjects = useSelector(state => state.project.allProjects)
     const pullRequest = useSelector(state => state.data.pullRequest)
     const activeUserPullRequests = useSelector(state => state.data.activeUserPullRequest)
     const inactiveUserPullRequests = useSelector(state => state.data.inactiveUserPullRequest)
     const activeUserReviewing = useSelector(state => state.data.activeUserReviewing)
     const inactiveUserReviewing = useSelector(state => state.data.inactiveUserReviewing)
+    const projectNames = useSelector(state => state.data.projects)
 
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
@@ -175,46 +241,107 @@ if(pullRequest.length <= 0 || !pullRequest){
 }
 
 
+
+// Helper functions
+
+
  const columns = [
 
 
     {
-      field: "name",
-      headerName: "Name",
-      description: "This column shows user nickname",
-      flex: 0.5,
-    },
-    {
         field: "displayName",
         description: "This column shows user display name",
-        headerName: "Display Name",
-        flex: 0.75,
-      },
+        headerName: "Name",
+        flex: 0.5,
+    },
     
     {
       field: "teamName",
       description: "This column shows user team name",
-      headerName: "Team Name",
-      flex: 0.35,
-    },
-    {
-      field: "emailAddress",
-      description: "This column shows user e-mail address",
-      headerName: "E-mail",
-      flex: 1,
+      headerName: "Team",
+      flex: 0.5,
     },
     {
       field: "userPullRequest",
       description: "This column shows total pull request of user",
-      headerName: "Pull Request",
-      flex: 0.35,
+      headerName: "PR",
+      flex: 0.5,
+    },
+    {
+      field: "open_pr",
+      description: "This column shows total open pull request of user",
+      headerName: "Open PR",
+      flex: 0.5,
+    },
+    {
+      field: "declined_pr",
+      description: "This column shows total declined pull request of user",
+      headerName: "Declined PR",
+      flex: 0.5,
+    },
+    {
+      field: "merged_pr",
+      description: "This column shows total merged pull request of user",
+      headerName: "Merged PR",
+      flex: 0.5,
     },
     {
       field: "userReviewing",
       description: "This column shows total reviewing of user",
       headerName: "Reviewing",
-      flex: 0.35,
+      flex: 0.5,
     },
+    {
+      field: "open_rw",
+      description: "This column shows total open reviewing of user",
+      headerName: "Open RW",
+      flex: 0.5,
+    },
+    {
+      field: "declined_rw",
+      description: "This column shows total declined reviewing of user",
+      headerName: "Declined RW",
+      flex: 0.5,
+    },
+    {
+      field: "merged_rw",
+      description: "This column shows total merged reviewing of user",
+      headerName: "Merged RW",
+      flex: 0.5,
+    },
+    {
+      field: "approved_rw",
+      description: "This column shows total Approved reviewing of user",
+      headerName: "Approved",
+      flex: 0.5,
+    },
+    {
+      field: "unapproved_rw",
+      description: "This column shows total Unapproved reviewing of user",
+      headerName: "Unapproved",
+      flex: 0.5,
+    },
+
+    {
+      field: "author_projects",
+      description: "This column shows total contributing of user's projects",
+      headerName: "Contributing Projects",
+      flex: 0.5,
+    },
+    {
+      field: "author_projects_name",
+      description: "This column shows total contributing of user's projects name",
+      headerName: "Projects Name",
+      flex: 0.5,
+    },
+    ...((filteredProjects(projectNames, allProjects)).map((element)=> {
+      return {
+          field: `${element}`,
+          description:`This column shows total user's pull request of ${element}`,
+          headerName: `${element} PR`,
+          flex: 0.5,
+
+    }})),
     {
       field: "info",
       description: "This column clickable for more information of user",
@@ -254,19 +381,47 @@ if(pullRequest.length <= 0 || !pullRequest){
   ];
 
 
+
+ 
+  
   const rows = data.map((pr, index) => {
     return createData(
       pr,
       pr.user.id,
-      pr.user.name,
       pr.user.displayName,
       pr.teamName,
-      pr.user.emailAddress,
       pr.user.active == true ? activeUserPullRequests[index].length : inactiveUserPullRequests[index].length,
+      pr.user.active == true ? getAuthorOpen(activeUserPullRequests[index]).length : getAuthorOpen(inactiveUserPullRequests[index]).length,
+      pr.user.active == true ? getAuthorDeclined(activeUserPullRequests[index]).length : getAuthorDeclined(inactiveUserPullRequests[index]).length,
+      pr.user.active == true ? getAuthorMerged(activeUserPullRequests[index]).length : getAuthorMerged(inactiveUserPullRequests[index]).length,
       pr.user.active == true ? activeUserReviewing[index].length : inactiveUserReviewing[index].length,
+      pr.user.active == true ? getAuthorOpen(activeUserReviewing[index]).length : getAuthorOpen(inactiveUserReviewing[index]).length,
+      pr.user.active == true ? getAuthorDeclined(activeUserReviewing[index]).length : getAuthorDeclined(inactiveUserReviewing[index]).length,
+      pr.user.active == true ? getAuthorMerged(activeUserReviewing[index]).length : getAuthorMerged(inactiveUserReviewing[index]).length,
+      pr.user.active == true ? getReviewersStatus(activeUserReviewing[index], pr.user.name, "APPROVED").length : getReviewersStatus(inactiveUserReviewing[index], pr.user.name, "APPROVED").length,
+      pr.user.active == true ? getReviewersStatus(activeUserReviewing[index], pr.user.name, "UNAPPROVED").length : getReviewersStatus(inactiveUserReviewing[index], pr.user.name, "UNAPPROVED").length,
+      pr.user.active == true ? getAuthorProjects(activeUserPullRequests[index]).length : getAuthorProjects(inactiveUserPullRequests[index]).length,
+      pr.user.active == true ? 
+      (getAuthorProjects(activeUserPullRequests[index]).length >0
+      ? 
+      getAuthorProjects(activeUserPullRequests[index]).join(" | ") 
+      : "Unknown" )
+      :
+      (getAuthorProjects(inactiveUserPullRequests[index]).length >0
+      ?
+      getAuthorProjects(inactiveUserPullRequests[index]).join(" | ")
+      :
+      "Unknown")
+      ,
+      ...(filteredProjects(projectNames, allProjects).map((element)=>{
+        const arr =  getProjectPullRequests(activeUserPullRequests[index], element).length
+        return [element, arr];
+      }))
 
       );
   });
+
+  
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -287,10 +442,10 @@ if(pullRequest.length <= 0 || !pullRequest){
         setButtonText(`${showActive ? "Show Inactive Users" : "Show Active Users"}`)
         setData(totalUsers.filter((filteredUser) => showActive ? filteredUser.user.active == true : filteredUser.user.active == false))
   }
+
   
  
   const handleSubmitTeam = (selectedUser)=> {
-   if(checkboxSelectedUsers.length > 0){
     let newData = (data.map((dataElement) => {
       let newTeamName = selectedUser.find((element)=> {
         return element.user.id == dataElement.user.id
@@ -317,10 +472,7 @@ if(pullRequest.length <= 0 || !pullRequest){
       })
     }
     sendData();
-   }
-   else{
 
-   }
   }
   const handleSelectClose = () =>{
     setTeamText("");

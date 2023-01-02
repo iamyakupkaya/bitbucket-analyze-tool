@@ -235,9 +235,6 @@ const [filterInfo, setFilterInfo] = useState({
     
   }
 
-  
-console.log("Gelen current data: ", currentData)
-
   return (
     <div>
       <Dialog
