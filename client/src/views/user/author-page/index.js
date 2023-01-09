@@ -101,22 +101,19 @@ const getAuthorMerged  = (arr) =>{
   const newArr=  arr.filter((element)=> element.values.state=="MERGED")
   return newArr;
 }
+const getRefsTitle  = (arr, refTitle) =>{
+
+  const newArr=  arr.filter((element) => {
+    return (element.values.fromRef.displayId).includes(refTitle)
+  })
+  return newArr;
+}
 
 const getReviewersStatus = (arr, name, searchText) =>{
-  console.log("name: ", name)
   const findReviewer = arr.filter((element)=> {
     return element.values.reviewers.find((foundReviewer)=> foundReviewer.status == searchText && foundReviewer.user.name == name)
   })
-  console.log("findReviewer: ", findReviewer)
   return findReviewer;
-}
-const getAuthorProjects = (arr) =>{
-  const mySet1 = new Set(); 
-  for (let index = 0; index < arr.length; index++) {
-    mySet1.add(arr[index].values.fromRef.repository.project.key)
-}
-const userProjects = [...mySet1]
-return userProjects;
 }
 
 const getProjectPullRequests = (arr, projectName) => {
@@ -137,20 +134,20 @@ const filteredProjects = (userProjects, allProjects) => {
 function createData(
   pr,
   id,
+  name,
   displayName,
   teamName,
   userPullRequest,
   open_pr,
   declined_pr,
   merged_pr,
+  bugfix,
+  feature,
+  issue,
+  release,
   userReviewing,
-  open_rw,
-  declined_rw,
-  merged_rw,
   approved_rw,
   unapproved_rw,
-  author_projects,
-  author_projects_name,
   ...args
  
 ) {
@@ -160,11 +157,11 @@ function createData(
     let objValue = args[index][1];
     projectObj={...projectObj, [objKey]:objValue}
   }
-  return { pr, id, displayName,  
+  return { pr, id, name, displayName,  
     teamName, userPullRequest, open_pr, 
-    declined_pr, merged_pr, userReviewing, open_rw, declined_rw, 
-    merged_rw, approved_rw, unapproved_rw, author_projects, 
-    author_projects_name, ...projectObj};
+    declined_pr, merged_pr, userReviewing,approved_rw, unapproved_rw,
+    bugfix, feature, issue, release,
+     ...projectObj};
 }
 
 
@@ -247,12 +244,18 @@ if(pullRequest.length <= 0 || !pullRequest){
 
  const columns = [
 
-
+    {
+      field: "name",
+      description: "This column shows user nick name",
+      headerName: "Nick Name",
+      headerClassName: 'super-app-theme--header',
+      flex: 0.5,
+    },
     {
         field: "displayName",
         description: "This column shows user display name",
-        headerName: "Name",
-        flex: 0.5,
+        headerName: "Full Name",
+        flex: 0.75,
     },
     
     {
@@ -265,7 +268,7 @@ if(pullRequest.length <= 0 || !pullRequest){
       field: "userPullRequest",
       description: "This column shows total pull request of user",
       headerName: "PR",
-      flex: 0.5,
+      flex: 0.25,
     },
     {
       field: "open_pr",
@@ -286,27 +289,33 @@ if(pullRequest.length <= 0 || !pullRequest){
       flex: 0.5,
     },
     {
+      field: "bugfix",
+      description: "This column shows total bugfixs of pull request of user",
+      headerName: "Bugfix",
+      flex: 0.5,
+    },
+    {
+      field: "feature",
+      description: "This column shows total features of pull request of user",
+      headerName: "Feature",
+      flex: 0.5,
+    },
+    {
+      field: "issue",
+      description: "This column shows total issues of pull request of user",
+      headerName: "Issue",
+      flex: 0.5,
+    },
+    {
+      field: "release",
+      description: "This column shows total release of pull request of user",
+      headerName: "Release",
+      flex: 0.5,
+    },
+    {
       field: "userReviewing",
-      description: "This column shows total reviewing of user",
+      description: "This column shows total reviewing of user (added to pull requests as a reviewers).",
       headerName: "Reviewing",
-      flex: 0.5,
-    },
-    {
-      field: "open_rw",
-      description: "This column shows total open reviewing of user",
-      headerName: "Open RW",
-      flex: 0.5,
-    },
-    {
-      field: "declined_rw",
-      description: "This column shows total declined reviewing of user",
-      headerName: "Declined RW",
-      flex: 0.5,
-    },
-    {
-      field: "merged_rw",
-      description: "This column shows total merged reviewing of user",
-      headerName: "Merged RW",
       flex: 0.5,
     },
     {
@@ -321,19 +330,7 @@ if(pullRequest.length <= 0 || !pullRequest){
       headerName: "Unapproved",
       flex: 0.5,
     },
-
-    {
-      field: "author_projects",
-      description: "This column shows total contributing of user's projects",
-      headerName: "Contributing Projects",
-      flex: 0.5,
-    },
-    {
-      field: "author_projects_name",
-      description: "This column shows total contributing of user's projects name",
-      headerName: "Projects Name",
-      flex: 0.5,
-    },
+   
     ...((filteredProjects(projectNames, allProjects)).map((element)=> {
       return {
           field: `${element}`,
@@ -348,6 +345,7 @@ if(pullRequest.length <= 0 || !pullRequest){
       headerName: "INFO",
       filterable: false,
       disableClickEventBubbling: true,
+      disableExport: true,
       sortable: false,
 
       renderCell: (params) => {
@@ -388,33 +386,22 @@ if(pullRequest.length <= 0 || !pullRequest){
     return createData(
       pr,
       pr.user.id,
+      pr.user.name,
       pr.user.displayName,
       pr.teamName,
       pr.user.active == true ? activeUserPullRequests[index].length : inactiveUserPullRequests[index].length,
       pr.user.active == true ? getAuthorOpen(activeUserPullRequests[index]).length : getAuthorOpen(inactiveUserPullRequests[index]).length,
       pr.user.active == true ? getAuthorDeclined(activeUserPullRequests[index]).length : getAuthorDeclined(inactiveUserPullRequests[index]).length,
       pr.user.active == true ? getAuthorMerged(activeUserPullRequests[index]).length : getAuthorMerged(inactiveUserPullRequests[index]).length,
+      pr.user.active == true ? getRefsTitle(activeUserPullRequests[index], "bugfix").length : getRefsTitle(inactiveUserPullRequests[index], "bugfix").length,
+      pr.user.active == true ? getRefsTitle(activeUserPullRequests[index], "feature").length : getRefsTitle(inactiveUserPullRequests[index], "feature").length,
+      pr.user.active == true ? getRefsTitle(activeUserPullRequests[index], "issue").length : getRefsTitle(inactiveUserPullRequests[index], "issue").length,
+      pr.user.active == true ? getRefsTitle(activeUserPullRequests[index], "release").length : getRefsTitle(inactiveUserPullRequests[index], "release").length,
       pr.user.active == true ? activeUserReviewing[index].length : inactiveUserReviewing[index].length,
-      pr.user.active == true ? getAuthorOpen(activeUserReviewing[index]).length : getAuthorOpen(inactiveUserReviewing[index]).length,
-      pr.user.active == true ? getAuthorDeclined(activeUserReviewing[index]).length : getAuthorDeclined(inactiveUserReviewing[index]).length,
-      pr.user.active == true ? getAuthorMerged(activeUserReviewing[index]).length : getAuthorMerged(inactiveUserReviewing[index]).length,
       pr.user.active == true ? getReviewersStatus(activeUserReviewing[index], pr.user.name, "APPROVED").length : getReviewersStatus(inactiveUserReviewing[index], pr.user.name, "APPROVED").length,
       pr.user.active == true ? getReviewersStatus(activeUserReviewing[index], pr.user.name, "UNAPPROVED").length : getReviewersStatus(inactiveUserReviewing[index], pr.user.name, "UNAPPROVED").length,
-      pr.user.active == true ? getAuthorProjects(activeUserPullRequests[index]).length : getAuthorProjects(inactiveUserPullRequests[index]).length,
-      pr.user.active == true ? 
-      (getAuthorProjects(activeUserPullRequests[index]).length >0
-      ? 
-      getAuthorProjects(activeUserPullRequests[index]).join(" | ") 
-      : "Unknown" )
-      :
-      (getAuthorProjects(inactiveUserPullRequests[index]).length >0
-      ?
-      getAuthorProjects(inactiveUserPullRequests[index]).join(" | ")
-      :
-      "Unknown")
-      ,
       ...(filteredProjects(projectNames, allProjects).map((element)=>{
-        const arr =  getProjectPullRequests(activeUserPullRequests[index], element).length
+        const arr =  pr.user.active == true ? getProjectPullRequests(activeUserPullRequests[index], element).length : getProjectPullRequests(inactiveUserPullRequests[index], element).length;
         return [element, arr];
       }))
 
@@ -586,16 +573,20 @@ if(pullRequest.length <= 0 || !pullRequest){
 <Button disabled={checkboxSelectedUsers.length <= 0 ? true : false} onClick={()=> setTeamButton(true)} sx={{borderRadius:"4px"}} variant="contained" endIcon={<Diversity2Icon />}>ADD TEAM</Button>
     </Box>
 
-      <Box m="20px 0 0 0" height="75vh" sx={{backgroundColor:"white", borderRadius:"20px", border:"0px solid black !important"}}>
+      <Box m="20px 0 0 0" height="75vh" 
+      sx={{
+      backgroundColor:"white", 
+      borderRadius:"20px", 
+      border:"0px solid black !important",}}>
       
         <DataGrid
         disableSelectionOnClick
-
         checkboxSelection={checkboxSelection}
         sx={{backgroundColor:"white", borderRadius:"4px",
         border:"0px solid black !important",
         "& .MuiDataGrid-virtualScroller::-webkit-scrollbar": {             
-            display: "none"
+            display: "none",
+            transform: "rotate(-45deg)"
         
         },}}
           rows={rows}
