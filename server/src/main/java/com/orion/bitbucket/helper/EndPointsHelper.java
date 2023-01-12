@@ -8,7 +8,7 @@ public final class EndPointsHelper {
      */
     private EndPointsHelper(){}
     // BASE URL FOR ALL PROJECTS
-    public static final String BASE_URL = "http://bitbucket.***.com/rest/api/1.0/projects/"; // Before running the application, modify this url
+    public static final String BASE_URL = "http://bitbucket.***.com/rest/api/1.0/projects/"; // TODO: Before running the application, modify this url
     public static final String REPOS = "/repos/";
     // END POINTS URL FOR ASRV PROJECT
     public static final String ASRV_MCP_CORE_ROOT_URL = BASE_URL + DatabaseHelper.ASRV_PROJECT_NAME +  REPOS + DatabaseHelper.ASRV_REPO_MCP_CORE_ROOT +"/pull-requests?state=ALL&limit=100&start=";
@@ -18,7 +18,7 @@ public final class EndPointsHelper {
     public static final class Bearer {
         private Bearer() {
         }
-        public static final String TOKEN = ""; // Before running the application, get a token from Bitbucket
+        public static final String TOKEN = ""; // TODO: Before running the application, get a token from Bitbucket
     }
 
 }
